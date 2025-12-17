@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+nelmio_cors:
+    defaults:
+        origin_regex: true
+        allow_origin: ['%env(CORS_ALLOW_ORIGIN)%']
+        allow_methods: ['GET', 'OPTIONS', 'POST', 'PUT', 'PATCH', 'DELETE']
+        allow_headers: ['Content-Type', 'Authorization']
+        expose_headers: ['Link']
+        max_age: 3600
+    paths:
+        '^/api/v1/auth/refresh-tokens':
+            allow_credentials: true
+        '^/': ~

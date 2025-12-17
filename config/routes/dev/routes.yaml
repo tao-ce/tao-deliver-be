@@ -1,0 +1,27 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+api_v1_attachments_upload_file:
+  path: '/api/v1/attachments/{path}'
+  methods: PUT
+  controller: App\Action\Attachments\UploadFileAction
+  requirements:
+    path: .+
+
+api_v1_attachments_download_file:
+  path: '/api/v1/attachments/{path}'
+  methods: GET
+  controller: App\Action\Attachments\DownloadFileAction
+  requirements:
+    path: .+
+
+api_v1_get_asset:
+  path: '/api/v1/asset'
+  methods: GET
+  controller: App\Action\Asset\GetAssetAction
+
+api_v1_download_asset:
+  path: '/api/v1/download-asset'
+  methods: GET
+  controller: App\Action\Asset\DownloadAssetAction

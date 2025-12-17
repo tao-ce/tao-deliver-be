@@ -1,0 +1,76 @@
+{
+    "i5db97d25d47b6": {
+        "mapping": [],
+        "areaMapping": [],
+        "howMatch": "http:\/\/www.imsglobal.org\/question\/qti_v2p1\/rptemplates\/match_correct",
+        "correctResponses": [
+            "tao"
+        ],
+        "defaultValue": [],
+        "mappingAttributes": {
+            "defaultValue": 0
+        },
+        "feedbackRules": {}
+    },
+    "i5db97d25d49f2": {
+        "processingType": "templateDriven",
+        "responseRules": [
+            {
+                "qtiClass": "responseCondition",
+                "responseIf": {
+                    "qtiClass": "responseIf",
+                    "expression": {
+                        "qtiClass": "match",
+                        "expressions": [
+                            {
+                                "qtiClass": "variable",
+                                "attributes": {
+                                    "identifier": "RESPONSE"
+                                }
+                            },
+                            {
+                                "qtiClass": "correct",
+                                "attributes": {
+                                    "identifier": "RESPONSE"
+                                }
+                            }
+                        ]
+                    },
+                    "responseRules": [
+                        {
+                            "qtiClass": "setOutcomeValue",
+                            "attributes": {
+                                "identifier": "SCORE"
+                            },
+                            "expression": {
+                                "qtiClass": "baseValue",
+                                "attributes": {
+                                    "baseType": "float"
+                                },
+                                "value": "1"
+                            }
+                        }
+                    ]
+                },
+                "responseElse": {
+                    "qtiClass": "responseElse",
+                    "responseRules": [
+                        {
+                            "qtiClass": "setOutcomeValue",
+                            "attributes": {
+                                "identifier": "SCORE"
+                            },
+                            "expression": {
+                                "qtiClass": "baseValue",
+                                "attributes": {
+                                    "baseType": "float"
+                                },
+                                "value": "0"
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

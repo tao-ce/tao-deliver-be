@@ -1,0 +1,78 @@
+{
+    "type": "qti",
+    "data": {
+        "identifier": "Q03",
+        "serial": "i5d70b7b04755f",
+        "qtiClass": "assessmentItem",
+        "attributes": {
+            "identifier": "Q03",
+            "title": "Listen to the music!",
+            "label": "",
+            "adaptive": false,
+            "timeDependent": false,
+            "toolName": "TAO",
+            "toolVersion": "NextGen",
+            "class": ""
+        },
+        "body": {
+            "serial": "i5d70b7b047556",
+            "body": "\n\t\t{{i5d70b7b04768f}}\n\t",
+            "elements": {
+                "i5d70b7b04768f": {
+                    "serial": "i5d70b7b04768f",
+                    "qtiClass": "mediaInteraction",
+                    "attributes": {
+                        "responseIdentifier": "RESPONSE",
+                        "autostart": false,
+                        "minPlays": 0,
+                        "maxPlays": 0,
+                        "loop": false
+                    },
+                    "choices": {},
+                    "prompt": {
+                        "serial": "i5d70b7b0476f4",
+                        "body": "Listen to this!",
+                        "elements": {}
+                    },
+                    "object": {
+                        "serial": "i5d70b7b0477a6",
+                        "qtiClass": "object",
+                        "attributes": {
+                            "data": "music.ogg",
+                            "type": "audio\/ogg"
+                        }
+                    }
+                }
+            }
+        },
+        "namespaces": {
+            "": "http:\/\/www.imsglobal.org\/xsd\/imsqti_v2p1",
+            "xsi": "http:\/\/www.w3.org\/2001\/XMLSchema-instance"
+        },
+        "schemaLocations": {
+            "http:\/\/www.imsglobal.org\/xsd\/imsqti_v2p1": "http:\/\/www.imsglobal.org\/xsd\/qti\/qtiv2p1\/imsqti_v2p1.xsd"
+        },
+        "stylesheets": {},
+        "outcomes": {},
+        "responses": {
+            "i5d70b7b0475e6": {
+                "identifier": "RESPONSE",
+                "serial": "i5d70b7b0475e6",
+                "qtiClass": "responseDeclaration",
+                "attributes": {
+                    "identifier": "RESPONSE",
+                    "cardinality": "single",
+                    "baseType": "integer"
+                },
+                "defaultValue": []
+            }
+        },
+        "feedbacks": {},
+        "apipAccessibility": ""
+    },
+    "assets": {
+        "video": {
+            "music.ogg": "music.ogg"
+        }
+    }
+}

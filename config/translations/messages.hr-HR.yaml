@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+test:
+    not:
+        available: Ispit nije dostupan.
+        access: Nemaš dopuštenje za pristup ovom ispitu.
+        found: Žao nam je, ne možemo pronaći tvoj ispit.
+    cannot:
+        start: Žao nam je, ispit se ne može pokrenuti.
+    relaunch:
+        contact:
+            administrator: Ponovno pokreni ispit ili se obrati svom ispitnom administratoru.
+            test_administrator: Ponovno pokreni ispit ili se obrati svom ispitnom administratoru.
+contact:
+    administrator: Obrati se svom ispitnom administratoru.

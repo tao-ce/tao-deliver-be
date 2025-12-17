@@ -1,0 +1,35 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+flysystem:
+    storages:
+        preuploaded_package.storage:
+            adapter: 'memory'
+
+        base64_zip.storage:
+            adapter: 'memory'
+
+        documentManager.storage:
+            adapter: 'memory'
+
+        qti_compiled_deliveries.storage:
+            adapter: 'memory'
+
+        qti_asset_manager.storage:
+            adapter: 'memory'
+
+        delivery_execution_uploads.storage:
+            adapter: 'memory'
+
+        delivery_execution_result.storage:
+            adapter: 'memory'
+
+        csv_results.storage:
+            adapter: 'memory'
+
+        data_store_results.storage:
+            adapter: 'memory'
+
+        extra_asset.storage:
+            adapter: 'memory'

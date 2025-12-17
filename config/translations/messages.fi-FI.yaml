@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+test:
+    not:
+        available: Koe ei ole käytettävissä.
+        access: Sinulla ei ole tämän kokeen käyttöoikeutta.
+        found: Emme valitettavasti löydä koettasi.
+    cannot:
+        start: Emme valitettavasti pysty aloittamaan koettasi.
+    relaunch:
+        contact:
+            administrator: Käynnistä koe uudelleen tai pyydä apua kokeen valvojalta.
+            test_administrator: Käynnistä koe uudelleen tai pyydä apua kokeen valvojalta.
+contact:
+    administrator: Pyydä apua kokeen valvojalta.

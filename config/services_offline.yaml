@@ -1,0 +1,23 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+imports:
+    resource: 'services_dev.yaml'
+
+services:
+  App\Messenger\Handler\AssessmentEventHandler:
+    autowire: true
+    tags: [ messenger.message_handler ]
+
+  App\Messenger\Handler\UiEventHandler:
+    autowire: true
+    tags: [ messenger.message_handler ]
+
+  App\TestRunner\ItemEnricher\TrendItemPropertiesEnricher:
+    autowire: true
+    arguments:
+      $cache: !service
+        class: Symfony\Component\Cache\Adapter\ArrayAdapter
+      $extraAssetUrl: '%extra_cdn.url%'
+      $extraAssetPrefix: '%extra_asset.storage.prefix%'

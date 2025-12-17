@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+test:
+    not:
+        available: Không có bài kiểm tra.
+        access: Bạn không có quyền truy cập bài thi này.
+        found: Rất tiếc, chúng tôi không tìm thấy bài kiểm tra của bạn.
+    cannot:
+        start: Rất tiếc, chúng tôi không thể bắt đầu bài kiểm tra của bạn.
+    relaunch:
+        contact:
+            administrator: Vui lòng khởi động lại bài kiểm tra hoặc liên hệ với quản trị viên của bạn.
+            test_administrator: Vui lòng khởi chạy lại bài kiểm tra của bạn hoặc liên hệ với quản trị viên phụ trách bài kiểm tra của bạn.
+contact:
+    administrator: Vui lòng liên hệ với quản trị viên phụ trách bài kiểm tra của bạn.

@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+test:
+    not:
+        available: الاختبار ليس متاحًا.
+        access: ليس لديك إذن للوصول إلى هذا الاختبار.
+        found: عذرًا، لا يمكننا العثور على اختبارك.
+    cannot:
+        start: عذرًا، لا يمكننا بدء اختبارك.
+    relaunch:
+        contact:
+            administrator: يُرجى فتح الاختبار مرة أخرى أو التواصل مع الشخص المسؤول.
+            test_administrator: يُرجى فتح الاختبار مرة أخرى أو التواصل مع المسؤول عن الاختبار.
+contact:
+    administrator: يُرجى التواصل مع مسؤول الاختبار.

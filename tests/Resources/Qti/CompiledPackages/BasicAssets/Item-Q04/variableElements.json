@@ -1,0 +1,127 @@
+{
+    "i5fa27d44b4d9e": {
+        "mapping": [],
+        "areaMapping": [],
+        "howMatch": "http:\/\/www.imsglobal.org\/question\/qti_v2p1\/rptemplates\/match_correct",
+        "correctResponses": [],
+        "defaultValue": [],
+        "mappingAttributes": {
+            "defaultValue": 0
+        },
+        "feedbackRules": {}
+    },
+    "i5fa27d44b4dd7": {
+        "mapping": [],
+        "areaMapping": [],
+        "howMatch": "http:\/\/www.imsglobal.org\/question\/qti_v2p1\/rptemplates\/match_correct",
+        "correctResponses": [],
+        "defaultValue": [],
+        "mappingAttributes": {
+            "defaultValue": 0
+        },
+        "feedbackRules": {}
+    },
+    "i5fa27d44b5177": {
+        "processingType": "templateDriven",
+        "responseRules": [
+            {
+                "qtiClass": "responseCondition",
+                "responseIf": {
+                    "qtiClass": "responseIf",
+                    "expression": {
+                        "qtiClass": "match",
+                        "expressions": [
+                            {
+                                "qtiClass": "variable",
+                                "attributes": {
+                                    "identifier": "RESPONSE"
+                                }
+                            },
+                            {
+                                "qtiClass": "correct",
+                                "attributes": {
+                                    "identifier": "RESPONSE"
+                                }
+                            }
+                        ]
+                    },
+                    "responseRules": [
+                        {
+                            "qtiClass": "setOutcomeValue",
+                            "attributes": {
+                                "identifier": "SCORE"
+                            },
+                            "expression": {
+                                "qtiClass": "sum",
+                                "expressions": [
+                                    {
+                                        "qtiClass": "variable",
+                                        "attributes": {
+                                            "identifier": "SCORE"
+                                        }
+                                    },
+                                    {
+                                        "qtiClass": "baseValue",
+                                        "attributes": {
+                                            "baseType": "integer"
+                                        },
+                                        "value": "1"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "qtiClass": "responseCondition",
+                "responseIf": {
+                    "qtiClass": "responseIf",
+                    "expression": {
+                        "qtiClass": "match",
+                        "expressions": [
+                            {
+                                "qtiClass": "variable",
+                                "attributes": {
+                                    "identifier": "RESPONSE_1"
+                                }
+                            },
+                            {
+                                "qtiClass": "correct",
+                                "attributes": {
+                                    "identifier": "RESPONSE_1"
+                                }
+                            }
+                        ]
+                    },
+                    "responseRules": [
+                        {
+                            "qtiClass": "setOutcomeValue",
+                            "attributes": {
+                                "identifier": "SCORE"
+                            },
+                            "expression": {
+                                "qtiClass": "sum",
+                                "expressions": [
+                                    {
+                                        "qtiClass": "variable",
+                                        "attributes": {
+                                            "identifier": "SCORE"
+                                        }
+                                    },
+                                    {
+                                        "qtiClass": "baseValue",
+                                        "attributes": {
+                                            "baseType": "integer"
+                                        },
+                                        "value": "1"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,15 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+monolog:
+    handlers:
+        deprecation:
+            type: stream
+            path: "php://stdout"
+            formatter: monolog.formatter.gcloud_json
+        deprecation_filter:
+            type: filter
+            handler: deprecation
+            max_level: info
+            channels: ['php']

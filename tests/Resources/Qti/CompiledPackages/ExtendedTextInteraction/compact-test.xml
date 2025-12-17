@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+
+SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+-->
+
+<assessmentTest xmlns="http://www.imsglobal.org/xsd/imsqti_v2p2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" identifier="Test28" title="Test 28" toolName="tao" toolVersion="2022.01" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqti_v2p2 http://www.taotesting.com/xsd/qticompact_v2p2.xsd">
+  <testPart identifier="testPart-1" navigationMode="linear" submissionMode="individual">
+    <itemSessionControl maxAttempts="0" showFeedback="false" allowReview="true" showSolution="false" allowComment="false" allowSkipping="true" validateResponses="false"/>
+    <assessmentSection identifier="assessmentSection-1" required="true" fixed="false" title="Section" visible="true" keepTogether="true">
+      <itemSessionControl maxAttempts="0" showFeedback="false" allowReview="true" showSolution="false" allowComment="false" allowSkipping="true" validateResponses="false"/>
+      <assessmentItemRef identifier="item-1" required="false" fixed="false" href="./item-1/item.json" adaptive="false" timeDependent="false" title="Extended text interaction" label="Extended text interaction">
+        <itemSessionControl maxAttempts="0" showFeedback="false" allowReview="true" showSolution="false" allowComment="false" allowSkipping="true" validateResponses="false"/>
+        <responseDeclaration identifier="RESPONSE" cardinality="single" baseType="string"/>
+        <outcomeDeclaration identifier="SCORE" cardinality="single" baseType="float" normalMaximum="0"/>
+        <outcomeDeclaration identifier="MAXSCORE" cardinality="single" baseType="float">
+          <defaultValue>
+            <value>0</value>
+          </defaultValue>
+        </outcomeDeclaration>
+        <responseProcessing template="http://www.imsglobal.org/question/qti_v2p1/rptemplates/match_correct"/>
+        <responseValidityConstraint responseIdentifier="RESPONSE" minConstraint="0" maxConstraint="0"/>
+      </assessmentItemRef>
+      <assessmentItemRef identifier="item-2" required="false" fixed="false" href="./item-2/item.json" adaptive="false" timeDependent="false" title="Extended text interaction" label="Extended text interaction">
+        <itemSessionControl maxAttempts="0" showFeedback="false" allowReview="true" showSolution="false" allowComment="false" allowSkipping="true" validateResponses="false"/>
+        <responseDeclaration identifier="RESPONSE" cardinality="single" baseType="string"/>
+        <outcomeDeclaration identifier="SCORE" cardinality="single" baseType="float" normalMaximum="0"/>
+        <outcomeDeclaration identifier="MAXSCORE" cardinality="single" baseType="float">
+          <defaultValue>
+            <value>0</value>
+          </defaultValue>
+        </outcomeDeclaration>
+        <responseProcessing template="http://www.imsglobal.org/question/qti_v2p1/rptemplates/match_correct"/>
+        <responseValidityConstraint responseIdentifier="RESPONSE" minConstraint="0" maxConstraint="0"/>
+      </assessmentItemRef>
+      <assessmentItemRef identifier="item-3" required="false" fixed="false" href="./item-3/item.json" adaptive="false" timeDependent="false" title="Extended text interaction" label="Extended text interaction">
+        <itemSessionControl maxAttempts="0" showFeedback="false" allowReview="true" showSolution="false" allowComment="false" allowSkipping="true" validateResponses="false"/>
+        <responseDeclaration identifier="RESPONSE" cardinality="single" baseType="string"/>
+        <outcomeDeclaration identifier="SCORE" cardinality="single" baseType="float" normalMaximum="0"/>
+        <outcomeDeclaration identifier="MAXSCORE" cardinality="single" baseType="float">
+          <defaultValue>
+            <value>0</value>
+          </defaultValue>
+        </outcomeDeclaration>
+        <responseProcessing template="http://www.imsglobal.org/question/qti_v2p1/rptemplates/match_correct"/>
+        <responseValidityConstraint responseIdentifier="RESPONSE" minConstraint="0" maxConstraint="0"/>
+      </assessmentItemRef>
+    </assessmentSection>
+  </testPart>
+</assessmentTest>

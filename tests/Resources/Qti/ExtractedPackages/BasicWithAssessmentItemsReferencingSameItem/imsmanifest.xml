@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<!--
+SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+
+SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+-->
+
+<manifest xmlns="http://www.imsglobal.org/xsd/imscp_v1p1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imscp_v1p1 http://www.imsglobal.org/xsd/qti/qtiv2p2/qtiv2p2_imscpv1p2_v1p0.xsd http://ltsc.ieee.org/xsd/LOM http://www.imsglobal.org/xsd/imsmd_loose_v1p3p2.xsd http://ltsc.ieee.org/xsd/LOM http://www.imsglobal.org/xsd/imsmd_loose_v1p3p2.xsd" identifier="QTI-TEST-MANIFEST-tao5ea9737680ce35-38380146" xmlns:imsmd="http://ltsc.ieee.org/xsd/LOM">
+    <metadata>
+        <schema>QTIv2.2 Package</schema>
+        <schemaversion>1.0.0</schemaversion>
+    </metadata>
+    <organizations/>
+    <resources>
+            <resource identifier="i5ea2c4f62fb332953388f32a131684fdfb" type="imsqti_item_xmlv2p2" href="items/i5ea2c4f62fb332953388f32a131684fdfb/qti.xml">
+            <metadata><imsmd:lom><imsmd:classification><imsmd:taxonPath><imsmd:source><imsmd:string xml:lang="en-US">http://www.w3.org/2000/01/rdf-schema#label</imsmd:string></imsmd:source><imsmd:taxon><imsmd:entry><imsmd:string xml:lang="en-US">Associate Things</imsmd:string></imsmd:entry></imsmd:taxon></imsmd:taxonPath></imsmd:classification></imsmd:lom></metadata><file href="items/i5ea2c4f62fb332953388f32a131684fdfb/qti.xml"/>
+                        <file href="items/i5ea2c4f62fb332953388f32a131684fdfb/style/custom/tao-user-styles.css"/>
+                    </resource><resource identifier="i5ea9724edc8b4629940e4fe7dc116de58" type="imsqti_test_xmlv2p2" href="tests/i5ea9724edc8b4629940e4fe7dc116de58/test.xml"><metadata><imsmd:lom><imsmd:classification><imsmd:taxonPath><imsmd:source><imsmd:string xml:lang="en-US">http://www.w3.org/2000/01/rdf-schema#label</imsmd:string></imsmd:source><imsmd:taxon><imsmd:entry><imsmd:string xml:lang="en-US">Test 2</imsmd:string></imsmd:entry></imsmd:taxon></imsmd:taxonPath></imsmd:classification></imsmd:lom></metadata><file href="tests/i5ea9724edc8b4629940e4fe7dc116de58/test.xml"/><dependency identifierref="i5ea2c4f62fb332953388f32a131684fdfb"/></resource></resources>
+</manifest>

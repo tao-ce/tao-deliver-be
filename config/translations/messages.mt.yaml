@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+test:
+  not:
+    available: It-test mhux disponibbli.
+    access: M'għandekx permess biex taċċessa dan it-test.
+    found: Jiddispjaċina, ma nistgħux insibu t-test tiegħek.
+  cannot:
+    start: Jiddispjaċina, ma nistgħux nibdew it-test tiegħek.
+  relaunch:
+    contact:
+      administrator: Jekk jogħġbok erġa' ibda t-test tiegħek jew ikkuntattja lill-amministratur tiegħek.
+      test_administrator: Jekk jogħġbok erġa' ibda t-test tiegħek jew ikkuntattja lill-amministratur tiegħek.
+contact:
+  administrator: Jekk jogħġbok ikkuntattja lill-amministratur tat-test tiegħek.

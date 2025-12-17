@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+
+SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+-->
+
+<assessmentItem xmlns="http://www.imsglobal.org/xsd/imsqti_v2p1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqti_v2p1  http://www.imsglobal.org/xsd/qti/qtiv2p1/imsqti_v2p1.xsd"
+	identifier="Q02" title="Attacker - Defender - 02" adaptive="false" timeDependent="false">
+	<responseDeclaration identifier="RESPONSE" cardinality="single" baseType="identifier">
+		<correctResponse>
+			<value>rolling</value>
+		</correctResponse>
+	</responseDeclaration>
+	<outcomeDeclaration identifier="SCORE" cardinality="single" baseType="float">
+		<defaultValue>
+			<value>0</value>
+		</defaultValue>
+	</outcomeDeclaration>
+	<itemBody>
+		<choiceInteraction id="interaction" responseIdentifier="RESPONSE" shuffle="false" maxChoices="1">
+			<prompt><b>What should do the <em>Defender</em> plane to counter the attack.</b></prompt>
+			<simpleChoice identifier="high">High Yo-Yo</simpleChoice>
+			<simpleChoice identifier="rolling">Rolling Scissors</simpleChoice>
+			<simpleChoice identifier="right">Right Break</simpleChoice>
+		</choiceInteraction>
+	</itemBody>
+	<responseProcessing template="http://www.imsglobal.org/question/qti_v2p1/rptemplates/match_correct"/>
+</assessmentItem>

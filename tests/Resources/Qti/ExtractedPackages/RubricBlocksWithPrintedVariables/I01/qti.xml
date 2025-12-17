@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+
+SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+-->
+
+<assessmentItem xmlns="http://www.imsglobal.org/xsd/imsqti_v2p1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqti_v2p1  http://www.imsglobal.org/xsd/qti/qtiv2p1/imsqti_v2p1.xsd"
+	identifier="I01" title="African Wildlife - End of Test" adaptive="false" timeDependent="false">
+	<itemBody>
+        <div id="message">
+            Thanks for your time! The test is now <strong>finished</strong>. Click the <em>End of Test</em> button
+            to proceed.
+        </div>
+	</itemBody>
+</assessmentItem>

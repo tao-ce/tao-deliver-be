@@ -1,0 +1,42 @@
+{
+    "type": "qti",
+    "data": {
+        "identifier": "I1",
+        "serial": "item_5d113084a5395124635123",
+        "qtiClass": "assessmentItem",
+        "attributes": {
+            "identifier": "I1",
+            "title": "Informational",
+            "label": "",
+            "adaptive": false,
+            "timeDependent": false,
+            "toolName": "TAO",
+            "toolVersion": "x.x.x",
+            "class": ""
+        },
+        "body": {
+            "serial": "container_containeritembody_5d113084a537a028864301",
+            "body": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing</p>",
+            "elements": [],
+            "debug": {
+                "relatedItem": "item_5d113084a5395124635123"
+            }
+        },
+        "debug": {
+            "relatedItem": "item_5d113084a5395124635123"
+        },
+        "namespaces": {
+            "": "http:\/\/www.imsglobal.org\/xsd\/imsqti_v2p1",
+            "xsi": "http:\/\/www.w3.org\/2001\/XMLSchema-instance"
+        },
+        "schemaLocations": {
+            "http:\/\/www.imsglobal.org\/xsd\/imsqti_v2p1": "http:\/\/www.imsglobal.org\/xsd\/qti\/qtiv2p1\/imsqti_v2p1.xsd"
+        },
+        "stylesheets": [],
+        "outcomes": [],
+        "responses": [],
+        "feedbacks": [],
+        "apipAccessibility": ""
+    },
+    "assets": []
+}

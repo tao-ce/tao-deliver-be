@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+test:
+    not:
+        available: การทดสอบไม่พร้อมใช้งาน
+        access: นักเรียนไม่ได้รับอนุญาตให้เข้าถึงการทดสอบนี้
+        found: ขออภัย เราไม่พบแบบทดสอบของนักเรียน
+    cannot:
+        start: ขออภัย เราไม่สามารถเริ่มการทดสอบของนักเรียนได้
+    relaunch:
+        contact:
+            administrator: โปรดเปิดแบบทดสอบของนักเรียนอีกครั้ง หรือติดต่อผู้ดูแล
+            test_administrator: โปรดเปิดแบบทดสอบของนักเรียนอีกครั้ง หรือติดต่อผู้ดูแลการทดสอบ
+contact:
+    administrator: โปรดติดต่อผู้ดูแลการทดสอบ

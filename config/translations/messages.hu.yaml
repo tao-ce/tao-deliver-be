@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+test:
+  not:
+    available: A teszt nem elérhető.
+    access: Nincs engedélye a teszt eléréséhez.
+    found: Elnézést, nem találjuk a tesztjét.
+  cannot:
+    start: Elnézést, nem tudjuk elindítani a tesztjét.
+  relaunch:
+    contact:
+      administrator: Kérem, indítsa el újra a tesztet, vagy forduljon a rendszergazdához.
+      test_administrator: Kérem, indítsa el újra a tesztet, vagy forduljon a tesztadminisztrátorhoz.
+contact:
+  administrator: Kérem, forduljon a tesztadminisztrátorhoz.

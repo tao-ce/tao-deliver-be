@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+test:
+    not:
+        available: Prøva er ikkje tilgjengeleg.
+        access: Du har ikkje tilgang til prøva.
+        found: Vi kan dessverre ikkje finne prøva.
+    cannot:
+        start: Vi kan dessverre ikkje starte prøva.
+    relaunch:
+        contact:
+            administrator: Start prøva på nytt eller kontakt læraren.
+            test_administrator: Start prøva på nytt eller kontakt læraren.
+contact:
+    administrator: Kontakt læraren.

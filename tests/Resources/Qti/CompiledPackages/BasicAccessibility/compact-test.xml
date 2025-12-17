@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+
+SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+-->
+
+<assessmentTest xmlns="http://www.imsglobal.org/xsd/imsqti_v2p1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                identifier="Test-T01" title="Basic Test (Linear-Individual)">
+    <testPart identifier="TestPart-TP01" navigationMode="linear" submissionMode="individual">
+        <itemSessionControl maxAttempts="0" showFeedback="false" allowReview="true" showSolution="false" allowComment="false" allowSkipping="true" validateResponses="false"/>
+        <assessmentSection identifier="Section-S01" required="true" fixed="false" title="Section 01" visible="true" keepTogether="true">
+            <assessmentItemRef identifier="Item-Q01" required="false" fixed="false" href="./Item-Q01/item.json" adaptive="false" timeDependent="false" category="x-tao-option-tts">
+                <responseDeclaration identifier="RESPONSE" cardinality="single" baseType="identifier">
+                    <correctResponse>
+                        <value>tao</value>
+                    </correctResponse>
+                </responseDeclaration>
+                <outcomeDeclaration identifier="SCORE" cardinality="single" baseType="float">
+                    <defaultValue>
+                        <value>1</value>
+                    </defaultValue>
+                </outcomeDeclaration>
+                <outcomeDeclaration identifier="MAXSCORE" cardinality="single" baseType="float">
+                    <defaultValue>
+                        <value>1</value>
+                    </defaultValue>
+                </outcomeDeclaration>
+                <responseProcessing template="http://www.imsglobal.org/question/qti_v2p1/rptemplates/match_correct"/>
+                <responseValidityConstraint responseIdentifier="RESPONSE" minConstraint="0" maxConstraint="1"/>
+            </assessmentItemRef>
+            <assessmentItemRef identifier="Item-Q02" required="false" fixed="false" href="./item-Q02/item.json" adaptive="false" timeDependent="false" category="x-tao-option-tts">
+                <responseDeclaration identifier="RESPONSE" cardinality="single" baseType="identifier">
+                    <correctResponse>
+                        <value>lego</value>
+                    </correctResponse>
+                </responseDeclaration>
+                <outcomeDeclaration identifier="SCORE" cardinality="single" baseType="float">
+                    <defaultValue>
+                        <value>0</value>
+                    </defaultValue>
+                </outcomeDeclaration>
+                <outcomeDeclaration identifier="MAXSCORE" cardinality="single" baseType="float">
+                    <defaultValue>
+                        <value>1</value>
+                    </defaultValue>
+                </outcomeDeclaration>
+                <responseProcessing template="http://www.imsglobal.org/question/qti_v2p1/rptemplates/match_correct"/>
+                <responseValidityConstraint responseIdentifier="RESPONSE" minConstraint="0" maxConstraint="1"/>
+            </assessmentItemRef>
+            <assessmentItemRef identifier="Item-Q03" required="false" fixed="false" href="./item-Q03/item.json" adaptive="false" timeDependent="false" category="x-tao-option-tts">
+                <responseDeclaration identifier="RESPONSE" cardinality="single" baseType="identifier">
+                    <correctResponse>
+                        <value>turismo</value>
+                    </correctResponse>
+                </responseDeclaration>
+                <outcomeDeclaration identifier="SCORE" cardinality="single" baseType="float">
+                    <defaultValue>
+                        <value>0</value>
+                    </defaultValue>
+                </outcomeDeclaration>
+                <outcomeDeclaration identifier="MAXSCORE" cardinality="single" baseType="float">
+                    <defaultValue>
+                        <value>1</value>
+                    </defaultValue>
+                </outcomeDeclaration>
+                <responseProcessing template="http://www.imsglobal.org/question/qti_v2p1/rptemplates/match_correct"/>
+                <responseValidityConstraint responseIdentifier="RESPONSE" minConstraint="0" maxConstraint="1"/>
+            </assessmentItemRef>
+        </assessmentSection>
+    </testPart>
+</assessmentTest>

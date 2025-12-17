@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+test:
+    not:
+        available: Тест недоступен.
+        access: У вас нет разрешения на доступ к этому тесту.
+        found: Извините, мы не можем найти ваш тест.
+    cannot:
+        start: Извините, мы не можем начать ваш тест.
+    relaunch:
+        contact:
+            administrator: Пожалуйста, запустите тест еще раз или обратитесь к администратору.
+            test_administrator: Пожалуйста, запустите тест еще раз или обратитесь к администратору теста.
+contact:
+    administrator: Обратитесь к администратору вашего теста.

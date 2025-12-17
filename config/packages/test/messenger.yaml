@@ -1,0 +1,25 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+framework:
+    messenger:
+        transports:
+            sync: 'sync://'
+            publication: 'in-memory:///'
+            result-extraction:  'in-memory:///'
+            interactions:  'in-memory:///'
+            failures: 'in-memory:///'
+            datastore-result: 'in-memory:///'
+            datastore-delivery-execution-actions: 'in-memory:///'
+            closure: 'in-memory:///'
+            scoring-submission: 'in-memory:///'
+            plagiarism-status: 'in-memory:///'
+            clean-up: 'in-memory:///'
+            delivery-execution: 'in-memory:///'
+            delivery-execution-ui-events: 'in-memory:///'
+            delivery-execution-acs-log: 'in-memory:///'
+            item-external-scoring: 'in-memory:///'
+            scoring-deliveries: 'in-memory:///'
+            tracing-span-collector: 'in-memory:///'
+            delivery-execution-assessment-log: 'in-memory:///'

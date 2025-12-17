@@ -1,0 +1,520 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+parameters:
+    empty.string: ''
+    deliver.frontend.url: '%env(DELIVER_FRONTEND_URL)%'
+    deliver.frontend.error_url: '%deliver.frontend.url%/error'
+    deliver.frontend.end_assessment_url: '%deliver.frontend.url%/thank-you'
+    dynamic_query_api.url: '%env(DYNAMIC_QUERY_API_URL)%'
+    dynamic_query_api.index.battery: '%env(default:dynamic_query_api.index.battery.default:DYNAMIC_QUERY_API_INDEX_BATTERY)%'
+    dynamic_query_api.index.battery.default: 'portalBattery'
+    dynamic_query_api.index.delivery: '%env(default:dynamic_query_api.index.delivery.default:DYNAMIC_QUERY_API_INDEX_DELIVERY)%'
+    dynamic_query_api.index.delivery.default: 'testRunnerDeliveries'
+    lti.deep_linking.frontend_url: '%env(DELIVER_LTI_DEEP_LINKING_FRONTEND_URL)%'
+    lti.deep_linking.return_auto_submit_form.default: false
+    lti.deep_linking.return_auto_submit_form: '%env(default:lti.deep_linking.return_auto_submit_form.default:bool:DELIVER_LTI_DEEP_LINKING_RETURN_AUTO_SUBMIT_FORM)%'
+    qti_extractor.tmp_dir: '%kernel.project_dir%/var/storage/temp'
+    cache_enabled: false
+    cache.default_ttl: 3600
+    env(FULLY_QUALIFIED_ASSET_URL): 'true'
+    asset.url_is_absolute: '%env(bool:FULLY_QUALIFIED_ASSET_URL)%'
+    asset.url_signature_key: '%env(ASSETS_URL_SIGNATURE_KEY)%'
+    asset.url_signature_prefix_name: 'delivery-execution-uploads'
+    asset.ttl: '%env(default:asset.ttl.default:SIGNED_URL_ASSET_TTL)%'
+    asset.ttl.default: 3600
+    extra_asset.storage.prefix: '%env(default:extra_asset.storage.prefix.default:EXTRA_ASSET_STORAGE_PREFIX)%'
+    extra_asset.storage.prefix.default: 'help-content'
+    env(LTI_MESSAGE_TTL): 3600
+    lti1p3.message_ttl: '%env(int:LTI_MESSAGE_TTL)%'
+    lti1p3.proctoring.audience: '%env(LTI1P3_PROCTORING_AUDIENCE)%'
+    lti1p3.proctoring.client_id: '%env(LTI1P3_PROCTORING_CLIENT_ID)%'
+    storage.bucket_name: '%env(GOOGLE_CLOUD_STORAGE_BUCKET_NAME)%'
+    storage.signed_url.ttl: '%env(GOOGLE_CLOUD_STORAGE_SIGNED_URL_TTL)%'
+    signed_url.cache.ttl_shift: '%env(default:signed_url.cache.default_ttl_shift:SIGNED_URL_CACHE_TTL_SHIFT)%'
+    signed_url.cache.default_ttl_shift: 60
+    extra_cdn.url: '%env(default:empty.string:GOOGLE_CLOUD_EXTRA_ASSET_CDN_URL)%'
+    cdn.url: '%env(GOOGLE_CLOUD_CDN_URL)%'
+    cdn.key: '%env(GOOGLE_CLOUD_CDN_KEY)%'
+    cdn.key_name: '%env(GOOGLE_CLOUD_CDN_KEY_NAME)%'
+    content_service.cdn.key_name: '%env(default:cdn.key_name:CONTENT_SERVICE_GOOGLE_CLOUD_CDN_KEY_NAME)%'
+    upload.max_size_limit: '%env(ASSETS_MAX_FILE_SIZE_LIMIT)%'
+    env_mgmt.auth_server.token_request_url: '%env(AUTH_SERVER_TOKEN_REQUEST_URL)%'
+    env_mgmt.auth_server.cookie_domain_level_max: '%env(default:env_mgmt.auth_server.cookie_domain_level_max.default:int:COOKIE_DOMAIN_LEVEL_MAX)%'
+    env_mgmt.auth_server.cookie_domain_level_max.default: 4
+    xml_result_extraction.max_file_size: '%env(default:xml_result_extraction_default_max_file_size:XML_RESULT_EXTRACTION_MAX_FILE_SIZE)%'
+    xml_result_extraction.file_mime_types: '%env(json:XML_RESULT_EXTRACTION_FILE_MIMETYPES)%'
+    xml_result_extraction_default_max_file_size: 2M
+    locks.plagiarism_report_update.ttl: '%env(default:locks.plagiarism_report_update.default_ttl:PLAGIARISM_UPDATE_LOCK_TTL)%'
+    env(CONTENT_API_URL): ''
+    content.api.url: '%env(CONTENT_API_URL)%'
+    locks.plagiarism_report_update.default_ttl: 5
+    datastore.delivery_execution: '%env(DOCUMENT_MANAGER_TABLE_NAME_DATASTORE_DELIVERY_EXECUTION)%'
+    http_client:
+        extra:
+            curl:
+                !php/const CURLOPT_IPRESOLVE: !php/const CURL_IPRESOLVE_V4
+#tracing
+    tracing.http.header.trace_id_key: '%env(default:tracing.http.header.trace_id_key_default:TRACING_HTTP_HEADER_TRACE_ID_KEY)%'
+    tracing.http.header.trace_id_key_default: 'X-traceID'
+    tracing.http.header.span_id_key: '%env(default:tracing.http.header.span_id_key_default:TRACING_HTTP_HEADER_SPAN_ID_KEY)%'
+    tracing.http.header.span_id_key_default: 'X-spanID'
+    tracing.disabled: '%env(default:tracing.disabled.default:bool:OTEL_SDK_DISABLED)%'
+    tracing.disabled.default: false
+
+services:
+
+    ###############################################################################################
+    ### Application configuration                                                              ####
+    ###############################################################################################
+
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+        bind:
+            $applicationDebug: '%env(APP_DEBUG)%'
+            $backendUrl: '%env(DELIVER_BACKEND_URL)%'
+            $oAuth2PublicKey: '@oauth2.public_key'
+            $oAuth2PrivateKey: '@oauth2.private_key'
+            $auditPlatformLogger: '@monolog.logger.audit_platform'
+            $auditDeliveryExecutionLogger: '@monolog.logger.audit_delivery_execution'
+            $defaultLocale: '%kernel.default_locale%'
+            $assetTtl: '%asset.ttl%'
+            $uploadedFileStorage: '@delivery_execution_uploads.storage'
+            $dataStoreDeliveryProcessingInput: '@data_store_delivery_processing_input.storage'
+            App\Service\DeliveryExecution\Contract\RepositoryAwareDeliveryExecutionServiceInterface $loggerAwareDeliveryExecutionService: '@App\Service\DeliveryExecution\LoggerAwareDeliveryExecutionService'
+            $tracingHttpHeaderTraceIdKey: '%tracing.http.header.trace_id_key%'
+            $tracingHttpHeaderSpanIdKey: '%tracing.http.header.span_id_key%'
+            string $deliverFrontendEndAssessmentUrl: '%deliver.frontend.end_assessment_url%'
+            iterable $acsActionProcessors: !tagged_iterator lti.acs_action_processor
+            int $signedUrlCacheTtlShift: '%signed_url.cache.ttl_shift%'
+            int $cookieDomainLevelMax: '%env_mgmt.auth_server.cookie_domain_level_max%'
+            string $dataStoreDeliveryExecutionIndex: '%datastore.delivery_execution%'
+            string $contentServiceCdnKeyName: '%content_service.cdn.key_name%'
+            Symfony\Component\Lock\LockFactory $optionalLockFactory:
+                !service
+                class: Symfony\Component\Lock\LockFactory
+                arguments: ['@lock.store.optional']
+                calls:
+                    - setLogger: ['@logger']
+
+    _instanceof:
+        App\Security\Contract\DeliveryExecutionSessionController:
+            tags: ['controller.service_arguments']
+        App\TestRunner\ActionProcessor\ActionProcessorInterface:
+            tags: ['test_runner.action_processor']
+        App\Lti\Sender\LtiResultSenderInterface:
+            tags: ['lti.result_sender']
+        App\Lti\Proctoring\AcsActionProcessor\AcsActionProcessorInterface:
+          tags: ['lti.acs_action_processor']
+        App\TestRunner\ItemEnricher\Contract\ItemStateEnricherInterface:
+            tags: ['test_runner.item_state_enricher']
+        App\TestRunner\ItemEnricher\Contract\ItemDataEnricherInterface:
+            tags: ['test_runner.item_data_enricher']
+        App\Request\Extractor\Contract\ContextExtractorInterface:
+            tags: ['request.context_extractor']
+        App\Qti\Extractor\QtiResultExtractorPreProcessor\QtiResultExtractorPreProcessorInterface:
+            tags: ['qti.extractor.qti_result_extractor.pre_processor']
+        App\Service\DeliveryExecution\Contract\BatteryDeliveryFilterInterface:
+            tags: ['battery.delivery.filter']
+
+    cache.messenger.restart_workers_signal: '@cache.filesystem'
+
+    ZipArchive:
+        class: ZipArchive
+
+    App\:
+        resource: '../src/*'
+        exclude:
+          - '../src/{DependencyInjection,Tests,Domain,Kernel.php}'
+
+    lock.store.optional:
+        class: App\Storage\Lock\NoopLockStore
+
+    App\Logger\Processor\RequestHeaderAwareProcessor:
+        arguments: [ 'X-Request-Id' ]
+        tags:
+            - { name: monolog.processor }
+
+    App\Logger\Processor\DeliveryExecutionAwareProcessor:
+        tags:
+            - { name: monolog.processor }
+
+    App\Logger\Processor\CurrentWorkerContextAwareProcessor:
+        tags:
+            - { name: monolog.processor }
+
+    App\Logger\Processor\TestRunnerActionAwareProcessor:
+        tags:
+            - { name: monolog.processor }
+
+    App\Action\:
+        resource: '../src/Action'
+        tags: ['controller.service_arguments']
+
+    App\Action\Lti\DeepLinking\GetDeepLinksAction:
+      tags: [ 'controller.service_arguments' ]
+      arguments:
+        $ltiDeepLinkingFrontendUrl: '%lti.deep_linking.frontend_url%'
+
+    App\Action\Lti\DeepLinking\SubmitDeepLinksAction:
+        tags: [ 'controller.service_arguments' ]
+        arguments:
+            $deepLinkingReturnAutoSubmitForm: '%lti.deep_linking.return_auto_submit_form%'
+
+    App\FlatTestMap\Action\GetCompactTestMapAction:
+        tags: [ 'controller.service_arguments' ]
+
+    App\Generator\Asset\LocalSignedUrlGenerator:
+        tags: ['asset.signed_url_generator']
+
+    App\Generator\Attachment\AttachmentUrlGenerator:
+      arguments:
+        $cloudCdnUrl: '%cdn.url%'
+        $prefix: '%asset.url_signature_prefix_name%'
+        $isFrontendUrlAbsolute: '%asset.url_is_absolute%'
+
+    App\Domain\Tenant\Model\TestRunnerSettingsRepositoryInterface:
+        alias: App\Repository\TenantLibTestRunnerSettingsRepository
+
+    App\Domain\Tenant\Model\DeliverProvisionedEventsSettingsRepositoryInterface:
+        alias: App\Repository\TenantLibDeliverProvisionedEventsSettingsRepository
+
+    App\Registry\LoggerRegistry:
+        arguments:
+            $logger: '@monolog.logger'
+            $taggedLoggers: !tagged_iterator monolog.custom_channel
+
+    App\Registry\LtiResultSenderRegistry:
+        arguments:
+            $senders: !tagged_iterator  lti.result_sender
+
+    App\Registry\SignedUrlGeneratorRegistry:
+        arguments:
+            $taggedGenerators: !tagged_iterator asset.signed_url_generator
+
+    App\Request\Service\ContextService:
+        arguments:
+            $contextExtractors: !tagged_iterator request.context_extractor
+
+    App\Lti\Sender\LtiAgsScoreSender: ~
+
+    App\Qti\Extractor\QtiPackageExtractor:
+        arguments:
+            $prefix: '%flysystem.path.qti_extracted_packages%'
+
+    App\Qti\Extractor\QtiResultExtractor:
+        arguments:
+          $deliveryExecutionPropertyService: '@App\Service\DeliveryExecution\DeliveryExecutionPropertyService'
+          $uploadedFilesReplacer: '@App\Service\Asset\AssessmentResultUploadedFilesReplacer'
+          $preProcessors: !tagged_iterator qti.extractor.qti_result_extractor.pre_processor
+
+    App\Messenger\Handler\PublicationMessageHandler:
+        arguments:
+            $workflow: '@state_machine.publication'
+
+    App\TestRunner\ActionProcessor\Registry\ActionProcessorRegistry:
+        arguments: [!tagged_iterator 'test_runner.action_processor']
+
+    App\TestRunner\ItemEnricher\Contract\ItemEnricherInterface:
+        alias: App\TestRunner\ItemEnricher\ItemEnricherService
+
+    App\TestRunner\ItemEnricher\TrendItemPropertiesEnricher:
+        arguments:
+            $extraAssetUrl: '%extra_cdn.url%'
+            $extraAssetPrefix: '%extra_asset.storage.prefix%'
+
+    App\TestRunner\ItemEnricher\ItemEnricherService:
+        arguments:
+            $enricherStateList: !tagged_iterator test_runner.item_state_enricher
+            $enricherDataList: !tagged_iterator test_runner.item_data_enricher
+
+    App\Service\DeliveryExecution\Contract\DeliveryExecutionCreatorInterface:
+        alias: App\Service\DeliveryExecution\DeliveryExecutionService
+
+    App\Service\DeliveryExecution\Contract\DeliveryExecutionServiceInterface:
+        alias: App\Service\DeliveryExecution\DeliveryExecutionService
+
+    App\Service\DeliveryExecution\Contract\RepositoryAwareDeliveryExecutionServiceInterface:
+        alias: App\Service\DeliveryExecution\DeliveryExecutionService
+
+    App\Service\Lti\LtiTokenResolverInterface:
+        alias: App\Service\Lti\LtiTokenResolver
+
+    App\Service\BatteryDistribution\BatteryDeliveryToExecuteRetriever:
+        arguments:
+            $filters: !tagged_iterator battery.delivery.filter
+
+    App\Twig\SignedUrlExtension:
+        tags: ['twig.extension']
+        lazy: true
+
+    App\Command\DeliveryExecution\DeliveryExecutionData:
+      arguments:
+        $qtiCompiledPrefix: '%flysystem.path.qti_compiled_deliveries%'
+
+    App\Command\DeliveryExecution\DeliveryExecutionImport:
+      arguments:
+        $qtiCompiledPrefix: '%flysystem.path.qti_compiled_deliveries%'
+
+    App\Command\WarmupDeliveryCacheCommand:
+        arguments:
+            $storage: '@qti_compiled_deliveries.storage'
+
+    App\Command\CopyUserUploadedFileMigrationCommand:
+        arguments:
+            $deliveryStorage: '@delivery_execution_uploads.storage'
+            $assetStorage: '@qti_asset_manager.storage'
+
+    App\Messenger\Handler\PlagiarismStatusMessageHandler:
+        arguments:
+            $lockTtl: '%locks.plagiarism_report_update.ttl%'
+
+    asset_manager.delivery_execution_uploads:
+        class: OAT\Bundle\QtiBundle\Manager\AssetManager
+        arguments:
+            $qtiAssetManagerStorage: '@delivery_execution_uploads.storage'
+
+    monolog.formatter.gcloud_json:
+        class: Monolog\Formatter\GoogleCloudLoggingFormatter
+
+    App\DynamicQueryApi\Gateway\DynamicQueryApiGateway:
+        arguments:
+            $dynamicQueryApiUrl: '%dynamic_query_api.url%'
+            $dynamicQueryApiIndexBattery: '%dynamic_query_api.index.battery%'
+            $dynamicQueryApiIndexDelivery: '%dynamic_query_api.index.delivery%'
+
+    App\ContentServiceApi\Gateway\ContentServiceApiGateway:
+        arguments:
+            $contentServiceApiUrl: '%content.api.url%'
+
+    App\Environment\FeatureFlagAdapterInterface:
+        class: App\Environment\FeatureFlagAdapter
+
+    OAT\Library\EnvironmentManagementClient\Repository\FeatureFlagRepositoryInterface:
+        class: OAT\Library\EnvironmentManagementClient\Repository\FeatureFlagRepository
+        arguments:
+            $httpClient: '@http_client'
+            $cache: '@cache.chain'
+            $authServerGrpcGatewayHost: '%em.auth_server.grpc_gateway.url%'
+            $cacheTtl: '%em.cache.ttl%'
+
+    OAT\Library\EnvironmentManagementClient\Repository\ConfigurationRepositoryInterface:
+        class: OAT\Library\EnvironmentManagementClient\Repository\ConfigurationRepository
+        arguments:
+            $httpClient: '@http_client'
+            $cache: '@cache.chain'
+            $authServerGrpcGatewayHost: '%em.auth_server.grpc_gateway.url%'
+            $cacheTtl: '%em.cache.ttl%'
+
+    App\Domain\Tenant\Model\PortalSettingsRepositoryInterface:
+        class: App\Repository\TenantLibPortalSettingsRepository
+
+    ###############################################################################################
+    ### Messenger serializer configuration                                                     ####
+    ###############################################################################################
+
+    messenger.transport.external_scoring_serializer:
+        class: App\Messenger\Serializer\ExternalMessageSerializer
+        arguments:
+            $type: App\Messenger\Message\DeliveryExecutionItemExternalScoringMessage
+
+    messenger.transport.plagiarism_status:
+        class: App\Messenger\Serializer\ExternalMessageSerializer
+        arguments:
+            $type: App\Messenger\Message\HblPlagiarismStatusMessage
+
+    messenger.transport.image_response:
+        class: App\Messenger\Serializer\ExternalMessageSerializer
+        arguments:
+            $type: App\ImageResponse\Input\ImageResponse
+
+    ###############################################################################################
+    ### Vendors configuration                                                                  ####
+    ###############################################################################################
+
+    Lcobucci\JWT\Signer:
+        class: Lcobucci\JWT\Signer\Rsa\Sha256
+
+    Lcobucci\JWT\Parser: ~
+    OAT\Bundle\CacheDocumentManagerBundle\Driver\CacheDocumentDriver:
+        arguments:
+            $cache: '@cache.document_manager'
+
+    OAT\Bundle\ElasticsearchDocumentManagerBundle\Configuration\ConfigurationProviderInterface:
+        alias: OAT\Bundle\ElasticsearchDocumentManagerBundle\Configuration\SimpleConfigurationProvider
+
+    # For prod env we override Elasticsearch\Client instead, see services_prod.yaml
+    OAT\Bundle\ElasticsearchDocumentManagerBundle\Configuration\SimpleConfigurationProvider:
+        arguments:
+            $host: '%env(ELASTICSEARCH_HOST)%'
+            $port: '%env(ELASTICSEARCH_PORT)%'
+
+    App\DocumentManager\Driver\CachedElasticsearchDocumentDriver:
+      class: App\DocumentManager\Driver\CachedElasticsearchDocumentDriver
+      arguments:
+        $driver: '@OAT\Bundle\ElasticsearchDocumentManagerBundle\Driver\ElasticsearchDocumentDriver'
+        $cache: '@cache.document_manager'
+        $cachableStorages:
+        - '%env(DOCUMENT_MANAGER_TABLE_NAME_DELIVERIES)%'
+
+    OAT\Bundle\QtiBundle\Manager\AssetManager:
+        arguments:
+            $qtiAssetManagerStorage: '@qti_asset_manager.storage'
+
+    OAT\Bundle\QtiBundle\Factory\TestSessionAccessorFactory:
+        arguments:
+            $storage: '@qti_compiled_deliveries.storage'
+            $assetManager: '@asset_manager.delivery_execution_uploads'
+
+    Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface:
+        class: Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory
+
+    Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface:
+        class: Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory
+
+    Symfony\Component\DomCrawler\Crawler:
+        shared: false
+
+    Symfony\Component\Cache\Marshaller\DeflateMarshaller:
+        decorates: cache.default_marshaller
+        arguments: ['@Symfony\Component\Cache\Marshaller\DeflateMarshaller.inner']
+
+    Psr\Http\Client\ClientInterface:
+        alias: GuzzleHttp\ClientInterface
+
+    GuzzleHttp\ClientInterface:
+        class: GuzzleHttp\Client
+        arguments:
+            - force_ip_resolve: v4
+
+    qtism\runtime\pci\json\Unmarshaller:
+        arguments:
+            $fileManager: '@asset_manager.delivery_execution_uploads'
+
+    App\Service\Asset\AssessmentResultUploadedFilesReplacer:
+      arguments:
+        $fileSizeLimit: '%xml_result_extraction.max_file_size%'
+        $mimeTypeList: '%xml_result_extraction.file_mime_types%'
+
+    qtism\runtime\pci\json\Marshaller: ~
+    qtism\runtime\rendering\markup\MarkupPostRenderer: ~
+    App\Qti\Render\XhtmlRenderingEngine: ~
+
+    # TODO : find a better way to handle autowiring
+    OAT\Library\QtiItemJsonCompilation\:
+        resource: '../vendor/oat-sa/lib-qti-item-json-compilation/src/*'
+        exclude: '../vendor/oat-sa/lib-qti-item-json-compilation/src/{Attribute,Container,DataType,Exception,Expression,Feedback,Interaction,Response}'
+
+    OAT\Library\Lti1p3Ags\Service\Score\Client\ScoreServiceClient: ~
+
+    OAT\Library\Lti1p3Ags\Factory\Score\ScoreFactory: ~
+
+    OAT\Library\Lti1p3Ags\Serializer\Result\ResultCollectionSerializerInterface:
+      class: OAT\Library\Lti1p3Ags\Serializer\Result\ResultCollectionSerializer
+
+    OAT\Library\Lti1p3Ags\Serializer\LineItem\LineItemCollectionSerializerInterface:
+      class: OAT\Library\Lti1p3Ags\Serializer\LineItem\LineItemCollectionSerializer
+
+    Lcobucci\JWT\Configuration: ~
+
+    Lcobucci\JWT\Token\Parser:
+      arguments:
+        - !service
+          class: Lcobucci\JWT\Encoding\JoseEncoder
+
+    OAT\Library\HealthCheckCache\CacheChecker: ~
+
+    OAT\Library\Lti1p3Proctoring\Message\Launch\Builder\StartProctoringLaunchRequestBuilder: ~
+    OAT\Library\Lti1p3Proctoring\Message\Launch\Builder\EndAssessmentLaunchRequestBuilder: ~
+    OAT\Library\Lti1p3Proctoring\Service\Server\Handler\AcsServiceServerRequestHandler: ~
+
+    OAT\Library\Lti1p3Proctoring\Service\Server\Processor\AcsServiceServerControlProcessorInterface:
+        class: App\Lti\Proctoring\AcsServiceServerControlProcessor
+
+  # LTI core dependencies
+    OAT\Library\Lti1p3Core\Message\Payload\Builder\MessagePayloadBuilderInterface:
+      class: OAT\Library\Lti1p3Core\Message\Payload\Builder\MessagePayloadBuilder
+      arguments:
+        $builder: !service
+          class: OAT\Library\Lti1p3Core\Security\Jwt\Builder\Builder
+          arguments:
+            $messageTtl: '%lti1p3.message_ttl%'
+
+    OAT\Library\Lti1p3Core\Security\User\UserAuthenticatorInterface:
+      class: App\Security\User\UserAuthenticator
+
+    OAT\Library\Lti1p3Core\User\UserIdentityFactoryInterface:
+      class: OAT\Library\Lti1p3Core\User\UserIdentityFactory
+
+    OAT\Library\Lti1p3DeepLinking\Message\Launch\Builder\DeepLinkingLaunchResponseBuilder: ~
+
+    OAT\Library\TaoTimerClient\Service\Decoder\ExceptionDrivenJsonDecoder: ~
+
+    OAT\Library\TaoTimerClient\DataMapper\Contract\TimerResponseDataMapperInterface:
+        class: OAT\Library\TaoTimerClient\DataMapper\TimerResponseDataMapper
+
+    OAT\Library\TaoTimerClient\Service\TimerServiceInterface:
+        class: OAT\Library\TaoTimerClient\Service\TimerService
+        arguments:
+            $baseUri: '%env(REAL_TIME_SERVICE_HOST)%'
+
+    OAT\Library\TaoTimerClient\Service\ProctoringAcsService:
+        arguments:
+            $baseUri: '%env(REAL_TIME_SERVICE_HOST)%'
+
+    http_handler:
+        class: callable
+        factory: [ 'Google\Auth\HttpHandler\HttpHandlerFactory', 'build' ]
+        arguments:
+            - '@GuzzleHttp\ClientInterface'
+
+    Google\Auth\Cache\SysVCacheItemPool: ~
+
+    Google\Cloud\Core\ServiceBuilder:
+        arguments:
+            - authHttpHandler: '@http_handler'
+              httpHandler: '@http_handler'
+
+    Google\Auth\Credentials\GCECredentials: ~
+
+    Google\Cloud\PubSub\PubSubClient:
+        factory: ['@Google\Cloud\Core\ServiceBuilder', 'pubsub']
+        arguments:
+            $config:
+                projectId: '%env(GOOGLE_CLOUD_PROJECT)%'
+                transport: 'grpc'
+
+    Google\Cloud\Storage\StorageClient:
+        factory: ['@Google\Cloud\Core\ServiceBuilder', 'storage']
+        arguments:
+            $config:
+                projectId: '%env(GOOGLE_CLOUD_PROJECT)%'
+                transport: 'grpc'
+
+    League\MimeTypeDetection\MimeTypeDetector:
+        class: League\MimeTypeDetection\ExtensionMimeTypeDetector
+
+    Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory: ~
+
+    OAT\Library\Lti1p3Proctoring\Service\Client\AcsServiceClient: ~
+
+    App\TestRunner\Service\RealTimeService:
+        class: App\TestRunner\Service\RealTimeService
+        arguments: ['%env(default::REAL_TIME_SERVICE_SOCKET_URL)%']
+
+    App\Repository\DeliveryRepository:
+      public: true
+
+    Elastic\Elasticsearch\Client:
+        factory: ['@OAT\Bundle\ElasticsearchDocumentManagerBundle\Factory\ElasticsearchClientFactory', 'create']
+
+    App\PlagiarismReport\Gateway\PlagiarismReportGateway:
+        arguments:
+            $reportUri: '%env(default::HBL_REPORT_URI)%'
+            $accessTokenUri: '%env(default::HBL_OAUTH2_URI)%'
+            $scope: '%env(default::HBL_OAUTH2_SCOPE)%'
+            $clientId: '%env(default::HBL_OAUTH2_CLIENT_ID)%'
+            $clientSecret: '%env(default::HBL_OAUTH2_CLIENT_SECRET)%'

@@ -1,0 +1,612 @@
+[
+    {
+        "id": "1",
+        "label": "Customer 1",
+        "tenants": [
+            {
+                "id": "1",
+                "customerId": "1",
+                "serviceType": "Construct",
+                "serviceUrls": ["http://customer1.com/construct/1"],
+                "label": "Customer 1 Construct",
+                "audience": "https://audience1.com/",
+                "lti1p0Credentials": [
+                    {
+                        "key": "aaa1",
+                        "secret": "aaa1",
+                        "roles": ["Learner", "ContentDeveloper"],
+                        "sourceId": "4"
+                    },
+                    {
+                        "key": "aaa2",
+                        "secret": "aaa2",
+                        "roles": ["Learner", "ContentDeveloper"],
+                        "sourceId": "4"
+                    }
+                ],
+                "lti1p3Credentials": [
+                    {
+                        "clientId": "client_id",
+                        "jwksUrl": "https://customer1.com/.well-known/jwks/set.json",
+                        "publicKey": "key content"
+                    }
+                ],
+                "oAuth2Credentials": [
+                    {
+                        "key": "bbb1",
+                        "secret": "bbb1",
+                        "roles": ["Learner", "ContentDeveloper"],
+                        "sourceId": "4"
+                    },
+                    {
+                        "key": "bbb2",
+                        "secret": "bbb2",
+                        "roles": ["Learner", "ContentDeveloper"],
+                        "sourceId": "4"
+                    }
+                ],
+                "preferences": {
+                    "some": "preference"
+                },
+                "deliver.provisioned_events": {
+                    "assessmentLog": {
+                        "proctorActions": ["*"],
+                        "systemActions": ["*"],
+                        "testTakerActions": ["*"],
+                    },
+                }
+            },
+            {
+                "id": "2",
+                "customerId": "1",
+                "serviceType": "Deliver",
+                "serviceUrls": ["http://customer1.com/deliver/1"],
+                "label": "Customer 1 Deliver 1",
+                "audience": "https://audience2.com/",
+                "oAuth2Credentials": [
+                    {
+                        "key": "ccc1",
+                        "secret": "ccc1",
+                        "roles": [
+                            "role1",
+                            "role2"
+                        ],
+                        "sourceId": "4"
+                    },
+                    {
+                        "key": "ccc2",
+                        "secret": "ccc2",
+                        "roles": [
+                            "role1",
+                            "role2"
+                        ],
+                        "sourceId": "4"
+                    }
+                ],
+                "preferences": {
+                    "some": "preference"
+                },
+                "testRunnerTheme": {
+                    "platform": [
+                        "platform"
+                    ],
+                    "testRunner": [
+                        "testRunner"
+                    ],
+                    "itemRunner": [
+                        "itemRunner"
+                    ],
+                    "default": "default"
+                },
+                "deliver.provisioned_events": {
+                    "assessmentLog": {
+                        "proctorActions": ["*"],
+                        "systemActions": ["*"],
+                        "testTakerActions": ["*"],
+                    },
+                }
+            },
+            {
+                "id": "3",
+                "customerId": "1",
+                "serviceType": "Deliver",
+                "serviceUrls": ["http://customer1.com/deliver/2"],
+                "label": "Customer 1 Deliver 2",
+                "audience": "https://audience3.com/",
+                "lti1p0Credentials": [
+                    {
+                        "key": "ddd1",
+                        "secret": "ddd1",
+                        "roles": [
+                            "role1",
+                            "role2"
+                        ],
+                        "sourceId": "4"
+                    },
+                    {
+                        "key": "ddd2",
+                        "secret": "ddd2",
+                        "roles": [
+                            "role1",
+                            "role2"
+                        ],
+                        "sourceId": "4"
+                    }
+                ],
+                "preferences": {
+                    "some": "preference"
+                },
+                "testRunnerTheme": {
+                    "platform": [
+                        "platform"
+                    ],
+                    "testRunner": [
+                        "testRunner"
+                    ],
+                    "itemRunner": [
+                        "itemRunner"
+                    ],
+                    "default": "default"
+                }
+            }
+        ]
+    },
+    {
+        "id": "2",
+        "label": "Customer 2",
+        "tenants": [
+            {
+                "id": "4",
+                "customerId": "2",
+                "serviceType": "Construct",
+                "serviceUrls": ["http://customer2.com/construct/1"],
+                "label": "Customer 2 Construct",
+                "audience": "https://audience4.com/",
+                "lti1p0Credentials": [
+                    {
+                        "key": "eee1",
+                        "secret": "eee1",
+                        "roles": [
+                            "role1",
+                            "role2"
+                        ],
+                        "sourceId": "1"
+                    },
+                    {
+                        "key": "eee2",
+                        "secret": "eee2",
+                        "roles": [
+                            "role1",
+                            "role2"
+                        ],
+                        "sourceId": "1"
+                    }
+                ],
+                "oAuth2Credentials": [
+                    {
+                        "key": "fff1",
+                        "secret": "fff1",
+                        "roles": [
+                            "role1",
+                            "role2"
+                        ],
+                        "sourceId": "1"
+                    },
+                    {
+                        "key": "fff2",
+                        "secret": "fff2",
+                        "roles": [
+                            "role1",
+                            "role2"
+                        ],
+                        "sourceId": "1"
+                    }
+                ],
+                "preferences": {
+                    "some": "preference"
+                }
+            },
+            {
+                "id": "5",
+                "customerId": "2",
+                "serviceType": "Deliver",
+                "serviceUrls": ["http://customer2.com/deliver/1"],
+                "label": "Customer 2 Deliver",
+                "audience": "https://audience5.com/",
+                "lti1p0Credentials": [
+                    {
+                        "key": "ggg1",
+                        "secret": "ggg1",
+                        "roles": [
+                            "role1",
+                            "role2"
+                        ],
+                        "sourceId": "1"
+                    },
+                    {
+                        "key": "ggg2",
+                        "secret": "ggg2",
+                        "roles": [
+                            "role1",
+                            "role2"
+                        ],
+                        "sourceId": "1"
+                    }
+                ],
+                "oAuth2Credentials": [
+                    {
+                        "key": "hhh1",
+                        "secret": "hhh1",
+                        "roles": [
+                            "role1",
+                            "role2"
+                        ],
+                        "sourceId": "1"
+                    },
+                    {
+                        "key": "hhh2",
+                        "secret": "hhh2",
+                        "roles": [
+                            "role1",
+                            "role2"
+                        ],
+                        "sourceId": "1"
+                    }
+                ],
+                "preferences": {
+                    "some": "preference"
+                },
+                "testRunnerTheme": {
+                    "platform": [
+                        "platform"
+                    ],
+                    "testRunner": [
+                        "testRunner"
+                    ],
+                    "itemRunner": [
+                        "itemRunner"
+                    ],
+                    "default": "default"
+                },
+                "deliver.provisioned_events": {
+                    "assessmentLog": {
+                        "proctorActions": ["*"],
+                        "systemActions": ["*"],
+                        "testTakerActions": ["*"],
+                    },
+                },
+                "testRunnerConfiguration": {
+                    "providers": {
+                        "runner": {
+                            "id": "qtinui",
+                            "module": "taoQtiNuiTest/runner/qti",
+                            "category": "runner"
+                        },
+                        "itemRunner": {
+                            "id": "qtinui",
+                            "module": "taoQtiNuiItem/runner/qti",
+                            "category": "runner"
+                        },
+                        "proxy": {
+                            "id": "actions-proxy",
+                            "module": "taoQtiNuiTest/runner/proxy/actionProxy",
+                            "category": "proxy"
+                        },
+                        "plugins": [{
+                            "id": "titlePlugin",
+                            "module": "taoQtiNuiTest/runner/plugins/content/title/plugin",
+                            "category": "content"
+                        }, {
+                            "id": "menuPanelPlugin",
+                            "module": "taoQtiNuiTest/runner/plugins/panel/menu/plugin",
+                            "category": "content"
+                        }, {
+                            "id": "jumpMenuPlugin",
+                            "module": "taoQtiNuiTest/runner/plugins/navigation/jumpMenu/plugin",
+                            "category": "content"
+                        }, {
+                            "id": "navigatorPlugin",
+                            "module": "taoQtiNuiTest/runner/plugins/navigation/navigator/plugin",
+                            "category": "content"
+                        }]
+                    },
+                    "reviewProviders": {
+                        "runner": {
+                            "id": "qtinui",
+                            "module": "taoQtiNuiTest/runner/qtiReview",
+                            "category": "runner"
+                        },
+                        "itemRunner": {
+                            "id": "qtinui",
+                            "module": "taoQtiNuiItem/runner/qti",
+                            "category": "runner"
+                        },
+                        "proxy": {
+                            "id": "actions-proxy",
+                            "module": "taoQtiNuiTest/runner/proxy/reviewProxy",
+                            "category": "proxy"
+                        },
+                        "plugins": [
+                            {
+                                "id": "titlePlugin",
+                                "module": "taoQtiNuiTest/runner/plugins/content/title/plugin",
+                                "category": "content"
+                            },
+                            {
+                                "id": "menuPanelPlugin",
+                                "module": "taoQtiNuiTest/runner/plugins/panel/menu/plugin",
+                                "category": "content"
+                            },
+                            {
+                                "id": "jumpMenuPlugin",
+                                "module": "taoQtiNuiTest/runner/plugins/navigation/jumpMenu/plugin",
+                                "category": "content"
+                            },
+                            {
+                                "id": "navigatorPlugin",
+                                "module": "taoQtiNuiTest/runner/plugins/navigation/navigator/plugin",
+                                "category": "content"
+                            }
+                        ]
+                    },
+                    "options": {
+                        "liteMode": false,
+                        "locale": "en-GB"
+                    }
+                }
+            },
+            {
+                "id": "6",
+                "customerId": "2",
+                "serviceType": "Deliver",
+                "serviceUrls": ["http://customer2.com/deliver/1"],
+                "label": "Customer 2 Deliver",
+                "audience": "https://audience5.com/",
+                "lti1p0Credentials": [
+                    {
+                        "key": "ggg3",
+                        "secret": "ggg3",
+                        "roles": [
+                            "role1",
+                            "role2"
+                        ],
+                        "sourceId": "1"
+                    },
+                    {
+                        "key": "ggg4",
+                        "secret": "ggg4",
+                        "roles": [
+                            "role1",
+                            "role2"
+                        ],
+                        "sourceId": "1"
+                    }
+                ],
+                "oAuth2Credentials": [
+                    {
+                        "key": "hhh3",
+                        "secret": "hhh3",
+                        "roles": [
+                            "role1",
+                            "role2"
+                        ],
+                        "sourceId": "1"
+                    },
+                    {
+                        "key": "hhh4",
+                        "secret": "hhh4",
+                        "roles": [
+                            "role1",
+                            "role2"
+                        ],
+                        "sourceId": "1"
+                    }
+                ],
+                "preferences": {
+                    "some": "preference"
+                },
+                "testRunnerTheme": {
+                    "platform": [
+                        "platform"
+                    ],
+                    "testRunner": [
+                        "testRunner"
+                    ],
+                    "itemRunner": [
+                        "itemRunner"
+                    ],
+                    "default": "default"
+                },
+                "deliver.provisioned_events": {
+                    "assessmentLog": {
+                        "proctorActions": ["*"],
+                        "systemActions": ["*"],
+                        "testTakerActions": ["*"],
+                    },
+                },
+                "testRunnerConfiguration": {
+                    "providers": {
+                        "runner": {
+                            "id": "qtinui",
+                            "module": "taoQtiNuiTest/runner/qti",
+                            "category": "runner"
+                        },
+                        "itemRunner": {
+                            "id": "qtinui",
+                            "module": "taoQtiNuiItem/runner/qti",
+                            "category": "runner"
+                        },
+                        "proxy": {
+                            "id": "actions-proxy",
+                            "module": "taoQtiNuiTest/runner/proxy/actionProxy",
+                            "category": "proxy"
+                        },
+                        "plugins": [{
+                            "id": "titlePlugin",
+                            "module": "taoQtiNuiTest/runner/plugins/content/title/plugin",
+                            "category": "content"
+                        }, {
+                            "id": "menuPanelPlugin",
+                            "module": "taoQtiNuiTest/runner/plugins/panel/menu/plugin",
+                            "category": "content"
+                        }, {
+                            "id": "jumpMenuPlugin",
+                            "module": "taoQtiNuiTest/runner/plugins/navigation/jumpMenu/plugin",
+                            "category": "content"
+                        }, {
+                            "id": "navigatorPlugin",
+                            "module": "taoQtiNuiTest/runner/plugins/navigation/navigator/plugin",
+                            "category": "content"
+                        }, {
+                            "id": "readAloud",
+                            "module": "taoQtiNuiTest/runner/plugins/tools/readAloud/plugin",
+                            "category": "tools"
+                        }]
+                    },
+                    "exportProviders": {
+                        "proxy": {
+                          "module": "taoQtiNuiTest/runner/proxy/actionProxy",
+                          "id": "actions-proxy",
+                          "category": "proxy"
+                        },
+                        "itemRunner": {
+                          "module": "taoQtiNuiItem/runner/qti",
+                          "id": "qtinui",
+                          "category": "runner"
+                        },
+                        "plugins": [
+                          {
+                            "module": "taoQtiNuiTest/runner/plugins/export/bookletExport/plugin",
+                            "id": "bookletExportPlugin",
+                            "category": "content"
+                          },
+                          {
+                            "module": "taoQtiNuiTest/runner/plugins/navigation/reviewNavigator/plugin",
+                            "id": "navigatorPlugin",
+                            "category": "content"
+                          }
+                        ],
+                        "runner": {
+                          "module": "taoQtiNuiTest/runner/qtiExport",
+                          "id": "qtinuiExport",
+                          "category": "runner"
+                        }
+                    },
+                    "reviewProviders": {
+                        "runner": {
+                            "id": "qtinui",
+                            "module": "taoQtiNuiTest/runner/qtiReview",
+                            "category": "runner"
+                        },
+                        "itemRunner": {
+                            "id": "qtinui",
+                            "module": "taoQtiNuiItem/runner/qti",
+                            "category": "runner"
+                        },
+                        "proxy": {
+                            "id": "actions-proxy",
+                            "module": "taoQtiNuiTest/runner/proxy/reviewProxy",
+                            "category": "proxy"
+                        },
+                        "plugins": [
+                            {
+                                "id": "titlePlugin",
+                                "module": "taoQtiNuiTest/runner/plugins/content/title/plugin",
+                                "category": "content"
+                            },
+                            {
+                                "id": "menuPanelPlugin",
+                                "module": "taoQtiNuiTest/runner/plugins/panel/menu/plugin",
+                                "category": "content"
+                            },
+                            {
+                                "id": "jumpMenuPlugin",
+                                "module": "taoQtiNuiTest/runner/plugins/navigation/jumpMenu/plugin",
+                                "category": "content"
+                            },
+                            {
+                                "id": "navigatorPlugin",
+                                "module": "taoQtiNuiTest/runner/plugins/navigation/navigator/plugin",
+                                "category": "content"
+                            }
+                        ]
+                    },
+                    "options": {
+                        "liteMode": false,
+                        "locale": "en-US"
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "id": "3",
+        "label": "Customer 3",
+        "tenants": [
+            {
+                "id": "lti1p3platform",
+                "customerId": "3",
+                "serviceType": "Platform",
+                "audience": "https://customer3.com/platform",
+                "serviceUrls": {
+                    "oidc_authentication_url": "https://customer3.com/platform/oidc-auth",
+                    "oauth2_access_token_url": "https://customer3.com/platform/access-token"
+                },
+                "label": "Test platform",
+                "lti1p3Credentials": [
+                    {
+                        "clientId": "client_id",
+                        "jwksUrl": "https://customer3.com/.well-known/jwks/platformSet.json",
+                        "publicKey": "key content"
+                    }
+                ],
+                "preferences": {
+                    "some": "preference"
+                }
+            },
+            {
+                "id": "lti1p3tool",
+                "customerId": "3",
+                "serviceType": "Tool",
+                "audience": "https://customer3.com/tool",
+                "serviceUrls": {
+                    "oidc_initiation_url": "https://customer3.com/tool/oidc-init",
+                    "launch_url": "https://customer3.com/api/v1/auth/launch-lti-1p3/",
+                    "deep_link_launch_url": "https://customer3.com/tool/deep-launch"
+                },
+                "label": "Test tool",
+                "lti1p3Credentials": [
+                    {
+                        "clientId": "client_id",
+                        "jwksUrl": "https://customer3.com/.well-known/jwks/toolSet.json",
+                        "publicKey": "key content"
+                    }
+                ],
+                "preferences": {
+                    "some": "preference"
+                }
+            },
+            {
+                "id": "lti1p3platformAuto",
+                "customerId": "3",
+                "serviceType": "Platform",
+                "audience": "platformAudience",
+                "serviceUrls": {
+                    "oidc_authentication_url": "https://customer3.com/platform/oidc-auth",
+                    "oauth2_access_token_url": "https://customer3.com/platform/access-token"
+                },
+                "label": "Test platform",
+                "lti1p3Credentials": [
+                    {
+                        "clientId": "registrationClientId",
+                        "jwksUrl": "https://customer3.com/.well-known/jwks/platformSet.json",
+                        "publicKey": "key content"
+                    }
+                ],
+                "preferences": {
+                    "some": "preference"
+                }
+            }
+        ]
+    }
+]

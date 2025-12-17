@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+test:
+  not:
+    available: Testas nepasiekiamas.
+    access: Neturite leidimo prisijungti prie šio testo.
+    found: Atsiprašome, negalime rasti jūsų testo.
+  cannot:
+    start: Atsiprašome, jūsų testas negali būti pradėtas.
+  relaunch:
+    contact:
+      administrator: "Please launch your test again or contact your administrator.\nIš naujo prisijunkite prie testo ar kreipkitės į savo administratorių."
+      test_administrator: Iš naujo prisijunkite prie testo ar kreipkitės į savo administratorių.
+contact:
+  administrator: Prašome kreiptis į testo administratorių.

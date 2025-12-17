@@ -1,0 +1,95 @@
+{
+  "assessmentResult": {
+    "contextSourcedId": "userId#BasicWithExternalScored#resultId#tenantId",
+    "userId": "userID",
+    "deliveryId": "BasicWithExternalScored",
+    "testResult": {
+      "datestamp": "2021-04-30T21:06:02.049819",
+      "identifier": "test_taker_result_id",
+      "outcomeVariable": [
+        {
+          "baseType": "float",
+          "cardinality": "single",
+          "identifier": "SCORE_TOTAL",
+          "value": "36"
+        },
+        {
+          "baseType": "float",
+          "cardinality": "single",
+          "identifier": "SCORE_TOTAL_WEIGHTED",
+          "value": "27.5"
+        },
+        {
+          "baseType": "float",
+          "cardinality": "single",
+          "identifier": "SCORE_RATIO",
+          "value": "0.47368421052632"
+        },
+        {
+          "baseType": "float",
+          "cardinality": "single",
+          "identifier": "SCORE_RATIO_WEIGHTED",
+          "value": "0.45833333333333"
+        }
+      ]
+    },
+    "itemResult": [
+      {
+        "datestamp": "2021-04-30T21:06:02.049819",
+        "identifier": "Item-Q01",
+        "sessionStatus": "final",
+        "outcomeVariable": [
+          {
+            "baseType": "string",
+            "cardinality": "single",
+            "identifier": "scoreStatus",
+            "value": "scored"
+          },
+          {
+            "baseType": "float",
+            "cardinality": "single",
+            "identifier": "MANUAL_SCORE",
+            "value": "2"
+          },
+          {
+            "baseType": "float",
+            "cardinality": "single",
+            "identifier": "SCORE",
+            "value": "2"
+          }
+        ]
+      },
+      {
+        "datestamp": "2021-04-30T21:06:02.049819",
+        "identifier": "Item-Q02",
+        "sessionStatus": "final",
+        "outcomeVariable": [
+          {
+            "baseType": "string",
+            "cardinality": "single",
+            "identifier": "scoreStatus",
+            "value": "scored"
+          },
+          {
+            "baseType": "float",
+            "cardinality": "single",
+            "identifier": "MANUAL_SCORE_1",
+            "value": "3"
+          },
+          {
+            "baseType": "float",
+            "cardinality": "single",
+            "identifier": "MANUAL_SCORE_2",
+            "value": "2"
+          },
+          {
+            "baseType": "float",
+            "cardinality": "single",
+            "identifier": "SCORE",
+            "value": "11"
+          }
+        ]
+      }
+    ]
+  }
+}

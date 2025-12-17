@@ -1,0 +1,121 @@
+{
+    "type": "qti",
+    "data": {
+        "identifier": "Q01",
+        "serial": "i5d7643202e2ff",
+        "qtiClass": "assessmentItem",
+        "attributes": {
+            "identifier": "Q01",
+            "title": "Attacker - Defender - 01",
+            "label": "",
+            "adaptive": false,
+            "timeDependent": false,
+            "toolName": "TAO",
+            "toolVersion": "NextGen",
+            "class": ""
+        },
+        "body": {
+            "serial": "i5d7643202e2fb",
+            "body": "\n\t\t{{i5d7643202e403}}\n\t",
+            "elements": {
+                "i5d7643202e403": {
+                    "serial": "i5d7643202e403",
+                    "qtiClass": "choiceInteraction",
+                    "attributes": {
+                        "responseIdentifier": "RESPONSE",
+                        "shuffle": false,
+                        "maxChoices": 1,
+                        "minChoices": 0,
+                        "id": "interaction"
+                    },
+                    "choices": {
+                        "i5d7643202e4bb": {
+                            "identifier": "immelman",
+                            "serial": "i5d7643202e4bb",
+                            "qtiClass": "simpleChoice",
+                            "attributes": {
+                                "identifier": "immelman",
+                                "fixed": false
+                            },
+                            "body": {
+                                "serial": "i5d7643202e4c9",
+                                "body": "Immelman",
+                                "elements": {}
+                            }
+                        },
+                        "i5d7643202e512": {
+                            "identifier": "barrel",
+                            "serial": "i5d7643202e512",
+                            "qtiClass": "simpleChoice",
+                            "attributes": {
+                                "identifier": "barrel",
+                                "fixed": false
+                            },
+                            "body": {
+                                "serial": "i5d7643202e51f",
+                                "body": "Displacement Roll",
+                                "elements": {}
+                            }
+                        },
+                        "i5d7643202e561": {
+                            "identifier": "pitch",
+                            "serial": "i5d7643202e561",
+                            "qtiClass": "simpleChoice",
+                            "attributes": {
+                                "identifier": "pitch",
+                                "fixed": false
+                            },
+                            "body": {
+                                "serial": "i5d7643202e56b",
+                                "body": "Pitchback",
+                                "elements": {}
+                            }
+                        }
+                    },
+                    "prompt": {
+                        "serial": "i5d7643202e448",
+                        "body": "<b>What is the name of the maneuver undertook by the <em>Attacker<\/em> figther?<\/b>",
+                        "elements": {}
+                    }
+                }
+            }
+        },
+        "namespaces": {
+            "": "http:\/\/www.imsglobal.org\/xsd\/imsqti_v2p1",
+            "xsi": "http:\/\/www.w3.org\/2001\/XMLSchema-instance"
+        },
+        "schemaLocations": {
+            "http:\/\/www.imsglobal.org\/xsd\/imsqti_v2p1": "http:\/\/www.imsglobal.org\/xsd\/qti\/qtiv2p1\/imsqti_v2p1.xsd"
+        },
+        "stylesheets": {},
+        "outcomes": {
+            "i5d7643202e398": {
+                "identifier": "SCORE",
+                "serial": "i5d7643202e398",
+                "qtiClass": "outcomeDeclaration",
+                "attributes": {
+                    "identifier": "SCORE",
+                    "cardinality": "single",
+                    "baseType": "float"
+                },
+                "defaultValue": "0"
+            }
+        },
+        "responses": {
+            "i5d7643202e35b": {
+                "identifier": "RESPONSE",
+                "serial": "i5d7643202e35b",
+                "qtiClass": "responseDeclaration",
+                "attributes": {
+                    "identifier": "RESPONSE",
+                    "cardinality": "single",
+                    "baseType": "identifier"
+                },
+                "defaultValue": []
+            }
+        },
+        "feedbacks": {},
+        "apipAccessibility": ""
+    },
+    "assets": []
+}

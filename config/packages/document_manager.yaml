@@ -1,0 +1,52 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+document_manager:
+  connections:
+    memory_connection:
+      driver: array
+      options: [ ]
+
+  handlers:
+    deliver_handler:
+      connection: memory_connection
+      classes:
+        App\Domain\Delivery\Model\Delivery:
+          storageName: '%env(DOCUMENT_MANAGER_TABLE_NAME_DELIVERIES)%'
+
+    battery_handler:
+      connection: memory_connection
+      classes:
+        App\Domain\Battery\Model\Battery:
+          storageName: '%env(DOCUMENT_MANAGER_TABLE_NAME_BATTERIES)%'
+
+    battery_distribution_handler:
+      connection: memory_connection
+      classes:
+        App\Domain\Battery\Model\BatteryDistribution:
+          storageName: '%env(DOCUMENT_MANAGER_TABLE_NAME_BATTERY_DISTRIBUTIONS)%'
+
+    delivery_execution_handler:
+      connection: memory_connection
+      classes:
+        App\Domain\DeliveryExecution\Model\DeliveryExecution:
+          storageName: '%env(DOCUMENT_MANAGER_TABLE_NAME_DELIVERY_EXECUTIONS)%'
+
+    delivery_execution_alias_handler:
+      connection: memory_connection
+      classes:
+        App\Domain\DeliveryExecution\Model\DeliveryExecutionAlias:
+          storageName: '%env(DOCUMENT_MANAGER_TABLE_NAME_DELIVERY_EXECUTIONS_ALIAS)%'
+
+    publication_handler:
+      connection: memory_connection
+      classes:
+        App\Domain\Publication\Model\Publication:
+          storageName: '%env(DOCUMENT_MANAGER_TABLE_NAME_PUBLICATIONS)%'
+
+    enrollment_handler:
+      connection: memory_connection
+      classes:
+        App\Domain\Enrollment\Model\Enrollment:
+          storageName: '%env(DOCUMENT_MANAGER_TABLE_NAME_ENROLLMENT)%'

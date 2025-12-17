@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+test:
+    not:
+        available: Tes tidak tersedia.
+        access: Anda tidak memiliki izin untuk mengakses tes ini.
+        found: Maaf, kami tidak dapat menemukan tes Anda.
+    cannot:
+        start: Maaf, kami tidak dapat memulai tes Anda.
+    relaunch:
+        contact:
+            administrator: Harap buka tes Anda lagi atau hubungi petugas.
+            test_administrator: Harap buka tes Anda lagi atau hubungi petugas tes.
+contact:
+    administrator: Harap hubungi petugas tes.

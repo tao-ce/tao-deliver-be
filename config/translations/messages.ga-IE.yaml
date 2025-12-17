@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+test:
+    not:
+        available: Níl an triail ar fáil.
+        access: Níl cead agat rochtain a fháil ar an triail seo.
+        found: Ár leithscéal, ní féidir linn do thriail a aimsiú.
+    cannot:
+        start: Ár leithscéal, ní féidir linn do thriail a thosú.
+    relaunch:
+        contact:
+            administrator: Lainseáil do thriail arís nó téigh i dteagmháil le riarthóir do thrialach, le do thoil.
+            test_administrator: Lainseáil do thriail arís nó téigh i dteagmháil le riarthóir do thrialach, le do thoil.
+contact:
+    administrator: Téigh i dteagmháil le riarthóir do thrialach.

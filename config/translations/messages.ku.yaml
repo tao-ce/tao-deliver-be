@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+test:
+    not:
+        available: Test berdest nîne.
+        access: Destûra we tune ku hûn bigihîjin vê testê.
+        found: Bibore, em nikarin testa we bibînin.
+    cannot:
+        start: Bibore, em nikarin testa we bidin destpêkirin.
+    relaunch:
+        contact:
+            administrator: Ji kerema xwe testa xwe ji nû ve bidin destpêkirin an bi rêveberê xwe re têkilî daynin.
+            test_administrator: Ji kerema xwe testa xwe dîsa bimeşînin an bi rêvebirê testa xwe re têkilî daynin.
+contact:
+    administrator: Ji kerema xwe bi rêvebirê testê re têkilî daynin.

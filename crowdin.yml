@@ -1,0 +1,19 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+"preserve_hierarchy": true
+
+"files":
+  - source: /config/translations/messages.en.yaml
+    translation: /config/translations/messages.%two_letters_code%.yaml
+    update_option: "update_as_unapproved"
+
+"pull_request_title": "Update translations from Crowdin"
+"pull_request_description": "This pull request updates translations from Crowdin"
+"pull_request_labels": ["l10n", "translations"]
+"pull_request_assignees": ["oat-github-bot", "wazelin"]
+"pull_request_reviewers": ["oat-github-bot", "poyuki", "kilatib", "wazelin", "be-delivery-express"]
+
+"commit_message": "chore: sync latest translations from Crowdin"
+"append_commit_message": false

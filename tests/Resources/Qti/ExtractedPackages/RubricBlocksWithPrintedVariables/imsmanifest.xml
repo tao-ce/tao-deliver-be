@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+
+SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+-->
+
+<manifest xmlns="http://www.imsglobal.org/xsd/imscp_v1p1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imscp_v1p1 http://www.imsglobal.org/xsd/qti/qtiv2p1/qtiv2p1_imscpv1p2_v1p0.xsd" identifier="QTI-MANIFEST-SUMSCORE">
+    <metadata>
+        <schema>QTIv2.1 Package</schema>
+        <schemaversion>1.0.0</schemaversion>
+    </metadata>	
+    <organizations/>
+	<resources>
+        <!-- Images used in this package are in the public domain. -->
+    	<resource identifier="Q01" type="imsqti_item_xmlv2p1" href="Q01/qti.xml">
+            <file href="Q01/qti.xml"/>
+            <file href="Q01/style.css"/>
+            <file href="Q01/animal.jpg"/>
+	    </resource>
+		<resource identifier="Q02" type="imsqti_item_xmlv2p1" href="Q02/qti.xml">
+            <file href="Q02/qti.xml"/>
+            <file href="Q02/style.css"/>
+            <file href="Q02/animal.jpg"/>
+		</resource>
+		<resource identifier="Q03" type="imsqti_item_xmlv2p1" href="Q03/qti.xml">
+            <file href="Q03/qti.xml"/>
+            <file href="Q03/style.css"/>
+            <file href="Q03/animal.jpg"/>
+		</resource>
+        <resource identifier="Q04" type="imsqti_item_xmlv2p1" href="Q04/qti.xml">
+            <file href="Q04/qti.xml"/>
+            <file href="Q04/style.css"/>
+            <file href="Q04/animal.jpg"/>
+		</resource>
+        <resource identifier="Q05" type="imsqti_item_xmlv2p1" href="Q05/qti.xml">
+            <file href="Q05/qti.xml"/>
+            <file href="Q05/style.css"/>
+            <file href="Q05/animal.jpg"/>
+		</resource>
+        <resource identifier="I01" type="imsqti_item_xmlv2p1" href="I01/qti.xml">
+            <file href="I01/qti.xml"/>
+		</resource>
+		<resource identifier="T01" type="imsqti_test_xmlv2p1" href="test.xml">
+			<file href="test.xml"/>
+			<dependency identifierref="Q01"/>
+			<dependency identifierref="Q02"/>
+			<dependency identifierref="Q03"/>
+            <dependency identifierref="Q04"/>
+            <dependency identifierref="Q05"/>
+            <dependency identifierref="I01"/>
+		</resource>
+	</resources>
+</manifest>

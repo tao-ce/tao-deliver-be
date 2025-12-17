@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+
+SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+-->
+
+<assessmentTest xmlns="http://www.imsglobal.org/xsd/imsqti_v2p2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" identifier="Test-2" title="Test 2" toolName="tao" toolVersion="3.4.0-sprint127" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqti_v2p2 http://www.imsglobal.org/xsd/qti/qtiv2p2/imsqti_v2p2p1.xsd">
+  <testPart identifier="testPart-1" navigationMode="linear" submissionMode="individual">
+    <itemSessionControl maxAttempts="0" showFeedback="false" allowReview="true" showSolution="false" allowComment="false" allowSkipping="true" validateResponses="false"/>
+    <assessmentSection identifier="assessmentSection-1" required="true" fixed="false" title="Section 1" visible="true" keepTogether="true">
+      <itemSessionControl maxAttempts="0" showFeedback="false" allowReview="true" showSolution="false" allowComment="false" allowSkipping="true" validateResponses="false"/>
+      <assessmentItemRef identifier="Q01-1" required="false" fixed="false" href="../../items/i5ea2c4f62fb332953388f32a131684fdfb/qti.xml">
+        <itemSessionControl maxAttempts="0" showFeedback="false" allowReview="true" showSolution="false" allowComment="false" allowSkipping="true" validateResponses="false"/>
+        <timeLimits allowLateSubmission="false"/>
+      </assessmentItemRef>
+    </assessmentSection>
+    <assessmentSection identifier="assessmentSection-2" required="false" fixed="false" title="Section 2" visible="false" keepTogether="true">
+      <itemSessionControl maxAttempts="0" showFeedback="false" allowReview="true" showSolution="false" allowComment="false" allowSkipping="true" validateResponses="false"/>
+      <assessmentItemRef identifier="Q01-2" required="false" fixed="false" href="../../items/i5ea2c4f62fb332953388f32a131684fdfb/qti.xml">
+        <itemSessionControl maxAttempts="0" showFeedback="false" allowReview="true" showSolution="false" allowComment="false" allowSkipping="true" validateResponses="false"/>
+        <timeLimits allowLateSubmission="false"/>
+      </assessmentItemRef>
+    </assessmentSection>
+  </testPart>
+</assessmentTest>

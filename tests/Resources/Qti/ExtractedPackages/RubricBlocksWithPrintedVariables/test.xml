@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+
+SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+-->
+
+<assessmentTest xmlns="http://www.imsglobal.org/xsd/imsqti_v2p1"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqti_v2p1  http://www.imsglobal.org/xsd/qti/qtiv2p1/imsqti_v2p1.xsd"
+    identifier="TestWithSumOfScoresRb" title="Linear Test with Sum of Scores (total displayed in rubric block)">
+    <outcomeDeclaration identifier="TOTAL_SCORE" cardinality="single" baseType="float"/>
+    <testPart navigationMode="linear" submissionMode="individual" identifier="TP01">
+        <itemSessionControl maxAttempts="0" allowSkipping="false"/>
+        <assessmentSection identifier="S01" title="Section 01" visible="true" required="true">
+		    <assessmentItemRef identifier="Q01" href="./Q01/qti.xml"/>
+		    <assessmentItemRef identifier="Q02" href="./Q02/qti.xml"/>
+		    <assessmentItemRef identifier="Q03" href="./Q03/qti.xml"/>
+            <assessmentItemRef identifier="Q04" href="./Q04/qti.xml"/>
+            <assessmentItemRef identifier="Q05" href="./Q05/qti.xml"/>
+        </assessmentSection>
+        <assessmentSection identifier="S02" title="End Section" visible="true" required="true">
+            <rubricBlock view="candidate">
+                Your score to the test is <strong><printedVariable identifier="TOTAL_SCORE" format="%d"/>/5</strong>.
+            </rubricBlock>
+            <assessmentItemRef identifier="I01" href="./I01/qti.xml"/>
+        </assessmentSection>
+    </testPart>
+    <outcomeProcessing>
+        <setOutcomeValue identifier="TOTAL_SCORE">
+            <sum>
+                <testVariables variableIdentifier="SCORE"/>
+            </sum>
+        </setOutcomeValue>
+    </outcomeProcessing>
+</assessmentTest>

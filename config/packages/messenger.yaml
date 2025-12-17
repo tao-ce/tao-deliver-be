@@ -1,0 +1,178 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+framework:
+    messenger:
+        default_bus: messenger.bus.default
+        serializer:
+            default_serializer: messenger.transport.symfony_serializer
+            symfony_serializer:
+                format: json
+                context: { }
+        failure_transport: failures
+        transports:
+            sync: 'sync://'
+            publication:
+                dsn: '%env(MESSENGER_PUBLICATIONS_TRANSPORT_DSN)%'
+                retry_strategy:
+                    max_retries: 5
+                    delay: 1000
+                    multiplier: 2
+            result-extraction:
+                dsn: '%env(MESSENGER_RESULTS_TRANSPORT_DSN)%'
+                retry_strategy:
+                    max_retries: 5
+                    delay: 1000
+                    multiplier: 2
+            datastore-result:
+                dsn: '%env(MESSENGER_DATA_STORE_RESULT_TRANSPORT_DSN)%'
+                retry_strategy:
+                    max_retries: 5
+                    delay: 1000
+                    multiplier: 2
+            datastore-delivery-execution-actions:
+                dsn: '%env(MESSENGER_DATA_STORE_DELIVERY_EXECUTION_ACTIONS_TRANSPORT_DSN)%'
+                retry_strategy:
+                    max_retries: 5
+                    delay: 1000
+                    multiplier: 2
+            delivery-execution:
+                dsn: '%env(MESSENGER_DELIVERY_EXECUTION_TRANSPORT_DSN)%'
+                retry_strategy:
+                    max_retries: 5
+                    delay: 1000
+                    multiplier: 2
+            delivery-execution-ui-events:
+                dsn: '%env(MESSENGER_DELIVERY_EXECUTION_UI_EVENT_TRANSPORT_DSN)%'
+                retry_strategy:
+                    max_retries: 5
+                    delay: 1000
+                    multiplier: 2
+            delivery-execution-acs-log:
+                dsn: '%env(MESSENGER_DELIVERY_EXECUTION_ACS_LOG_TRANSPORT_DSN)%'
+                retry_strategy:
+                    max_retries: 5
+                    delay: 1000
+                    multiplier: 2
+            delivery-execution-assessment-log:
+                dsn: '%env(MESSENGER_DELIVERY_EXECUTION_ASSESSMENT_LOG_TRANSPORT_DSN)%'
+                retry_strategy:
+                    max_retries: 5
+                    delay: 1000
+                    multiplier: 2
+            interactions:
+                dsn: '%env(MESSENGER_INTERACTIONS_TRANSPORT_DSN)%'
+                retry_strategy:
+                    max_retries: 5
+                    delay: 1000
+                    multiplier: 2
+            item-external-scoring:
+                dsn: '%env(MESSENGER_ITEM_EXTERNAL_SCORE_DSN)%'
+                serializer: messenger.transport.external_scoring_serializer
+                retry_strategy:
+                    max_retries: 5
+                    delay: 1000
+                    multiplier: 2
+            plagiarism-status:
+                dsn: '%env(MESSENGER_PLAGIARISM_STATUS_TRANSPORT_DSN)%'
+                serializer: messenger.transport.plagiarism_status
+                retry_strategy:
+                    max_retries: 5
+                    delay: 1000
+                    multiplier: 2
+            closure:
+                dsn: '%env(MESSENGER_CLOSURE_TRANSPORT_DSN)%'
+                retry_strategy:
+                    max_retries: 5
+                    delay: 1000
+                    multiplier: 2
+            failures:
+                dsn: '%env(MESSENGER_FAILURES_TRANSPORT_DSN)%'
+                retry_strategy:
+                    max_retries: 5
+                    delay: 1000
+                    multiplier: 2
+            scoring-submission:
+                dsn: '%env(MESSENGER_SCORING_SUBMISSION_TRANSPORT_DSN)%'
+                serializer: OAT\Bundle\GraderMessengerBridgeBundle\Messenger\Serializer\GraderMessengerSerializer
+                retry_strategy:
+                    max_retries: 5
+                    delay: 1000
+                    multiplier: 2
+            scoring-deliveries:
+                dsn: '%env(MESSENGER_SCORING_DELIVERIES_TRANSPORT_DSN)%'
+                serializer: OAT\Bundle\GraderMessengerBridgeBundle\Messenger\Serializer\GraderMessengerSerializer
+                retry_strategy:
+                    max_retries: 5
+                    delay: 1000
+                    multiplier: 2
+            clean-up:
+                dsn: '%env(MESSENGER_CLEAN_UP_TRANSPORT_DSN)%'
+                retry_strategy:
+                    max_retries: 5
+                    delay: 1000
+                    multiplier: 2
+            delivery-language-attachment:
+                dsn: '%env(MESSENGER_DELIVERY_LANGUAGE_ATTACHMENT_TRANSPORT_DSN)%'
+                retry_strategy:
+                    max_retries: 5
+                    delay: 1000
+                    multiplier: 2
+            delivery-language-attachment-succeeded:
+              dsn: '%env(MESSENGER_DELIVERY_LANGUAGE_ATTACHMENT_SUCCEEDED_TRANSPORT_DSN)%'
+              retry_strategy:
+                max_retries: 5
+                delay: 1000
+                multiplier: 2
+            delivery-language-attachment-failed:
+              dsn: '%env(MESSENGER_DELIVERY_LANGUAGE_ATTACHMENT_FAILED_TRANSPORT_DSN)%'
+              retry_strategy:
+                max_retries: 5
+                delay: 1000
+                multiplier: 2
+            delivery-publication-failed:
+              dsn: '%env(MESSENGER_DELIVERY_PUBLICATION_FAILED_TRANSPORT_DSN)%'
+              retry_strategy:
+                max_retries: 5
+                delay: 1000
+                multiplier: 2
+            image-response:
+              dsn: '%env(MESSENGER_IMAGE_RESPONSE_DSN)%'
+              serializer: messenger.transport.image_response
+              retry_strategy:
+                max_retries: 5
+                delay: 1000
+                multiplier: 2
+        routing:
+            App\Messenger\Message\PublicationMessage: publication
+            App\Messenger\Message\ResultExtractionMessage: result-extraction
+            App\Messenger\Message\InteractionMessage: interactions
+            App\Messenger\Message\DeliveryExecutionClosureMessage: closure
+            App\Messenger\Message\DataStoreDeliveryExecutionActionMessage: datastore-delivery-execution-actions
+            App\Messenger\Message\DeliveryExecutionUIEventMessage: delivery-execution-ui-events
+            App\Messenger\Message\DataStoreResultMessage: datastore-result
+            App\Messenger\Message\PlagiarismStatusMessage: plagiarism-status
+            App\Messenger\Message\QtiClassValueCleanUpMessage: clean-up
+            App\Messenger\Message\DeliveryExecutionItemExternalScoringMessage: item-external-scoring
+            OAT\Library\GraderMessengerBridge\Message\Event\DeliveryExecutionFinishedEvent: scoring-submission
+            App\Messenger\Message\DeliveryExecution\DeliveryExecutionCreatedMessage: delivery-execution
+            App\Messenger\Message\DeliveryExecution\DeliveryExecutionFinishedMessage: delivery-execution
+            App\Messenger\Message\DeliveryExecutionAcsLogMessage: delivery-execution-acs-log
+            OAT\Library\GraderMessengerBridge\Message\Event\DeliveryPublishedEvent: scoring-deliveries
+            App\Messenger\Message\DeliveryExecution\ExecutionControlMessage: delivery-execution-assessment-log
+            App\Messenger\Message\DeliveryExecution\ExecutionLogMessage: delivery-execution-assessment-log
+            App\Messenger\Message\DeliveryExecution\NormalizedExecutionControlMessage: delivery-execution-assessment-log
+            App\Messenger\Message\Delivery\SynchronousDeliveryLanguageAttachmentMessage: sync
+            App\Messenger\Message\Delivery\DeliveryLanguageAttachmentMessage: delivery-language-attachment
+            App\Messenger\Message\Delivery\DeliveryLanguageAttachmentSucceededMessage: delivery-language-attachment-succeeded
+            App\Messenger\Message\Delivery\DeliveryLanguageAttachmentFailedMessage: delivery-language-attachment-failed
+            App\Messenger\Message\Delivery\DeliveryPublicationFailedMessage: delivery-publication-failed
+            App\ImageResponse\Input\ImageResponse: image-response
+
+        buses:
+          messenger.bus.default:
+            default_middleware: allow_no_handlers
+            middleware:
+              - App\Messenger\Middleware\RemoveBusNameStampFromNonInternalMessagesMiddleware
+              - App\Messenger\Middleware\AssessmentLogMessageFilterMiddleware

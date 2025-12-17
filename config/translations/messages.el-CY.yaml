@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+test:
+    not:
+        available: Το δοκίμιο δεν είναι διαθέσιμο.
+        access: Δεν έχεις δικαίωμα πρόσβασης σε αυτό το δοκίμιο.
+        found: Λυπούμαστε, δεν μπορούμε να βρούμε το δοκίμιό σου.
+    cannot:
+        start: Λυπούμαστε, δεν μπορούμε να ξεκινήσουμε το δοκίμιό σου.
+    relaunch:
+        contact:
+            administrator: Ξεκίνα πάλι το δοκίμιο ή επικοινώνησε με τον/τη χορηγητή/χορηγήτρια.
+            test_administrator: Ξεκίνα πάλι το δοκίμιο ή επικοινώνησε με τον/τη χορηγητή/χορηγήτρια.
+contact:
+    administrator: Επικοινώνησε με τον/τη χορηγητή/χορηγήτρια.

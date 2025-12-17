@@ -1,0 +1,119 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+openapi: 3.0.1
+
+info:
+    version: v1
+    title: TAO Deliver
+    description: TAO Deliver API
+
+servers:
+    - url: http://localhost:8001
+      description: Local (docker)
+
+paths:
+    /api/v1/delivery-executions/encrypt:
+        post:
+            summary: Synchronize a delivery execution
+            description: Synchronize a delivery execution
+            operationId: SynchronizeAction
+            tags:
+                - Delivery Executions
+            responses:
+                200:
+                    description: All actions has been processed successfully
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/EncryptDeliveryExecutionActionResponse'
+                401:
+                    $ref: '../api_v1.yml#/components/responses/UnauthorizedResponse'
+                500:
+                    $ref: '../api_v1.yml#/components/responses/InternalServerErrorResponse'
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/EncryptDeliveryExecutionActionRequest'
+
+components:
+    schemas:
+        EncryptDeliveryExecutionActionRequest:
+            type: object
+            required:
+                - encryptionKey
+                - deliveryExecutionId
+            properties:
+                encryptionKey:
+                    type: string
+                deliveryExecutionId:
+                    type: string
+        EncryptDeliveryExecutionActionResponse:
+            type: object
+            required:
+                - deliveryExecutionId
+                - ltiLaunchParameters
+                - qtiSdkEncodedTestSession
+                - extraStateData
+                - status
+                - startedAt
+                - finishedAt
+                - closeAt
+                - updatedAt
+            properties:
+                deliveryExecutionId:
+                    type: string
+                ltiLaunchParameters:
+                    type: object
+                qtiSdkEncodedTestSession:
+                    type: string
+                extraStateData:
+                    type: object
+                    properties:
+                        flaggedItems:
+                            type: object
+                        comments:
+                            type: object
+                        traceData:
+                            type: object
+                        toolStates:
+                            type: object
+                        itemStates:
+                            type: object
+                        temporaryItemStates:
+                            type: object
+                        plagiarismReports:
+                            type: object
+                        durationStorage:
+                            type: object
+                        externalTimerDefinition:
+                            type: object
+                        externalScoredItems:
+                            type: object
+                status:
+                    type: string
+                    enum:
+                        - initial
+                        - interacting
+                        - suspended
+                        - closed
+                        - canceled
+                        - terminated
+                startedAt:
+                    type: string
+                    format: date-time
+                finishedAt:
+                    type: string
+                    nullable: true
+                    format: date-time
+                closeAt:
+                    type: string
+                    nullable: true
+                    format: date-time
+                updatedAt:
+                    type: string
+                    nullable: true
+                    format: date-time

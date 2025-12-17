@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+
+SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+-->
+
+<assessmentItem xmlns="http://www.imsglobal.org/xsd/imsqti_v2p1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqti_v2p1  http://www.imsglobal.org/xsd/qti/qtiv2p1/imsqti_v2p1.xsd"
+	identifier="Q04" title="African Wildlife 04" adaptive="false" timeDependent="false">
+	<responseDeclaration identifier="RESPONSE" cardinality="single" baseType="identifier">
+		<correctResponse>
+			<value>crocodile</value>
+		</correctResponse>
+	</responseDeclaration>
+	<outcomeDeclaration identifier="SCORE" cardinality="single" baseType="float">
+		<defaultValue>
+			<value>0</value>
+		</defaultValue>
+	</outcomeDeclaration>
+    <stylesheet href="style.css" type="text/css"/>
+	<itemBody>
+        <h2>African Wildlife - Question 4</h2>
+        <div id="image">
+            <img src="animal.jpg" alt="An animal"/>
+        </div>
+		<choiceInteraction id="interaction" responseIdentifier="RESPONSE" shuffle="true" maxChoices="1">
+			<prompt><strong>What is the name of the animal above?</strong></prompt>
+			<simpleChoice identifier="crocodile">Crocodile</simpleChoice>
+			<simpleChoice identifier="snake">Snake</simpleChoice>
+			<simpleChoice identifier="kangaroo">Kangaroo</simpleChoice>
+		</choiceInteraction>
+	</itemBody>
+	<responseProcessing template="http://www.imsglobal.org/question/qti_v2p1/rptemplates/match_correct"/>
+</assessmentItem>

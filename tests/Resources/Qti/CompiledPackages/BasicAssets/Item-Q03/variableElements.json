@@ -1,0 +1,17 @@
+{
+    "i5d70b7b0475e6": {
+        "mapping": [],
+        "areaMapping": [],
+        "howMatch": "no_response_processing",
+        "correctResponses": [],
+        "defaultValue": [],
+        "mappingAttributes": {
+            "defaultValue": 0
+        },
+        "feedbackRules": {}
+    },
+    "i5d70b7b047848": {
+        "processingType": "templateDriven",
+        "responseRules": []
+    }
+}

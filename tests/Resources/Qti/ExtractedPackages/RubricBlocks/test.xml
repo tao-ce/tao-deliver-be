@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+
+SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+-->
+
+<assessmentTest xmlns="http://www.imsglobal.org/xsd/imsqti_v2p1"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqti_v2p1  http://www.imsglobal.org/xsd/qti/qtiv2p1/imsqti_v2p1.xsd"
+    identifier="testRubricBlocksStylesheetsImages" title="RubricBlocks with Stylesheets and Images Test">
+    <testPart navigationMode="linear" submissionMode="individual" identifier="TP01">
+        <itemSessionControl maxAttempts="0" allowSkipping="true"/>
+        <assessmentSection identifier="S01" title="Miscellaneous" visible="true">
+		<rubricBlock view="candidate">
+			<div>
+				<img src="img/dogfight.png" alt="Naval Air Training Command Basic Fighter Maneuvers"/>
+				<p>Extract of <em>United States Navy - Naval Air Training Command (NAS Corpus Christi, Texas) Flight training instruction manual</em>.</p>
+			</div>
+			<stylesheet href="stylesheets/dogfight.css" type="text/css" media="screen"/>
+		</rubricBlock>
+
+		<assessmentItemRef identifier="Q01" href="./Q01/qti.xml" category="misc"/>
+		<assessmentItemRef identifier="Q02" href="./Q02/qti.xml" category="misc"/>
+        </assessmentSection>
+    </testPart>
+</assessmentTest>

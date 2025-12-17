@@ -1,0 +1,12 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+monolog:
+  handlers:
+    system:
+      path: '%kernel.logs_dir%/%kernel.environment%/system.log'
+    audit_platform:
+      path: '%kernel.logs_dir%/%kernel.environment%/audit_platform.log'
+    audit_delivery_execution:
+      path: '%kernel.logs_dir%/%kernel.environment%/audit_delivery_execution.log'

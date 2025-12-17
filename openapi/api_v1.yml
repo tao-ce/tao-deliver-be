@@ -1,0 +1,2299 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+openapi: 3.0.1
+
+info:
+  version: v1
+  title: TAO Deliver
+  description: TAO Deliver API
+
+servers:
+  - url: https://deliver.docker.localhost
+    description: Local (Nextgen Stack)
+
+paths:
+  /api/v1/auth/launch-lti-1p3:
+    post:
+      summary: Process LTI 1.3 request endpoint
+      description: Process LTI 1.3 request, generation of new access and refresh tokens based on provided data and redirect to the target URL
+      operationId: LaunchLti1p3Action
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/signed-exchange:
+            schema:
+              type: object
+              properties:
+                state:
+                  type: string
+                id_token:
+                  type: string
+              required:
+                - id_token
+      responses:
+        302:
+          description: Success redirect response with new generated `accessToken`, `refreshToken` and `deliveryExecutionId` as query parameters of the target URL.
+          headers:
+            Location:
+              description: Target URL for redirection
+              schema:
+                type: string
+        400:
+          $ref: '#/components/responses/BadRequestResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+    get:
+      summary: Process LTI 1.3 request endpoint
+      description: Process LTI 1.3 request, generation of new access and refresh tokens based on provided data and redirect to the target URL
+      operationId: LaunchLti1p3GetAction
+      tags:
+        - Authentication
+      parameters:
+        - in: query
+          name: state
+          required: false
+          schema:
+            type: string
+          description: OAuth 2.0 state value
+        - in: query
+          name: id_token
+          required: true
+          schema:
+            type: string
+          description: The LTI 1.3 signed parameters
+      responses:
+        302:
+          description: Success redirect response with new generated `accessToken`, `refreshToken` and `deliveryExecutionId` as query parameters of the target URL.
+          headers:
+            Location:
+              description: Target URL for redirection
+              schema:
+                type: string
+        400:
+          $ref: '#/components/responses/BadRequestResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+  /api/v1/auth/launch-lti-1p3-battery:
+    post:
+      summary: Process LTI 1.3 request endpoint for Test Battery
+      description: Process LTI 1.3 request, generation of new access and refresh tokens based on provided data and redirect to the target URL
+      operationId: LaunchLti1p3Action
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/signed-exchange:
+            schema:
+              type: object
+              properties:
+                state:
+                  type: string
+                id_token:
+                  type: string
+              required:
+                - id_token
+      responses:
+        302:
+          description: Success redirect response with new generated `accessToken`, `refreshToken` and `deliveryExecutionId` as query parameters of the target URL.
+          headers:
+            Location:
+              description: Target URL for redirection
+              schema:
+                type: string
+        400:
+          $ref: '#/components/responses/BadRequestResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+    get:
+      summary: Process LTI 1.3 request endpoint for Test Battery
+      description: Process LTI 1.3 request, generation of new access and refresh tokens based on provided data and redirect to the target URL
+      operationId: LaunchLti1p3GetAction
+      tags:
+        - Authentication
+      parameters:
+        - in: query
+          name: state
+          required: false
+          schema:
+            type: string
+          description: OAuth 2.0 state value
+        - in: query
+          name: id_token
+          required: true
+          schema:
+            type: string
+          description: The LTI 1.3 signed parameters
+      responses:
+        302:
+          description: Success redirect response with new generated `accessToken`, `refreshToken` and `deliveryExecutionId` as query parameters of the target URL.
+          headers:
+            Location:
+              description: Target URL for redirection
+              schema:
+                type: string
+        400:
+          $ref: '#/components/responses/BadRequestResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+  /api/v1/auth/launch-lti-1p3/{id}:
+    post:
+      summary: Process LTI 1.3 request endpoint
+      description: Process LTI 1.3 request, generation of new access and refresh tokens based on provided data and redirect to the target URL
+      operationId: LaunchLti1p3Action
+      deprecated: true
+      tags:
+        - Authentication
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The Delivery ID
+      requestBody:
+        required: true
+        content:
+          application/signed-exchange:
+            schema:
+              type: object
+              properties:
+                state:
+                  type: string
+                id_token:
+                  type: string
+              required:
+                - id_token
+      responses:
+        302:
+          description: Success redirect response with new generated `accessToken`, `refreshToken` and `deliveryExecutionId` as query parameters of the target URL.
+          headers:
+            Location:
+              description: Target URL for redirection
+              schema:
+                type: string
+        400:
+          $ref: '#/components/responses/BadRequestResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+    get:
+      summary: Process LTI 1.3 request endpoint
+      description: Process LTI 1.3 request, generation of new access and refresh tokens based on provided data and redirect to the target URL
+      operationId: LaunchLti1p3GetAction
+      deprecated: true
+      tags:
+        - Authentication
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The Delivery ID
+        - in: query
+          name: state
+          required: false
+          schema:
+            type: string
+          description: OAuth 2.0 state value
+        - in: query
+          name: id_token
+          required: true
+          schema:
+            type: string
+          description: The LTI 1.3 signed parameters
+      responses:
+        302:
+          description: Success redirect response with new generated `accessToken`, `refreshToken` and `deliveryExecutionId` as query parameters of the target URL.
+          headers:
+            Location:
+              description: Target URL for redirection
+              schema:
+                type: string
+        400:
+          $ref: '#/components/responses/BadRequestResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+  /api/v1/lti/deep-links:
+    get:
+      summary: LTI 1.3 Deep Linking endpoint
+      description: LTI 1.3 Deep Linking endpoint that redirects the user to the Deep Linking frontend after successful request validation
+      operationId: GetDeepLinksAction
+      tags:
+        - LTI Deep Linking
+      responses:
+        302:
+          description: User get redirected to Deep Linking Frontend, or to the Deep Linking Return URL in case of error
+        400:
+          $ref: '#/components/responses/BadRequestResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+    post:
+      summary: LTI 1.3 Deep Linking endpoint
+      description: LTI 1.3 Deep Linking endpoint that redirects the user to the Deep Linking frontend after successful request validation
+      operationId: GetDeepLinksAction
+      tags:
+        - LTI Deep Linking
+      responses:
+        302:
+          description: User get redirected to Deep Linking Frontend, or to the Deep Linking Return URL in case of error
+        400:
+          $ref: '#/components/responses/BadRequestResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+  /api/v1/lti/deep-links/submit:
+    post:
+      summary: LTI 1.3 Deep Linking endpoint to submit resources
+      description: LTI 1.3 Deep Linking endpoint that returns an url of LTI Platform where the user needs to get redirect after successful request validation
+      operationId: SubmitDeepLinksAction
+      tags:
+        - LTI Deep Linking
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                deliveries:
+                  type: array
+                  items:
+                    type: string
+                batteries:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                    description: Url where the user get redirected to with the received LtiResourceLinks
+        400:
+          $ref: '#/components/responses/BadRequestResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+  /api/v1/lti/deep-links/deliveries:
+    get:
+      summary: LTI 1.3 Deep Linking endpoint to fetch deliveries
+      description: LTI 1.3 Deep Linking endpoint that returns deliveries for the given tenant
+      operationId: GetDeliveriesAction
+      tags:
+        - LTI Deep Linking
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: The ID of the delivery
+                        name:
+                          type: string
+                          description: The name of the delivery
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+  /api/v1/lti/deep-links/batteries:
+    get:
+      summary: LTI 1.3 Deep Linking endpoint to fetch batteries
+      description: LTI 1.3 Deep Linking endpoint that returns batteries for the given tenant
+      operationId: GetBatteriesAction
+      tags:
+        - LTI Deep Linking
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: The ID of the battery
+                        name:
+                          type: string
+                          description: The name of the battery
+                        nrOfDeliveries:
+                          type: integer
+                          description: The number of deliveries assigned to this battery
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+  /api/v1/auth/refresh-tokens:
+    post:
+      summary: Refresh token endpoint
+      description: Generates a new access token from provided refresh token
+      operationId: RefreshTokenAction
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken:
+                  type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshTokenResponse'
+        400:
+          $ref: '#/components/responses/BadRequestResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        405:
+          $ref: '#/components/responses/MethodNotAllowedResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+  /api/v1/publications:
+    post:
+      summary: Create publication
+      security:
+        - oAuth2ClientCredentials: []
+      description: Publication creation based on a package, a configuration and a tenantId
+      operationId: CreatePublicationAction
+      tags:
+        - Publications
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                package:
+                  type: string
+                  format: base64
+                packageRef:
+                  type: string
+                tenantId:
+                  type: string
+                configuration:
+                  $ref: '#/components/schemas/Configuration'
+      responses:
+        202:
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatePublicationResponse'
+        400:
+          $ref: '#/components/responses/BadRequestResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+  /api/v1/publications/{id}:
+    get:
+      summary: Get publication by ID
+      security:
+        - oAuth2ClientCredentials: []
+      description: Finds a publication by provided ID and responses a JSON representation
+      operationId: GetPublicationAction
+      tags:
+        - Publications
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The publication ID
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPublicationResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+  /api/v1/deliveries/{id}:
+    get:
+      summary: Get delivery by ID
+      security:
+        - oAuth2ClientCredentials: []
+      description: Finds a delivery by provided ID and responses a JSON representation
+      operationId: GetDeliveryAction
+      tags:
+        - Deliveries
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The delivery ID
+        - in: query
+          name: version
+          required: false
+          schema:
+            type: string
+          description: The delivery configuration version
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDeliveryResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+    patch:
+      summary: Update delivery by ID
+      security:
+        - oAuth2ClientCredentials: []
+      description: Partially updates a delivery
+      operationId: UpdateDeliveryAction
+      tags:
+        - Deliveries
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The delivery ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                configuration:
+                  $ref: '#/components/schemas/Configuration'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDeliveryResponse'
+        400:
+          $ref: '#/components/responses/BadRequestResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+    delete:
+      summary: Delete delivery
+      security:
+        - oAuth2ClientCredentials: []
+      description: Delete delivery by provided delivery id
+      operationId: DeleteDelivery
+      tags:
+        - Deliveries
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The delivery ID
+      responses:
+        204:
+          description: delivery deleted
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+  /api/v1/deliveries/{id}/localization/{locale}:
+    post:
+      summary: Attach locale to deliveries
+      security:
+        - oAuth2ClientCredentials: []
+      description: Attach new locales to the existing delivery
+      operationId: AttachLanguageToDeliveryAction
+      tags:
+        - Deliveries
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The delivery ID
+        - in: path
+          name: locale
+          required: true
+          schema:
+            type: string
+          description: The locale to be attached to the delivery
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDeliveryResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+  /api/v1/deliveries/{id}/clone-data:
+    put:
+      summary: Clone the Delivery data into a Draft
+      security:
+        - oAuth2ClientCredentials: []
+      description: Clones a given Delivery data and adds a linked editable draft ID to the Delivery
+      operationId: CloneDeliveryDataAction
+      tags:
+        - Deliveries
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The delivery ID
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDeliveryResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+  /api/v1/deliveries/{id}/publish-clone:
+    post:
+      summary: Publish a cloned Delivery draft
+      security:
+        - oAuth2ClientCredentials: []
+      description: Publishes a cloned Delivery draft making it a proper functioning Delivery
+      operationId: PublishDeliveryCloneAction
+      tags:
+        - Deliveries
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The delivery ID
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDeliveryResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+  /api/v1/deliveries/{id}/statistics:
+    get:
+      summary: Get delivery statistics by ID
+      security:
+        - oAuth2ClientCredentials: []
+      description: Returns a specific delivery statistics
+      operationId: GetDeliveryStatisticsAction
+      tags:
+        - Deliveries
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The delivery ID
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDeliveryStatisticsResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+  /api/v1/deliveries:
+    get:
+      summary: Get list of deliveries
+      security:
+        - oAuth2ClientCredentials: []
+      description: Finds delivery by tenantId found based on OAuth and responses a JSON representation
+      operationId: GetDeliveryListAction
+      tags:
+        - Deliveries
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDeliveryListResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+  /api/v1/delivery-executions/{id}/configuration:
+    get:
+      summary: Get delivery configuration
+      description: Responses the configuration of delivery which belongs to a specific delivery execution
+      operationId: GetDeliveryExecutionConfigurationAction
+      tags:
+        - Delivery Executions
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The delivery execution ID
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDeliveryExecutionConfigurationResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+  /api/v1/delivery-executions/{id}/scoring/inline-comment:
+    put:
+      summary: Store Review Inline comment for Delivery Execution
+      description: Store Review Inline comment for Delivery Execution
+      operationId: SetInlineCommentAction
+      tags:
+        - Delivery Executions
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The delivery execution ID
+      requestBody:
+        description: Store comment for review mode in item
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                itemId:
+                  type: string
+                comment:
+                  type: object
+                  description: Any object values
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                properties:
+                  success:
+                    type: boolean
+        400:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+  /api/v1/delivery-executions/{id}/log:
+    post:
+      summary: Store Delivery Execution log
+      description: Store technical log with given reason
+      operationId: LogAction
+      tags:
+        - Delivery Executions
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The delivery execution ID
+      requestBody:
+        description: Log message data
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                reason:
+                  type: string
+                issuer:
+                  type: string
+                  description: >
+                    Possible values:
+                      * deliver-fe
+                      * realtime
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                properties:
+                  success:
+                    type: boolean
+        400:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+  /api/v1/delivery-executions/{id}/attachments:
+    post:
+      summary: Provide possibility to get upload url for delivery execution
+      description: Provide possibility to get upload url for delivery execution
+      tags:
+        - Delivery Executions
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The delivery execution ID
+        - in: query
+          name: item_id
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: response_id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: We could generate upload and download url for file successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttachmentsActionResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+  /api/v1/delivery-executions/{id}/actions:
+    post:
+      summary: Process delivery execution actions
+      description: Process delivery execution actions
+      operationId: ProcessActionsAction
+      tags:
+        - Delivery Executions
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The delivery execution ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                channel:
+                  type: string
+                message:
+                  properties:
+                    actions:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Action'
+      responses:
+        200:
+          description: All actions has been processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessActionsActionResponse'
+        207:
+          description: Not all actions has been processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessActionsActionResponse'
+        400:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+  /api/v1/init-items/{id}:
+    get:
+      summary: Fetch static item data
+      description: Allows to fetch just the static part of the item data, excluding any item states
+      operationId: GetInitItems
+      tags:
+        - item
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The Delivery ID
+        - in: query
+          name: itemId[]
+          required: true
+          schema:
+            type: array
+      responses:
+        200:
+          description: All actions has been processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessActionsActionResponse'
+        207:
+          description: Not all actions has been processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessActionsActionResponse'
+        400:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+  /api/v1/delivery-executions/{id}/upload:
+    post:
+      summary: Upload file for delivery execution
+      description: Upload file for delivery execution
+      operationId: UploadFileAction
+      tags:
+        - Delivery Executions
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The delivery execution ID
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [ 'itemIdentifier', 'responseIdentifier', 'attempt', 'hash', 'file' ]
+              properties:
+                itemIdentifier:
+                  type: string
+                  description: Item identifier
+                responseIdentifier:
+                  type: string
+                  description: Response identifer
+                attempt:
+                  type: integer
+                  description: Attempt number
+                hash:
+                  type: string
+                  description: SHA-256 hash of uploaded file
+                file:
+                  type: string
+                  format: binary
+                  description: File contents
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadFileActionResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  /api/v1/delivery-executions/sync:
+    post:
+      summary: Synchronize a delivery execution
+      description: Synchronize a delivery execution
+      operationId: SynchronizeAction
+      tags:
+        - Delivery Executions
+      responses:
+        201:
+          description: Success
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SynchronizeDeliveryExecutionActionRequest'
+
+  /api/v1/delivery-executions/{id}/locale:
+    put:
+      summary: Set the locale for a delivery execution
+      security:
+        - oAuth2ClientCredentials: []
+      description: The locale can only be set if it is currently null. The locale must be among the delivery's supported locales.
+      operationId: SetLocaleAction
+      tags:
+        - Delivery Executions
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The delivery execution ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                locale:
+                  type: string
+                  description: The locale to set for the delivery execution
+              required:
+                - locale
+      responses:
+        '200':
+          description: Locale set successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Locale set successfully.
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  /api/v1/battery-distributions/{batteryDistributionId}/locale:
+    put:
+      summary: Set the locale for a battery distribution
+      security:
+        - oAuth2ClientCredentials: [ ]
+      description: The locale can only be set if it is currently null. The locale must be among the delivery's supported locales.
+      operationId: AssignLocaleToBatteryDistributionAction
+      tags:
+        - Batteries
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The battery distribution ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                locale:
+                  type: string
+                  description: The locale to set for the battery distribution
+              required:
+                - locale
+      responses:
+        '200':
+          description: Locale set successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Locale set successfully.
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  /api/v1/delivery-executions/{id}/results:
+    get:
+      summary: Get Result Action by a delivery execution ID
+      security:
+        - oAuth2ClientCredentials: []
+      description: Get Result by a delivery execution ID Action
+      operationId: GetResultAction
+      tags:
+        - Results
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The delivery execution ID or a platform-sourced result ID
+      responses:
+        200:
+          description: Success
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ResultActionResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+  /api/v1/logs:
+    post:
+      summary: Logs the received messages
+      description: Expects an array of log objects and log them in the defined channels
+      operationId: CreateLogsAction
+      tags:
+        - Logs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLogActionRequest'
+      responses:
+        204:
+          description: The log got saved successfully
+        400:
+          $ref: '#/components/responses/BadRequestResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+  /api/v1/asset:
+    get:
+      tags:
+        - Asset
+      summary: Get Asset
+      description: Get Asset by signed URL
+      operationId: GetAssetAction
+      parameters:
+        - name: path
+          in: query
+          description: 'The path for the requested asset'
+          required: true
+          schema:
+            type: string
+            example: f70340df-c197-48e1-82aa-ffffb821fb57/planeStrategy.png
+        - name: timestamp
+          in: query
+          description: 'unix timestamp'
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 1567005688
+        - name: signature
+          in: query
+          description: 'The URL signature'
+          required: true
+          schema:
+            type: string
+            example: 3e8f926e7cc748520c2e8e6d4fd177028291b1f153da45fd8162f1968c9619dd
+      responses:
+        200:
+          description: File Content according to the given requested resource
+        206:
+          description: File Partial Content according to the given requested resource
+        400:
+          $ref: '#/components/responses/BadRequestResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+        416:
+          $ref: '#/components/responses/RangeNotSatisfiable'
+        422:
+          $ref: '#/components/responses/UnprocessableEntityResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+  /api/v1/download-asset:
+    get:
+      tags:
+        - Asset
+      summary: Download asset file
+      description: Download the asset file from the given path
+      operationId: DownloadAssetAction
+      parameters:
+        - name: path
+          in: query
+          description: 'The path for the requested asset'
+          required: true
+          schema:
+            type: string
+            example: deliveryId/item-1/RESPONSE/1/document.doc
+        - name: timestamp
+          in: query
+          description: 'unix timestamp'
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 1567005688
+        - name: signature
+          in: query
+          description: 'The URL signature'
+          required: true
+          schema:
+            type: string
+            example: 3e8f926e7cc748520c2e8e6d4fd177028291b1f153da45fd8162f1968c9619dd
+      responses:
+        200:
+          description: File Content according to the given requested resource path
+        206:
+          description: File Partial Content according to the given requested resource path
+        400:
+          $ref: '#/components/responses/BadRequestResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+        416:
+          $ref: '#/components/responses/RangeNotSatisfiable'
+        422:
+          $ref: '#/components/responses/UnprocessableEntityResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  /api/v1/proctoring/external/assessment-control/{alias}:
+    post:
+      tags:
+        - Proctoring
+        - Assessment Control
+      summary: Assessment Control endpoint
+      description: Endpoint for control assessment process
+      operationId: AssessmentControlAction
+      parameters:
+        - name: alias
+          in: path
+          description: The alias of the delivery execution id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssessmentControlRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/vnd.ims.lti-ap.v1.control+json:
+              schema:
+                $ref: '#/components/schemas/AssessmentControlResultResponse'
+        400:
+          $ref: '#/components/responses/BadRequestResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+  /api/v1/flat-test-map/{id}:
+    get:
+      security:
+        - oAuth2ClientCredentials: []
+      tags:
+        - Test Map
+      summary: Get Flat Test Map
+      description: Generates a static flat assessment map based on a delivery and allows to optionally filter out certain items
+      operationId: GetFlatTestMapAction
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 'Delivery ID'
+        - name: locale
+          in: query
+          required: false
+          schema:
+            default: ''
+            type: string
+          description: 'Locale, required for Deliveries with localized content'
+        - name: includeOnlyInteraction[]
+          description: 'Filters out items that have interactions other than the ones specified'
+          in: query
+          required: false
+          schema:
+            default:
+              - extendedTextInteraction
+            type: array
+            items:
+              type: string
+        - name: includeOnlyFormat[]
+          description: 'Filters out items that have formats other than the ones specified'
+          in: query
+          required: false
+          schema:
+            default:
+              - xhtml
+            type: array
+            items:
+              type: string
+        - name: allowMultipleResponseVariables
+          description: '(Dis)allows multiple response variables(interactions) for the same item'
+          in: query
+          required: false
+          schema:
+            default: false
+            type: boolean
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetFlatTestMapResponse'
+        400:
+          $ref: '#/components/responses/BadRequestResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
+components:
+  securitySchemes:
+    oAuth2ClientCredentials:
+      type: oauth2
+      description: Use `devkit-deliver-be` and `client-secret` as credentials on Nextgen Stack
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth-server.docker.localhost/v1/oauth2/tokens
+  schemas:
+    Action:
+      type: object
+      required:
+        - name
+        - id
+      properties:
+        name:
+          type: string
+          description: Alphanumeric chars, _ and - only.
+          example: action_3445
+          enum:
+            - comment
+            - exitTest
+            - flagItem
+            - getItem
+            - getNextItemData
+            - init
+            - move
+            - skip
+            - saveItemState
+            - storeTraceData
+            - submitItem
+            - timeout
+            - up
+        id:
+          type: string
+          description: Alphanumeric chars, _ and - only.
+          example: move
+        timestamp:
+          type: integer
+          format: int32
+          nullable: true
+          description: Unix timestamp containing digits only
+          example: 1641574336517
+        parameters:
+          type: object
+          nullable: true
+          oneOf:
+            - $ref: '#/components/schemas/MoveActionParameters'
+            - $ref: '#/components/schemas/SaveItemStateActionParameters'
+            - $ref: '#/components/schemas/CommentActionParameters'
+            - $ref: '#/components/schemas/ExitActionParameters'
+            - $ref: '#/components/schemas/FlagItemActionParameters'
+            - $ref: '#/components/schemas/GetItemActionParameters'
+            - $ref: '#/components/schemas/GetNextItemDataActionParameters'
+            - $ref: '#/components/schemas/SkipActionParameters'
+            - $ref: '#/components/schemas/StoreTraceDataActionParameters'
+            - $ref: '#/components/schemas/SubmitItemActionParameters'
+            - $ref: '#/components/schemas/TimeoutActionParameters'
+    MoveActionParameters:
+      type: object
+      required:
+        - itemIdentifier
+        - itemResponse
+        - itemDuration
+        - scope
+        - direction
+      properties:
+        direction:
+          type: string
+          enum:
+            - next
+            - previous
+            - jump
+        scope:
+          type: string
+          enum:
+            - item
+            - section
+            - testPart
+            - test
+            - assessmentItemRef
+            - assessmentSection
+            - assessmentTest
+        itemState:
+          type: string
+        itemResponse:
+          type: string
+        itemDuration:
+          type: number
+        itemIdentifier:
+          type: string
+        toolState:
+          type: string
+        ref:
+          type: integer
+    SaveItemStateActionParameters:
+      type: object
+      required:
+        - itemState
+        - itemIdentifier
+      properties:
+        itemState:
+          type: string
+        itemIdentifier:
+          type: string
+    CommentActionParameters:
+      type: object
+      required:
+        - comment
+        - itemIdentifier
+      properties:
+        comment:
+          type: string
+        itemIdentifier:
+          type: string
+    ExitActionParameters:
+      type: object
+      required:
+        - itemIdentifier
+        - itemDuration
+      properties:
+        itemIdentifier:
+          type: string
+        itemDuration:
+          type: number
+    FlagItemActionParameters:
+      type: object
+      required:
+        - position
+        - flag
+      properties:
+        position:
+          type: string
+        flag:
+          type: boolean
+    GetItemActionParameters:
+      type: object
+      required:
+        - itemIdentifier
+      properties:
+        itemIdentifier:
+          type: string
+    GetNextItemDataActionParameters:
+      type: object
+      required:
+        - itemIdentifier
+      properties:
+        itemIdentifier:
+          type: string
+    SkipActionParameters:
+      type: object
+      required:
+        - itemIdentifier
+      properties:
+        direction:
+          type: string
+          enum:
+            - next
+            - previous
+            - jump
+        scope:
+          type: string
+          enum:
+            - item
+            - section
+            - testPart
+            - test
+            - assessmentItemRef
+            - assessmentSection
+            - assessmentTest
+        itemState:
+          type: string
+        toolState:
+          type: string
+        itemDuration:
+          type: number
+        itemIdentifier:
+          type: string
+        ref:
+          type: integer
+    StoreTraceDataActionParameters:
+      type: object
+      required:
+        - traceData
+      properties:
+        traceData:
+          type: array
+    SubmitItemActionParameters:
+      type: object
+      required:
+        - itemIdentifier
+        - itemResponse
+        - itemState
+      properties:
+        itemState:
+          type: string
+        itemResponse:
+          type: string
+        itemIdentifier:
+          type: string
+    TimeoutActionParameters:
+      type: object
+      required:
+        - itemIdentifier
+        - itemResponse
+        - itemDuration
+        - scope
+        - direction
+      properties:
+        direction:
+          type: string
+          enum:
+            - next
+            - previous
+            - jump
+        scope:
+          type: string
+          enum:
+            - item
+            - section
+            - testPart
+            - test
+            - assessmentItemRef
+            - assessmentSection
+            - assessmentTest
+        itemState:
+          type: string
+        itemResponse:
+          type: string
+        itemDuration:
+          type: number
+        itemIdentifier:
+          type: string
+        toolState:
+          type: string
+        ref:
+          type: integer
+    RefreshTokenResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          description: Generated access token
+        refreshToken:
+          type: string
+          description: Refresh token (sent back)
+    GetPublicationResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              description: Publication ID
+            deliveryId:
+              type: string
+              nullable: true
+              description: Delivery ID
+            tenantId:
+              type: string
+              description: Tenant ID
+            status:
+              type: string
+              enum:
+                - created
+                - queued
+                - started
+                - success
+                - failed
+              description: Status of publication
+            url:
+              type: string
+              description: URL of publication
+            reports:
+              type: array
+              items:
+                $ref: '#/components/schemas/Report'
+              description: Array of Reports
+    GetDeliveryExecutionConfigurationResponse:
+      type: object
+      required:
+        - deliveryExecutionId
+        - locale
+        - testTaker
+        - providers
+        - options
+      properties:
+        deliveryExecutionId:
+          type: string
+          description: "The delivery execution unique identifier"
+        providers:
+          type: object
+          description: "The configured implementations to load"
+          properties:
+            runner:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: "qti"
+                module:
+                  type: string
+                  example: "taoQtiTest/runner/provider/qti"
+                category:
+                  type: string
+                  example: "runner"
+            proxy:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: "actions-proxy"
+                module:
+                  type: string
+                  example: "service/runner/proxy/actionsProxy"
+                category:
+                  type: string
+                  example: "proxy"
+            communicator:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: "request"
+                module:
+                  type: string
+                  example: "core/communicator/request"
+                category:
+                  type: string
+                  example: "communicator"
+            plugins:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "rubricBlock"
+                  module:
+                    type: string
+                    example: "taoQtiTest/runner/plugins/content/rubricBlock/rubricBlock"
+                  category:
+                    type: string
+                    example: "content"
+        testTaker:
+          type: object
+          description: "Test taker basic meta data"
+          properties:
+            id:
+              type: string
+              description: "ID of the LTI user"
+              example: "12345"
+            login:
+              type: string
+              example: "john_doe"
+              default: null
+            firstName:
+              type: string
+              example: "John"
+              default: null
+            lastName:
+              type: string
+              example: "Doe"
+              default: null
+        locale:
+          type: string
+          description: "The configured locale"
+          default: null
+          example: "en-US"
+        options:
+          type: object
+          description: "The test runner options and feature flags. It can contain other optional key-values"
+          required:
+            - fullScreen
+            - readOnly
+          properties:
+            fullScreen:
+              type: boolean
+              description: "Run the test in full screen mode"
+              default: false
+            readOnly:
+              type: boolean
+              description: "Is the test read-only or not"
+              default: false
+            exitUrl:
+              type: string
+              description: "Exit url"
+              default: null
+        themes:
+          type: object
+          nullable: true
+          description: "The list of available themes"
+          properties:
+            platform:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: "Title e.g.: Massachusetts Institute of Tehnologies"
+                link:
+                  type: string
+                  description: "Link e.g.: https://web.mit.edu"
+                logo:
+                  type: string
+                  description: "Logo url e.g.: https://upload.wikimedia.org/wikipedia/commons/0/0c/MIT_logo.svg"
+                footer:
+                  type: string
+                  description: "Footer text e.g.: 2019 © MIT and OAT"
+                showControl:
+                  type: boolean
+                  description: "show header and footer, default true"
+                colors:
+                  type: object
+                  description: "object that contains color with format key: value"
+                stylesheet:
+                  type: string
+                  description: "url/path to css location e.g.: https://cdn.taocould.org/mit/1.2.0/platform-theme.css"
+            testRunner:
+              type: object
+              properties:
+                base:
+                  type: string
+                  description: "e.g.: https://cdn.taocould.org/1.2.0/test-runner.css"
+                available:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: "e.g.: tao"
+                      name:
+                        type: string
+                        description: "e.g.: TAO"
+                      path:
+                        type: string
+                        description: "e.g.: https://cdn.taocould.org/1.2.0/test-runner/theme.css"
+                default:
+                  type: string
+                  description: "e.g.: tao"
+            itemRunner:
+              type: object
+              properties:
+                base:
+                  type: string
+                  description: "https://cdn.taocould.org/1.2.0/item-runner.css"
+                available:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: "e.g.: tao"
+                      name:
+                        type: string
+                        description: "e.g.: TAO"
+                      path:
+                        type: string
+                        description: "e.g.: https://cdn.taocould.org/1.2.0/item-runner/theme.css"
+                default:
+                  type: string
+                  description: "e.g.: tao"
+    CreateLogActionRequest:
+      type: object
+      required:
+        - message
+        - level
+      properties:
+        type:
+          type: string
+          enum: [ 'default', 'audit_platform', 'audit_delivery_execution' ]
+        message:
+          type: string
+        level:
+          type: string
+          enum:
+            - debug
+            - info
+            - notice
+            - warning
+            - error
+            - critical
+            - alert
+            - emergency
+        context:
+          type: array
+          items: { }
+    SynchronizeDeliveryExecutionActionRequest:
+      type: object
+      required:
+        - deliveryExecutionId
+        - ltiLaunchParameters
+        - status
+        - startedAt
+      properties:
+        deliveryExecutionId:
+          type: string
+        qtiSdkEncodedTestSession:
+          type: string
+          nullable: true
+        extraStateData:
+          type: object
+          nullable: true
+        ltiLaunchParameters:
+          type: object
+          properties:
+            result_id: { type: string }
+        status:
+          type: string
+          enum:
+            - initial
+            - interacting
+            - suspended
+            - closed
+            - canceled
+            - terminated
+        startedAt:
+            type: string
+            format: date-time
+        finishedAt:
+            type: string
+            nullable: true
+            format: date-time
+        closeAt:
+            type: string
+            nullable: true
+            format: date-time
+        updatedAt:
+            type: string
+            nullable: true
+            format: date-time
+    CreatePublicationResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              description: Publication ID
+            tenantId:
+              type: string
+              description: Tenant ID
+            status:
+              type: string
+              enum:
+                - created
+              description: Status of publication
+            url:
+              type: string
+              description: URL of publication
+    GetDeliveryResponse:
+      $ref: '#/components/schemas/Delivery'
+    GetDeliveryStatisticsResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            totalDeliveryExecutions:
+              type: integer
+              description: Total of delivery executions
+            deliveryExecutionsStatusInitial:
+              type: integer
+              description: Count of delivery executions in status initial
+            deliveryExecutionsStatusInteracting:
+              type: integer
+              description: Count of delivery executions in status interacting
+            deliveryExecutionsStatusSuspended:
+              type: integer
+              description: Count of delivery executions in status suspended
+            deliveryExecutionsStatusClosed:
+              type: integer
+              description: Count of delivery executions in status closed
+            deliveryExecutionsStatusCancelled:
+              type: integer
+              description: Count of delivery executions in status cancelled
+            deliveryExecutionsStatusTerminated:
+              type: integer
+              description: Count of delivery executions in status terminated
+    Delivery:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Delivery ID
+        tenantId:
+          type: string
+          nullable: true
+          description: Tenant ID
+        draftId:
+          type: string
+          nullable: true
+          description: ID of the linked editable Delivery Draft
+        configuration:
+          $ref: '#/components/schemas/Configuration'
+        launchUrl:
+          type: string
+          description: Delivery Launch URL
+        version:
+          type: string
+          description: Delivery version (hardcoded to 1 for backward compatibility)
+          default: "1"
+    GetDeliveryListResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/Delivery'
+    Report:
+      type: object
+      properties:
+        type:
+          type: string
+        message:
+          type: string
+    Configuration:
+      type: object
+      properties:
+        label:
+          type: string
+        status:
+          type: boolean
+          enum: [ true, false ]
+        metadata:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+        availabilityDate:
+          type: integer
+        expiryDate:
+          type: integer
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            message:
+              description: Error message.
+              example: 'error message'
+              type: string
+            trace:
+              description: Error trace.
+              example: 'error trace (if debug activated)'
+              type: string
+    ProcessActionsActionResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Is the request processed properly or not
+          enum: [ true ]
+        responses:
+          items:
+            type: array
+            items:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                  description: Is the action processed properly or not
+                name:
+                  type: string
+                  description: Action name
+                id:
+                  type: integer
+                  description: Action ID
+                errorCode:
+                  type: integer
+                  description: Error code
+                errorMessage:
+                  type: string
+                  description: Error message
+                values:
+                  type: object
+                  description: Action values
+    AttachmentsActionResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Is the request processed properly or not
+          enum: [ true ]
+        data:
+          type: object
+          properties:
+            uploadMethod:
+              type: string
+              description: method used for future file upload - { POST, GET, PUT }, default - POST
+            uploadUrl:
+              type: string
+              description: Url which content file name for future file upload
+            downloadUrl:
+              type: string
+              description: After upload this url should be used for access to file
+            id:
+              type: string
+              description: Unique file id for retrieve download URL in future for that file
+            error:
+              type: string
+              description: Present if only error happens and contain error details
+    ResultActionResponse:
+      type: object
+      properties:
+        xmlns:
+          type: string
+          xml:
+            attribute: true
+        'xmlns:xsi':
+          type: string
+          xml:
+            attribute: true
+        'xsi:schemaLocation':
+          type: string
+          xml:
+            attribute: true
+        context:
+          type: object
+        testResult:
+          type: object
+          properties:
+            identifier:
+              type: string
+              xml:
+                attribute: true
+            datestamp:
+              type: string
+              xml:
+                attribute: true
+        itemResult:
+          type: object
+          properties:
+            identifier:
+              type: string
+              xml:
+                attribute: true
+            cardinality:
+              type: string
+              xml:
+                attribute: true
+            baseType:
+              type: string
+              xml:
+                attribute: true
+          items:
+            type: array
+            items:
+              type: object
+              properties:
+                responseVariable:
+                  type: object
+                  description: 'response Variable'
+                  properties:
+                    identifier:
+                      type: string
+                      xml:
+                        attribute: true
+                    cardinality:
+                      type: string
+                      xml:
+                        attribute: true
+                    baseType:
+                      type: string
+                      xml:
+                        attribute: true
+    CreateCsvResultActionResponse:
+      type: object
+      properties:
+        testReport:
+          type: string
+          description: the signed url for the test report CSV
+        itemMapping:
+          type: string
+          description: the signed url for the item mapping CSV
+        ttl:
+          type: integer
+          description: the TTL of the signed urls
+          example: 3600
+    UploadFileActionResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: action has been processed succesfully
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              description: a path of uploaded file in the storage
+    AssessmentControlRequest:
+      type: object
+      properties:
+        user:
+          required:
+            - iss
+            - sub
+          type: object
+          properties:
+            iss:
+              type: string
+            sub:
+              type: string
+        resource_link:
+          type: object
+          properties:
+            url:
+              type: string
+              nullable: true
+            title:
+              type: string
+              nullable: true
+            text:
+              type: string
+              nullable: true
+            icon:
+              type: object
+              nullable: true
+              properties:
+                url:
+                  type: string
+                width:
+                    type: integer
+                height:
+                  type: integer
+            thumbnail:
+              type:  object
+              nullable: true
+              properties:
+                url:
+                  type: string
+                width:
+                  type: integer
+                height:
+                  type: integer
+            window:
+              type: object
+              nullable: true
+              properties:
+                width:
+                  type: integer
+                height:
+                  type: integer
+                windowFeatures:
+                  type: string
+                targetName:
+                  type: string
+            iframe:
+              type: object
+              nullable: true
+              properties:
+                width:
+                  type: integer
+                height:
+                  type: integer
+            custom:
+              type: object
+            lineItem:
+              type: object
+              properties:
+                label:
+                  type: string
+                  nullable: true
+                scoreMaximum:
+                  type: number
+                  nullable: false
+                resourceId:
+                  type: string
+                  nullable: true
+                tag:
+                  type: string
+                  nullable: true
+                gradesReleased:
+                  type: boolean
+                  nullable: true
+            available:
+              type: object
+              properties:
+                startDateTime:
+                  type: string
+                  format: date-time
+                endDateTime:
+                  type: string
+                  format: date-time
+            submission:
+              type: object
+              properties:
+                startDateTime:
+                  type: string
+                  format: date-time
+                endDateTime:
+                  type: string
+                  format: date-time
+        attempt_number:
+          type: integer
+        action:
+          type: string
+          enum:
+            - pause
+            - resume
+            - terminate
+            - update
+            - flag
+        extra_time:
+          type: integer
+        incident_time:
+          type: string
+          format: date-time
+        reason_code:
+          type: string
+          example: "999"
+        reason_msg:
+          type: string
+    AssessmentControlResultResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - none
+            - running
+            - paused
+            - terminated
+            - complete
+        extra_time:
+            type: integer
+    GetFlatTestMapResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              title:
+                type: string
+              responseIds:
+                type: array
+                items:
+                  type: string
+  responses:
+    BadRequestResponse:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFoundResponse:
+      description: Requested URI not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    UnauthorizedResponse:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    MethodNotAllowedResponse:
+      description: HTTP method not allowed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    RangeNotSatisfiable:
+      description: Range Not Satisfiable
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    UnprocessableEntityResponse:
+      description: Unprocessable Entity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalServerErrorResponse:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

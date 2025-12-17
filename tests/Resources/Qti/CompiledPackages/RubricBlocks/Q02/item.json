@@ -1,0 +1,121 @@
+{
+    "type": "qti",
+    "data": {
+        "identifier": "Q02",
+        "serial": "i5d76432033008",
+        "qtiClass": "assessmentItem",
+        "attributes": {
+            "identifier": "Q02",
+            "title": "Attacker - Defender - 02",
+            "label": "",
+            "adaptive": false,
+            "timeDependent": false,
+            "toolName": "TAO",
+            "toolVersion": "NextGen",
+            "class": ""
+        },
+        "body": {
+            "serial": "i5d76432033004",
+            "body": "\n\t\t{{i5d764320330f2}}\n\t",
+            "elements": {
+                "i5d764320330f2": {
+                    "serial": "i5d764320330f2",
+                    "qtiClass": "choiceInteraction",
+                    "attributes": {
+                        "responseIdentifier": "RESPONSE",
+                        "shuffle": false,
+                        "maxChoices": 1,
+                        "minChoices": 0,
+                        "id": "interaction"
+                    },
+                    "choices": {
+                        "i5d7643203317c": {
+                            "identifier": "high",
+                            "serial": "i5d7643203317c",
+                            "qtiClass": "simpleChoice",
+                            "attributes": {
+                                "identifier": "high",
+                                "fixed": false
+                            },
+                            "body": {
+                                "serial": "i5d76432033187",
+                                "body": "High Yo-Yo",
+                                "elements": {}
+                            }
+                        },
+                        "i5d764320331c6": {
+                            "identifier": "rolling",
+                            "serial": "i5d764320331c6",
+                            "qtiClass": "simpleChoice",
+                            "attributes": {
+                                "identifier": "rolling",
+                                "fixed": false
+                            },
+                            "body": {
+                                "serial": "i5d764320331d0",
+                                "body": "Rolling Scissors",
+                                "elements": {}
+                            }
+                        },
+                        "i5d7643203320b": {
+                            "identifier": "right",
+                            "serial": "i5d7643203320b",
+                            "qtiClass": "simpleChoice",
+                            "attributes": {
+                                "identifier": "right",
+                                "fixed": false
+                            },
+                            "body": {
+                                "serial": "i5d76432033214",
+                                "body": "Right Break",
+                                "elements": {}
+                            }
+                        }
+                    },
+                    "prompt": {
+                        "serial": "i5d7643203311e",
+                        "body": "<b>What should do the <em>Defender<\/em> plane to counter the attack.<\/b>",
+                        "elements": {}
+                    }
+                }
+            }
+        },
+        "namespaces": {
+            "": "http:\/\/www.imsglobal.org\/xsd\/imsqti_v2p1",
+            "xsi": "http:\/\/www.w3.org\/2001\/XMLSchema-instance"
+        },
+        "schemaLocations": {
+            "http:\/\/www.imsglobal.org\/xsd\/imsqti_v2p1": "http:\/\/www.imsglobal.org\/xsd\/qti\/qtiv2p1\/imsqti_v2p1.xsd"
+        },
+        "stylesheets": {},
+        "outcomes": {
+            "i5d76432033090": {
+                "identifier": "SCORE",
+                "serial": "i5d76432033090",
+                "qtiClass": "outcomeDeclaration",
+                "attributes": {
+                    "identifier": "SCORE",
+                    "cardinality": "single",
+                    "baseType": "float"
+                },
+                "defaultValue": "0"
+            }
+        },
+        "responses": {
+            "i5d76432033059": {
+                "identifier": "RESPONSE",
+                "serial": "i5d76432033059",
+                "qtiClass": "responseDeclaration",
+                "attributes": {
+                    "identifier": "RESPONSE",
+                    "cardinality": "single",
+                    "baseType": "identifier"
+                },
+                "defaultValue": []
+            }
+        },
+        "feedbacks": {},
+        "apipAccessibility": ""
+    },
+    "assets": []
+}

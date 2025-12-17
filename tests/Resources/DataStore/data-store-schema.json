@@ -1,0 +1,183 @@
+{
+    "$id": "https://example.com/arrays.schema.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "description": "DataStore json schema",
+    "type": "object",
+    "properties": {
+        "delivery": {
+            "type": "object",
+            "properties": {
+                "identifier": {
+                    "type": "string"
+                },
+                "publicationTime": {
+                    "type": "integer"
+                },
+                "tenantId": {
+                    "type": "string"
+                }
+            },
+            "required": ["identifier", "publicationTime", "tenantId"]
+        },
+        "assessmentResult": {
+            "type": "object",
+            "properties": {
+                "testResult": {
+                    "type": "object",
+                    "properties": {
+                        "outcomeVariable": {
+                            "type": "array",
+                            "items": { "$ref": "#/definitions/outcomeVariable" }
+                        },
+                        "duration": {
+                            "type": "integer"
+                        },
+                        "submittedAt": {
+                            "type": "integer"
+                        }
+                    },
+                    "required": ["outcomeVariable", "duration", "submittedAt"]
+                },
+                "session": {
+                    "type": "object",
+                    "properties": {
+                        "sessionId": {
+                            "type": "string"
+                        },
+                        "startTimeStamp": {
+                            "type": "integer"
+                        },
+                        "endTimeStamp": {
+                            "type": "integer"
+                        },
+                        "attempt": {
+                          "type": "integer"
+                        }
+                    },
+                    "required": ["sessionId", "startTimeStamp", "endTimeStamp", "attempt"]
+                },
+                "itemResults": {
+                    "type": "object",
+                    "patternProperties": {
+                        ".*": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "outcomeVariable": {
+                                        "type": "array",
+                                        "items": {
+                                            "$ref": "#/definitions/outcomeVariable"
+                                        }
+                                    },
+                                    "responseVariable": {
+                                        "type": "array",
+                                        "items": {
+                                            "$ref": "#/definitions/responseVariable"
+                                        }
+                                    },
+                                    "itemPosition": {
+                                        "type": "integer"
+                                    },
+                                    "interaction": {
+                                        "type": "array"
+                                    },
+                                    "customVariable": {
+                                        "type": "array"
+                                    },
+                                    "startedTimeStamp": {
+                                        "type": ["number", "null"]
+                                    },
+                                    "submittedTimeStamp": {
+                                        "type": ["number", "null"]
+                                    },
+                                    "lastAttempt": {
+                                        "type": "boolean"
+                                    },
+                                    "manuallyGradedAt": {
+                                        "type": ["integer", "null"]
+                                    },
+                                    "state": {
+                                       "type": ["object", "null"]
+                                    }
+                                },
+                                "required": [
+                                    "outcomeVariable",
+                                    "responseVariable",
+                                    "itemPosition",
+                                    "interaction",
+                                    "customVariable",
+                                    "startedTimeStamp",
+                                    "submittedTimeStamp",
+                                    "lastAttempt"
+                                ]
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "required": ["testResult", "session", "itemResults"]
+        },
+        "ltiParameters": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "value": {
+                        "type": ["string", "array", "number", "boolean", "object", "null"]
+                    }
+                },
+                "required": ["name", "value"]
+            }
+        }
+    },
+    "required": ["delivery", "assessmentResult", "ltiParameters"],
+    "definitions": {
+        "outcomeVariable": {
+            "type": "object",
+            "properties": {
+                "identifier": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": ["number", "string", "null"]
+                },
+                "cardinality": {
+                    "type": "string"
+                },
+                "baseType": {
+                    "type": ["string", "null"]
+                }
+            },
+            "required": ["identifier", "value", "cardinality", "baseType"]
+        },
+        "responseVariable": {
+            "type": "object",
+            "properties": {
+                "identifier": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": ["number", "string", "null"]
+                },
+                "cardinality": {
+                    "type": "string"
+                },
+                "baseType": {
+                    "type": ["string", "null"]
+                },
+                "correct": {
+                    "type": ["boolean", "null"]
+                },
+                "uploadDocumentIdentifier": {
+                    "type": "string"
+                }
+            },
+            "required": ["identifier", "value", "cardinality", "baseType", "correct"]
+        }
+    }
+}

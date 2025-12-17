@@ -1,0 +1,157 @@
+{
+    "type": "qti",
+    "data": {
+        "identifier": "Q02",
+        "serial": "item_5d113084a5395124635123",
+        "qtiClass": "assessmentItem",
+        "attributes": {
+            "identifier": "Q02",
+            "title": "What is TAO?",
+            "label": "",
+            "adaptive": false,
+            "timeDependent": false,
+            "toolName": "TAO",
+            "toolVersion": "x.x.x",
+            "class": ""
+        },
+        "body": {
+            "serial": "container_containeritembody_5d113084a537a028864301",
+            "body": "\n\t\t{{interaction_choiceinteraction_5d113084a7b98719371853}}\n\t",
+            "elements": {
+                "interaction_choiceinteraction_5d113084a7b98719371853": {
+                    "serial": "interaction_choiceinteraction_5d113084a7b98719371853",
+                    "qtiClass": "choiceInteraction",
+                    "attributes": {
+                        "responseIdentifier": "RESPONSE",
+                        "shuffle": false,
+                        "maxChoices": 1,
+                        "minChoices": 0,
+                        "id": "interaction"
+                    },
+                    "debug": {
+                        "relatedItem": "item_5d113084a5395124635123"
+                    },
+                    "choices": {
+                        "choice_simplechoice_5d113084a8b61127321654": {
+                            "identifier": "chinese",
+                            "serial": "choice_simplechoice_5d113084a8b61127321654",
+                            "qtiClass": "simpleChoice",
+                            "attributes": {
+                                "identifier": "chinese",
+                                "fixed": false
+                            },
+                            "body": {
+                                "serial": "container_containerstatic_5d113084a8f07113833631",
+                                "body": "A metaphysical Chinese concept",
+                                "elements": [],
+                                "debug": {
+                                    "relatedItem": "item_5d113084a5395124635123"
+                                }
+                            },
+                            "debug": {
+                                "relatedItem": "item_5d113084a5395124635123"
+                            }
+                        },
+                        "choice_simplechoice_5d113084a8fd0120052680": {
+                            "identifier": "tao",
+                            "serial": "choice_simplechoice_5d113084a8fd0120052680",
+                            "qtiClass": "simpleChoice",
+                            "attributes": {
+                                "identifier": "tao",
+                                "fixed": false
+                            },
+                            "body": {
+                                "serial": "container_containerstatic_5d113084a9007146617391",
+                                "body": "A commercial-grade, open-source assessment platform.",
+                                "elements": [],
+                                "debug": {
+                                    "relatedItem": "item_5d113084a5395124635123"
+                                }
+                            },
+                            "debug": {
+                                "relatedItem": "item_5d113084a5395124635123"
+                            }
+                        },
+                        "choice_simplechoice_5d113084a90c5034182995": {
+                            "identifier": "drink",
+                            "serial": "choice_simplechoice_5d113084a90c5034182995",
+                            "qtiClass": "simpleChoice",
+                            "attributes": {
+                                "identifier": "drink",
+                                "fixed": false
+                            },
+                            "body": {
+                                "serial": "container_containerstatic_5d113084a9115796059427",
+                                "body": "A soft drink",
+                                "elements": [],
+                                "debug": {
+                                    "relatedItem": "item_5d113084a5395124635123"
+                                }
+                            },
+                            "debug": {
+                                "relatedItem": "item_5d113084a5395124635123"
+                            }
+                        }
+                    },
+                    "prompt": {
+                        "serial": "container_containerstatic_5d113084a87bd909877722",
+                        "body": "What is TAO?",
+                        "elements": [],
+                        "debug": {
+                            "relatedItem": "item_5d113084a5395124635123"
+                        }
+                    }
+                }
+            },
+            "debug": {
+                "relatedItem": "item_5d113084a5395124635123"
+            }
+        },
+        "debug": {
+            "relatedItem": "item_5d113084a5395124635123"
+        },
+        "namespaces": {
+            "": "http:\/\/www.imsglobal.org\/xsd\/imsqti_v2p1",
+            "xsi": "http:\/\/www.w3.org\/2001\/XMLSchema-instance"
+        },
+        "schemaLocations": {
+            "http:\/\/www.imsglobal.org\/xsd\/imsqti_v2p1": "http:\/\/www.imsglobal.org\/xsd\/qti\/qtiv2p1\/imsqti_v2p1.xsd"
+        },
+        "stylesheets": [],
+        "outcomes": {
+            "outcomedeclaration_5d113084a6f0e306826368": {
+                "identifier": "SCORE",
+                "serial": "outcomedeclaration_5d113084a6f0e306826368",
+                "qtiClass": "outcomeDeclaration",
+                "attributes": {
+                    "identifier": "SCORE",
+                    "cardinality": "single",
+                    "baseType": "float"
+                },
+                "debug": {
+                    "relatedItem": "item_5d113084a5395124635123"
+                },
+                "defaultValue": "0"
+            }
+        },
+        "responses": {
+            "responsedeclaration_5d113084a66f9815433381": {
+                "identifier": "RESPONSE",
+                "serial": "responsedeclaration_5d113084a66f9815433381",
+                "qtiClass": "responseDeclaration",
+                "attributes": {
+                    "identifier": "RESPONSE",
+                    "cardinality": "single",
+                    "baseType": "identifier"
+                },
+                "debug": {
+                    "relatedItem": "item_5d113084a5395124635123"
+                },
+                "defaultValue": []
+            }
+        },
+        "feedbacks": [],
+        "apipAccessibility": ""
+    },
+    "assets": []
+}

@@ -1,0 +1,122 @@
+{
+    "type": "qti",
+    "data": {
+        "identifier": "Q03",
+        "serial": "i5da9b32d5e112",
+        "qtiClass": "assessmentItem",
+        "attributes": {
+            "identifier": "Q03",
+            "title": "What does mean GT?",
+            "label": "What does mean GT?",
+            "xml:lang": "en-US",
+            "adaptive": false,
+            "timeDependent": false,
+            "toolName": "TAO",
+            "toolVersion": "NextGen",
+            "class": ""
+        },
+        "body": {
+            "serial": "i5da9b32d5e108",
+            "body": "\n    {{i5da9b32d5e217}}\n  ",
+            "elements": {
+                "i5da9b32d5e217": {
+                    "serial": "i5da9b32d5e217",
+                    "qtiClass": "choiceInteraction",
+                    "attributes": {
+                        "responseIdentifier": "RESPONSE",
+                        "shuffle": false,
+                        "maxChoices": 1,
+                        "minChoices": 0,
+                        "id": "interaction"
+                    },
+                    "choices": {
+                        "i5da9b32d5e2d8": {
+                            "identifier": "turbo",
+                            "serial": "i5da9b32d5e2d8",
+                            "qtiClass": "simpleChoice",
+                            "attributes": {
+                                "identifier": "turbo",
+                                "fixed": false
+                            },
+                            "body": {
+                                "serial": "i5da9b32d5e2f2",
+                                "body": "Great Turbo",
+                                "elements": {}
+                            }
+                        },
+                        "i5da9b32d5e35e": {
+                            "identifier": "turbine",
+                            "serial": "i5da9b32d5e35e",
+                            "qtiClass": "simpleChoice",
+                            "attributes": {
+                                "identifier": "turbine",
+                                "fixed": false
+                            },
+                            "body": {
+                                "serial": "i5da9b32d5e373",
+                                "body": "Gear Turbine",
+                                "elements": {}
+                            }
+                        },
+                        "i5da9b32d5e3c8": {
+                            "identifier": "turismo",
+                            "serial": "i5da9b32d5e3c8",
+                            "qtiClass": "simpleChoice",
+                            "attributes": {
+                                "identifier": "turismo",
+                                "fixed": false
+                            },
+                            "body": {
+                                "serial": "i5da9b32d5e3dc",
+                                "body": "Gran Turismo",
+                                "elements": {}
+                            }
+                        }
+                    },
+                    "prompt": {
+                        "serial": "i5da9b32d5e265",
+                        "body": "What does mean GT within the concept of racing cars?",
+                        "elements": {}
+                    }
+                }
+            }
+        },
+        "namespaces": {
+            "": "http:\/\/www.imsglobal.org\/xsd\/imsqti_v2p1",
+            "xsi": "http:\/\/www.w3.org\/2001\/XMLSchema-instance"
+        },
+        "schemaLocations": {
+            "http:\/\/www.imsglobal.org\/xsd\/imsqti_v2p1": "http:\/\/www.imsglobal.org\/xsd\/qti\/qtiv2p1\/imsqti_v2p1.xsd"
+        },
+        "stylesheets": {},
+        "outcomes": {
+            "i5da9b32d5e1af": {
+                "identifier": "SCORE",
+                "serial": "i5da9b32d5e1af",
+                "qtiClass": "outcomeDeclaration",
+                "attributes": {
+                    "identifier": "SCORE",
+                    "cardinality": "single",
+                    "baseType": "float"
+                },
+                "defaultValue": "0"
+            }
+        },
+        "responses": {
+            "i5da9b32d5e169": {
+                "identifier": "RESPONSE",
+                "serial": "i5da9b32d5e169",
+                "qtiClass": "responseDeclaration",
+                "attributes": {
+                    "identifier": "RESPONSE",
+                    "cardinality": "single",
+                    "baseType": "identifier"
+                },
+                "defaultValue": []
+            }
+        },
+        "feedbacks": {},
+        "apipAccessibility": ""
+    },
+    "assets": []
+}

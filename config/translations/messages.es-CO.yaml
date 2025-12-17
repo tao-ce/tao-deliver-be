@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+test:
+    not:
+        available: Prueba no disponible.
+        access: No tienes permiso para acceder a esta prueba.
+        found: Lo sentimos, no podemos encontrar tu prueba.
+    cannot:
+        start: Lo sentimos, no podemos iniciar tu prueba.
+    relaunch:
+        contact:
+            administrator: Vuelve a iniciar la prueba o ponte en contacto con la persona encargada de la administración.
+            test_administrator: Vuelve a iniciar la prueba o ponte en contacto con la persona encargada de la administración de la prueba.
+contact:
+    administrator: Ponte en contacto con la persona encargada de la administración de la prueba.

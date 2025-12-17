@@ -1,0 +1,87 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+parameters:
+    flysystem.path.local_filesystem: '/'
+    flysystem.path.document_manager: '%kernel.project_dir%/var/storage/document-manager'
+    flysystem.path.qti_extracted_packages: '%kernel.project_dir%/var/storage/qti-extracted-packages'
+    flysystem.path.qti_compiled_deliveries: '%kernel.project_dir%/var/storage/qti-compiled-deliveries'
+    flysystem.path.qti_asset_manager: '%kernel.project_dir%/var/storage/qti-asset-manager'
+    flysystem.path.delivery_execution_uploads: '%kernel.project_dir%/var/storage/%asset.url_signature_prefix_name%'
+    flysystem.path.base64_zip: '%kernel.project_dir%/var/storage/base64-zip'
+    flysystem.path.preuploaded_package: '%kernel.project_dir%/var/storage/preuploaded-packages'
+    flysystem.path.delivery_execution_result: '%kernel.project_dir%/var/storage/results'
+    flysystem.path.data_store: '%kernel.project_dir%/var/storage/data-store'
+    flysystem.path.tenants: '%kernel.project_dir%/resources/tenants'
+    flysystem.path.csv_results: '%kernel.project_dir%/var/storage/csv-results'
+
+flysystem:
+    storages:
+        preuploaded_package.storage:
+            adapter: 'local'
+            options:
+                directory: '%flysystem.path.preuploaded_package%'
+
+        base64_zip.storage:
+            adapter: 'local'
+            options:
+                directory: '%flysystem.path.base64_zip%'
+
+        documentManager.storage:
+            adapter: 'local'
+            options:
+                directory: '%flysystem.path.document_manager%'
+
+        local_filesystem.storage:
+            adapter: 'local'
+            options:
+                directory: '%flysystem.path.local_filesystem%'
+
+        qti_compiled_deliveries.storage:
+            adapter: 'local'
+            options:
+                directory: '%flysystem.path.qti_compiled_deliveries%'
+
+        qti_package_extractor.storage:
+            adapter: 'local'
+            options:
+                directory: '%flysystem.path.qti_extracted_packages%'
+
+        qti_asset_manager.storage:
+            adapter: 'local'
+            options:
+                directory: '%flysystem.path.qti_asset_manager%'
+                lock: !php/const LOCK_NB
+
+        delivery_execution_uploads.storage:
+            adapter: 'local'
+            options:
+                directory: '%flysystem.path.delivery_execution_uploads%'
+                lock: !php/const LOCK_NB
+
+        delivery_execution_result.storage:
+            adapter: 'local'
+            options:
+                directory: '%flysystem.path.delivery_execution_result%'
+
+        csv_results.storage:
+            adapter: 'local'
+            options:
+                directory: '%flysystem.path.csv_results%'
+
+        data_store_results.storage:
+            adapter: 'local'
+            options:
+                directory: '%flysystem.path.data_store%'
+
+        data_store_delivery_processing_input.storage:
+            adapter: 'local'
+            options:
+                directory: '%flysystem.path.data_store%'
+
+        extra_asset.storage:
+            adapter: 'local'
+            options:
+                directory: '%flysystem.path.delivery_execution_uploads%/%extra_asset.storage.prefix%'
+                lock: !php/const LOCK_NB

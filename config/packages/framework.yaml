@@ -1,0 +1,28 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+framework:
+    secret: '%env(APP_SECRET)%'
+    default_locale: '%env(APP_DEFAULT_LOCALE)%'
+
+    trusted_proxies: '%env(TRUSTED_PROXIES)%'
+    trusted_headers: ['x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-port']
+
+    annotations:
+        enabled: false
+
+    http_method_override: false
+    handle_all_throwables: true
+
+    session:
+        handler_id: ~
+        cookie_secure: auto
+        cookie_samesite: lax
+        storage_factory_id: session.storage.factory.native
+
+    php_errors:
+        log: true
+
+    router:
+        default_uri: '%env(DELIVER_BACKEND_URL)%'

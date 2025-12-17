@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+
+SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+-->
+
+<assessmentItem xmlns="http://www.imsglobal.org/xsd/imsqti_v2p2" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqti_v2p2 http://www.imsglobal.org/xsd/qti/qtiv2p2/imsqti_v2p2.xsd" identifier="i5fabb50204bf88f19e0531b413b36e" title="IMS 1" label="IMS 1" xml:lang="en-US" adaptive="false" timeDependent="false" toolName="TAO" toolVersion="3.4.0-sprint140">
+  <responseDeclaration identifier="RESPONSE" cardinality="single" baseType="integer"/>
+  <responseDeclaration identifier="RESPONSE_1" cardinality="single" baseType="string"/>
+  <responseDeclaration identifier="RESPONSE_2" cardinality="record">
+    <correctResponse>
+      <value baseType="integer" fieldIdentifier="numberPointsRequired"><![CDATA[2]]></value>
+    </correctResponse>
+  </responseDeclaration>
+  <responseDeclaration identifier="RESPONSE_3" cardinality="record"/>
+  <responseDeclaration identifier="RESPONSE_4" cardinality="single" baseType="integer"/>
+  <responseDeclaration identifier="RESPONSE_5" cardinality="multiple" baseType="string"/>
+  <responseDeclaration identifier="RESPONSE_6" cardinality="single" baseType="float"/>
+  <responseDeclaration identifier="RESPONSE_7" cardinality="single" baseType="integer"/>
+  <responseDeclaration identifier="RESPONSE_8" cardinality="single" baseType="integer"/>
+  <outcomeDeclaration identifier="SCORE" cardinality="single" baseType="float"/>
+  <stylesheet href="style/custom/tao-user-styles.css" type="text/css" media="all" title=""/>
+  <itemBody>
+    <div class="grid-row">
+      <div class="col-12">
+        <customInteraction responseIdentifier="RESPONSE">
+          <portableCustomInteraction xmlns="http://www.imsglobal.org/xsd/portableCustomInteraction_v1" customInteractionTypeIdentifier="likertCompactInteraction" data-version="1.2.0">
+            <properties>
+              <property key="level">5</property>
+              <property key="label-min">min</property>
+              <property key="label-max">max</property>
+            </properties>
+            <modules>
+              <module id="likertCompactInteraction/likert/runtime/js/likertInteraction.min" primaryPath="../../likert/runtime/js/likertInteraction.min.js"/>
+            </modules>
+            <markup xmlns="http://www.w3.org/1999/xhtml">
+              <div class="likertInteraction">
+                <style>
+        .likertInteraction ul.likert{
+            list-style-type: none;
+            margin: 0 5px;
+            padding: 0;
+            display: inline-block;
+            position: relative;
+            top: 7px;
+        }
+        .likertInteraction ul.likert li{
+            float: left;
+            text-align: left;
+            list-style-type: none;
+        }
+    </style>
+                <div class="prompt"/>
+                <ul class="likert"/>
+              </div>
+            </markup>
+          </portableCustomInteraction>
+        </customInteraction>
+      </div>
+    </div>
+    <div class="grid-row">
+      <div class="col-12">
+        <customInteraction responseIdentifier="RESPONSE_1">
+          <portableCustomInteraction xmlns="http://www.imsglobal.org/xsd/portableCustomInteraction_v1" customInteractionTypeIdentifier="fractionModelInteraction" data-version="1.0.0">
+            <properties>
+              <property key="title">Fraction Model</property>
+              <property key="radius">100</property>
+              <property key="selectedPartitionsColor">#ff0000</property>
+              <property key="partitionColor">#ffffff</property>
+              <property key="outlineColor">#000000</property>
+              <property key="outlineThickness">1</property>
+              <property key="partitionMax">12</property>
+              <property key="partitionMin">1</property>
+              <property key="partitionInit">2</property>
+              <property key="selectedPartitionsInit">0</property>
+              <property key="selectedPartitions">[]</property>
+            </properties>
+            <modules>
+              <module id="fractionModelInteraction/runtime/fractionModelInteraction.min" primaryPath="../../runtime/fractionModelInteraction.min.js"/>
+            </modules>
+            <markup xmlns="http://www.w3.org/1999/xhtml">
+              <div class="fractionModelInteraction">
+                <div class="shape-panel">
+                  <h3 class="shape-title">Fraction Model</h3>
+                  <div class="shape-container"/>
+                  <div class="shape-controls">
+                    <button value="fewer" class="fewer btn btn-info" type="button">Fewer</button>
+                    <button value="more" class="more btn btn-info" type="button">More</button>
+                    <button value="reset" class="reset btn btn-info" type="button">Reset</button>
+                  </div>
+                </div>
+              </div>
+            </markup>
+          </portableCustomInteraction>
+        </customInteraction>
+      </div>
+    </div>
+    <div class="grid-row">
+      <div class="col-12">
+        <customInteraction responseIdentifier="RESPONSE_2">
+          <portableCustomInteraction xmlns="http://www.imsglobal.org/xsd/portableCustomInteraction_v1" customInteractionTypeIdentifier="graphFunctionInteraction" data-version="1.0.0">
+            <properties>
+              <property key="graphs">linear,absolute,quadratic,exponential,logarithmic,cosine,tangent</property>
+              <property key="graphTitle"></property>
+              <property key="graphTitleRequired"></property>
+              <property key="plotColor">#0000FF</property>
+              <property key="plotThickness">6</property>
+              <property key="pointColor">#0000FF</property>
+              <property key="pointGlow">true</property>
+              <property key="pointRadius">8</property>
+              <property key="weight">1</property>
+              <property key="width">450</property>
+              <property key="height">450</property>
+              <property key="xAllowOuter">true</property>
+              <property key="xBorderWeight">3</property>
+              <property key="xStep">1</property>
+              <property key="xLabel"></property>
+              <property key="xTitle"></property>
+              <property key="xStart">-10</property>
+              <property key="xEnd">10</property>
+              <property key="xSubStep">2</property>
+              <property key="xWeight">3</property>
+              <property key="yAllowOuter">true</property>
+              <property key="yBorderWeight">3</property>
+              <property key="yStep">1</property>
+              <property key="yLabel"></property>
+              <property key="yTitle"></property>
+              <property key="yStart">-10</property>
+              <property key="yEnd">10</property>
+              <property key="ySubStep">2</property>
+              <property key="yWeight">3</property>
+            </properties>
+            <modules>
+              <module id="graphFunctionInteraction/runtime/graphFunctionInteraction.min" primaryPath="../../runtime/graphFunctionInteraction.min.js"/>
+            </modules>
+            <markup xmlns="http://www.w3.org/1999/xhtml">
+              <div class="graphFunctionInteraction">
+                <div class="shape-panel">
+                  <div class="shape-controls">
+                    <button name="linear" value="linear" class="btn btn-info" type="button">Linear</button>
+                    <button name="absolute" value="absolute" class="btn btn-info" type="button">Absolute Value</button>
+                    <button name="quadratic" value="quadratic" class="btn btn-info" type="button">Quadratic</button>
+                    <button name="exponential" value="exponential" class="btn btn-info" type="button">Exponential</button>
+                    <button name="logarithmic" value="logarithmic" class="btn btn-info" type="button">Logarithmic</button>
+                    <button name="cosine" value="cosine" class="btn btn-info" type="button">Sin/Cos</button>
+                    <button name="tangent" value="tangent" class="btn btn-info" type="button">Tan/Cotan</button>
+                  </div>
+                  <div class="shape-container"/>
+                </div>
+              </div>
+            </markup>
+          </portableCustomInteraction>
+        </customInteraction>
+      </div>
+    </div>
+    <div class="grid-row">
+      <div class="col-12">
+        <customInteraction responseIdentifier="RESPONSE_3">
+          <portableCustomInteraction xmlns="http://www.imsglobal.org/xsd/portableCustomInteraction_v1" customInteractionTypeIdentifier="graphLineAndPointInteraction" data-version="1.0.0">
+            <properties>
+              <property key="graphs">{"points":{"label":"Points","count":0,"elements":[]},"setPoints":{"label":"Sets of Points","count":0,"elements":[]},"segments":{"label":"Segments","count":0,"elements":[]},"lines":{"label":"Lines","count":0,"elements":[]},"solutionSet":{"label":"Solution Sets","count":0,"elements":[]}}</property>
+              <property key="xMin">-10</property>
+              <property key="xMax">10</property>
+              <property key="yMin">-10</property>
+              <property key="yMax">10</property>
+            </properties>
+            <modules>
+              <module id="graphLineAndPointInteraction/runtime/graphLineAndPointInteraction.min" primaryPath="../../runtime/graphLineAndPointInteraction.min.js"/>
+            </modules>
+            <markup xmlns="http://www.w3.org/1999/xhtml">
+              <div class="pointAndLineFunctionInteraction">
+                <div class="shape-panel">
+                  <div class="shape-controls">
+                    <!-- Controls will be inserted here -->
+                  </div>
+                  <div class="templates">
+                    <div class="template-lines">
+                      <div class="button-container clearfix">
+                        <button class="btn btn-info" name="line"/>
+                        <div class="triangle"/>
+                        <ul class="plain line-styles">
+                          <li>
+                            <label>
+                              <input name="line-style" type="radio" value=""/>
+                              <span class="icon-radio"/>
+                              <span class="line-style line-style-plain"/>
+                            </label>
+                          </li>
+                          <li>
+                            <label>
+                              <input name="line-style" type="radio" value="-"/>
+                              <span class="icon-radio"/>
+                              <span class="line-style line-style-dashed"/>
+                            </label>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="template-points">
+                      <div class="button-container clearfix">
+                        <button class="btn btn-info" name="point"/>
+                        <div class="triangle"/>
+                      </div>
+                    </div>
+                    <div class="template-segments">
+                      <div class="button-container clearfix">
+                        <button class="btn btn-info" name="segment"/>
+                        <div class="triangle"/>
+                        <ul class="plain line-styles">
+                          <li>
+                            <label>
+                              <input name="line-style" type="radio" value=""/>
+                              <span class="icon-radio"/>
+                              <span class="line-style line-style-plain"/>
+                            </label>
+                          </li>
+                          <li>
+                            <label>
+                              <input name="line-style" type="radio" value="-"/>
+                              <span class="icon-radio"/>
+                              <span class="line-style line-style-dashed"/>
+                            </label>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="template-solutionSet">
+                      <div class="button-container clearfix graph-solutionSet deactivated">
+                        <button class="btn btn-info" name="solutionSet"/>
+                        <div class="triangle"/>
+                      </div>
+                    </div>
+                    <div class="template-setPoints">
+                      <div class="button-container clearfix">
+                        <button class="btn btn-info" name="setPoints"/>
+                        <div class="triangle"/>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="shape-container"/>
+                </div>
+              </div>
+            </markup>
+          </portableCustomInteraction>
+        </customInteraction>
+      </div>
+    </div>
+    <div class="grid-row">
+      <div class="col-12">
+        <customInteraction responseIdentifier="RESPONSE_4">
+          <portableCustomInteraction xmlns="http://www.imsglobal.org/xsd/portableCustomInteraction_v1" customInteractionTypeIdentifier="graphNumberLineInteraction" data-version="1.0.0">
+            <properties>
+              <property key="intervals">closed-closed,closed-open,open-closed,open-open,arrow-open,arrow-closed,open-arrow,closed-arrow</property>
+              <property key="color">#266d9c</property>
+              <property key="min">-5</property>
+              <property key="max">5</property>
+              <property key="unitSubDivision">2</property>
+              <property key="increment">1</property>
+              <property key="snapTo">1</property>
+            </properties>
+            <modules>
+              <module id="graphNumberLineInteraction/runtime/graphNumberLineInteraction.min" primaryPath="../../runtime/graphNumberLineInteraction.min.js"/>
+            </modules>
+            <markup xmlns="http://www.w3.org/1999/xhtml">
+              <div> </div>
+            </markup>
+          </portableCustomInteraction>
+        </customInteraction>
+      </div>
+    </div>
+    <div class="grid-row">
+      <div class="col-12">
+        <customInteraction responseIdentifier="RESPONSE_5">
+          <portableCustomInteraction xmlns="http://www.imsglobal.org/xsd/portableCustomInteraction_v1" customInteractionTypeIdentifier="graphPointLineGraphInteraction" data-version="1.0.0">
+            <properties>
+              <property key="draggable">true</property>
+              <property key="graphTitle"></property>
+              <property key="graphTitleRequired"></property>
+              <property key="graphType">line</property>
+              <property key="maxPoints">6</property>
+              <property key="plotColor">#0000FF</property>
+              <property key="plotThickness">6</property>
+              <property key="pointColor">#0000FF</property>
+              <property key="pointGlow">true</property>
+              <property key="pointRadius">8</property>
+              <property key="segment">true</property>
+              <property key="weight">1</property>
+              <property key="width">450</property>
+              <property key="height">300</property>
+              <property key="staticPoints">[]</property>
+              <property key="staticPointColor">#AA00AA</property>
+              <property key="staticPointGlow"></property>
+              <property key="staticPointRadius">6</property>
+              <property key="staticPointLabelSize">10</property>
+              <property key="staticPointLabelWeight">0</property>
+              <property key="staticPointLabelColor">#FFF</property>
+              <property key="staticDisplayPoints">true</property>
+              <property key="staticLineColor">#AA00AA</property>
+              <property key="staticLineThickness">4</property>
+              <property key="staticShowLine">true</property>
+              <property key="xAllowOuter">true</property>
+              <property key="xBorderWeight">3</property>
+              <property key="xStep">1</property>
+              <property key="xLabel"></property>
+              <property key="xTitle"></property>
+              <property key="xStart">0</property>
+              <property key="xEnd">7</property>
+              <property key="xSubStep">2</property>
+              <property key="xWeight">3</property>
+              <property key="yAllowOuter">true</property>
+              <property key="yBorderWeight">3</property>
+              <property key="yStep">10</property>
+              <property key="yLabel"></property>
+              <property key="yTitle"></property>
+              <property key="yStart">0</property>
+              <property key="yEnd">100</property>
+              <property key="ySubStep">2</property>
+              <property key="yWeight">3</property>
+            </properties>
+            <modules>
+              <module id="graphPointLineGraphInteraction/runtime/graphPointLineGraphInteraction.min" primaryPath="../../runtime/graphPointLineGraphInteraction.min.js"/>
+            </modules>
+            <markup xmlns="http://www.w3.org/1999/xhtml">
+              <div class="graphPointLineGraphInteraction">
+                <div class="shape-panel">
+                  <div class="shape-container"/>
+                </div>
+              </div>
+            </markup>
+          </portableCustomInteraction>
+        </customInteraction>
+      </div>
+    </div>
+    <div class="grid-row">
+      <div class="col-12">
+        <customInteraction responseIdentifier="RESPONSE_6">
+          <portableCustomInteraction xmlns="http://www.imsglobal.org/xsd/portableCustomInteraction_v1" customInteractionTypeIdentifier="graphZoomNumberLineInteraction" data-version="1.0.0">
+            <properties>
+              <property key="color">#266d9c</property>
+              <property key="min">0</property>
+              <property key="max">10</property>
+              <property key="unitSubDivision">2</property>
+              <property key="increment">1</property>
+              <property key="snapTo">1</property>
+            </properties>
+            <modules>
+              <module id="graphZoomNumberLineInteraction/runtime/graphZoomNumberLineInteraction.min" primaryPath="../../runtime/graphZoomNumberLineInteraction.min.js"/>
+            </modules>
+            <markup xmlns="http://www.w3.org/1999/xhtml">
+              <div class="graphZoomNumberLineInteraction">
+                <div class="shape-panel">
+                  <div class="shape-container"/>
+                </div>
+              </div>
+            </markup>
+          </portableCustomInteraction>
+        </customInteraction>
+      </div>
+    </div>
+    <div class="grid-row">
+      <div class="col-12">
+        <customInteraction responseIdentifier="RESPONSE_7">
+          <portableCustomInteraction xmlns="http://www.imsglobal.org/xsd/portableCustomInteraction_v1" customInteractionTypeIdentifier="likertInteraction" data-version="1.2.0">
+            <properties>
+              <property key="level">5</property>
+              <property key="label-min">min</property>
+              <property key="label-max">max</property>
+            </properties>
+            <modules primaryConfiguration="../../likert/runtime/likertConfig.json">
+              <module id="likertInteraction/runtime/js/likertInteraction" primaryPath="../../likert/runtime/js/likertInteraction.js"/>
+            </modules>
+            <markup xmlns="http://www.w3.org/1999/xhtml">
+              <div class="likertInteraction">
+                <style>
+        .likertInteraction ul.likert{
+            list-style-type: none;
+            margin: 0 5px;
+            padding: 0;
+            display: inline-block;
+            position: relative;
+            top: 7px;
+        }
+        .likertInteraction ul.likert li{
+            float: left;
+            text-align: left;
+            list-style-type: none;
+        }
+    </style>
+                <div class="prompt"/>
+                <ul class="likert"/>
+              </div>
+            </markup>
+          </portableCustomInteraction>
+        </customInteraction>
+      </div>
+    </div>
+    <div class="grid-row">
+      <div class="col-12">
+        <customInteraction responseIdentifier="RESPONSE_8">
+          <portableCustomInteraction xmlns="http://www.imsglobal.org/xsd/portableCustomInteraction_v1" customInteractionTypeIdentifier="likertCompactInteraction" data-version="1.2.0">
+            <properties>
+              <property key="level">5</property>
+              <property key="label-min">min</property>
+              <property key="label-max">max</property>
+            </properties>
+            <modules>
+              <module id="likertCompactInteraction/likert/runtime/js/likertInteraction.min" primaryPath="../../likert/runtime/js/likertInteraction.min.js"/>
+            </modules>
+            <markup xmlns="http://www.w3.org/1999/xhtml">
+              <div class="likertInteraction">
+                <style>
+        .likertInteraction ul.likert{
+            list-style-type: none;
+            margin: 0 5px;
+            padding: 0;
+            display: inline-block;
+            position: relative;
+            top: 7px;
+        }
+        .likertInteraction ul.likert li{
+            float: left;
+            text-align: left;
+            list-style-type: none;
+        }
+    </style>
+                <div class="prompt"/>
+                <ul class="likert"/>
+              </div>
+            </markup>
+          </portableCustomInteraction>
+        </customInteraction>
+      </div>
+    </div>
+  </itemBody>
+  <responseProcessing>
+    <responseCondition>
+      <responseIf>
+        <match>
+          <variable identifier="RESPONSE_1"/>
+          <correct identifier="RESPONSE_1"/>
+        </match>
+        <setOutcomeValue identifier="SCORE">
+          <sum>
+            <variable identifier="SCORE"/>
+            <baseValue baseType="integer">1</baseValue>
+          </sum>
+        </setOutcomeValue>
+      </responseIf>
+    </responseCondition>
+    <responseCondition>
+      <responseIf>
+        <equal tolerance="0.000000000001" toleranceMode="absolute">
+          <divide>
+            <customOperator class="qti.customOperators.math.fraction.Numerator">
+              <variable identifier="RESPONSE_1"/>
+            </customOperator>
+            <customOperator class="qti.customOperators.math.fraction.Denominator">
+              <variable identifier="RESPONSE_1"/>
+            </customOperator>
+          </divide>
+          <divide>
+            <customOperator class="qti.customOperators.math.fraction.Numerator">
+              <correct identifier="RESPONSE_1"/>
+            </customOperator>
+            <customOperator class="qti.customOperators.math.fraction.Denominator">
+              <correct identifier="RESPONSE_1"/>
+            </customOperator>
+          </divide>
+        </equal>
+        <setOutcomeValue identifier="SCORE">
+          <sum>
+            <variable identifier="SCORE"/>
+            <baseValue baseType="float">1</baseValue>
+          </sum>
+        </setOutcomeValue>
+      </responseIf>
+      <responseElse>
+        <setOutcomeValue identifier="SCORE">
+          <baseValue baseType="float">0</baseValue>
+        </setOutcomeValue>
+      </responseElse>
+    </responseCondition>
+    <responseCondition>
+      <responseIf>
+        <and>
+          <match>
+            <index n="1">
+              <customOperator class="qti.customOperators.CsvToOrdered">
+                <fieldValue fieldIdentifier="points">
+                  <variable identifier="RESPONSE_2"/>
+                </fieldValue>
+              </customOperator>
+            </index>
+            <fieldValue fieldIdentifier="vertex">
+              <correct identifier="RESPONSE_2"/>
+            </fieldValue>
+          </match>
+          <match>
+            <fieldValue fieldIdentifier="functionGraphType">
+              <variable identifier="RESPONSE_2"/>
+            </fieldValue>
+            <fieldValue fieldIdentifier="functionGraphType">
+              <correct identifier="RESPONSE_2"/>
+            </fieldValue>
+          </match>
+          <not>
+            <match>
+              <index n="1">
+                <customOperator class="qti.customOperators.CsvToOrdered">
+                  <fieldValue fieldIdentifier="points">
+                    <variable identifier="RESPONSE_2"/>
+                  </fieldValue>
+                </customOperator>
+              </index>
+              <index n="2">
+                <customOperator class="qti.customOperators.CsvToOrdered">
+                  <fieldValue fieldIdentifier="points">
+                    <variable identifier="RESPONSE_2"/>
+                  </fieldValue>
+                </customOperator>
+              </index>
+            </match>
+          </not>
+          <equal toleranceMode="exact">
+            <customOperator class="qti.customOperators.math.graph.CountPointsThatSatisfyEquation">
+              <customOperator class="qti.customOperators.CsvToMultiple">
+                <fieldValue fieldIdentifier="points">
+                  <variable identifier="RESPONSE_2"/>
+                </fieldValue>
+              </customOperator>
+              <fieldValue fieldIdentifier="equation">
+                <correct identifier="RESPONSE_2"/>
+              </fieldValue>
+            </customOperator>
+            <fieldValue fieldIdentifier="numberPointsRequired">
+              <correct identifier="RESPONSE_2"/>
+            </fieldValue>
+          </equal>
+        </and>
+        <setOutcomeValue identifier="SCORE">
+          <sum>
+            <variable identifier="SCORE"/>
+            <baseValue baseType="float">1</baseValue>
+          </sum>
+        </setOutcomeValue>
+      </responseIf>
+      <responseElse>
+        <setOutcomeValue identifier="SCORE">
+          <baseValue baseType="float">0</baseValue>
+        </setOutcomeValue>
+      </responseElse>
+    </responseCondition>
+  </responseProcessing>
+</assessmentItem>

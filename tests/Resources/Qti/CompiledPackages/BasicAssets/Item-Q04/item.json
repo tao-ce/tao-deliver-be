@@ -1,0 +1,183 @@
+{
+    "type": "qti",
+    "data": {
+        "identifier": "i5fa27cddb75646d92bd2cd109c56de",
+        "serial": "i5fa27d44b4d04",
+        "qtiClass": "assessmentItem",
+        "attributes": {
+            "identifier": "i5fa27cddb75646d92bd2cd109c56de",
+            "title": "Item 4",
+            "label": "Item 4",
+            "xml:lang": "en-US",
+            "adaptive": false,
+            "timeDependent": false,
+            "toolName": "TAO",
+            "toolVersion": "NextGen",
+            "class": ""
+        },
+        "body": {
+            "serial": "i5fa27d44b4cfd",
+            "body": "\n    <div class=\"grid-row\">\n      <div class=\"col-12\">\n        {{i5fa27d44b4f26}}\n      <\/div>\n    <\/div>\n    <div class=\"grid-row\">\n      <div class=\"col-12\">\n        {{i5fa27d44b4fc2}}\n      <\/div>\n    <\/div>\n  ",
+            "elements": {
+                "i5fa27d44b4f26": {
+                    "serial": "i5fa27d44b4f26",
+                    "qtiClass": "customInteraction",
+                    "attributes": {
+                        "responseIdentifier": "RESPONSE"
+                    },
+                    "choices": {},
+                    "typeIdentifier": "mathEntryInteraction",
+                    "markup": "\n              <div class=\"mathEntryInteraction\">\n                <div class=\"prompt\"\/>\n                <div class=\"math-entry\">\n                  <div class=\"toolbar\"\/>\n                  <div>\n                    <span class=\"math-entry-input\"\/>\n                  <\/div>\n                <\/div>\n              <\/div>\n            ",
+                    "version": "0.10.0",
+                    "entryPoint": "mathEntryInteraction\/runtime\/mathEntryInteraction.min.js",
+                    "libraries": [],
+                    "stylesheets": [
+                        "mathEntryInteraction\/runtime\/mathquill\/mathquill.css",
+                        "mathEntryInteraction\/runtime\/css\/mathEntryInteraction.css"
+                    ],
+                    "mediaFiles": [
+                        "mathEntryInteraction\/runtime\/mathquill\/font\/Symbola.eot",
+                        "mathEntryInteraction\/runtime\/mathquill\/font\/Symbola.otf",
+                        "mathEntryInteraction\/runtime\/mathquill\/font\/Symbola.svg",
+                        "mathEntryInteraction\/runtime\/mathquill\/font\/Symbola.ttf",
+                        "mathEntryInteraction\/runtime\/mathquill\/font\/Symbola.woff",
+                        "mathEntryInteraction\/runtime\/mathquill\/font\/Symbola.woff2",
+                        "mathEntryInteraction\/runtime\/mathquill\/font\/Symbola-basic.eot",
+                        "mathEntryInteraction\/runtime\/mathquill\/font\/Symbola-basic.ttf",
+                        "mathEntryInteraction\/runtime\/mathquill\/font\/Symbola-basic.woff",
+                        "mathEntryInteraction\/runtime\/mathquill\/font\/Symbola-basic.woff2"
+                    ],
+                    "properties": {
+                        "authorizeWhiteSpace": "false",
+                        "useGapExpression": "false",
+                        "gapExpression": "",
+                        "gapStyle": "math-gap-small",
+                        "tool_frac": "true",
+                        "tool_sqrt": "true",
+                        "tool_exp": "true",
+                        "tool_log": "true",
+                        "tool_ln": "true",
+                        "tool_e": "true",
+                        "tool_infinity": "true",
+                        "tool_lbrack": "true",
+                        "tool_rbrack": "true",
+                        "tool_pi": "true",
+                        "tool_cos": "true",
+                        "tool_sin": "true",
+                        "tool_lte": "true",
+                        "tool_gte": "true",
+                        "tool_times": "true",
+                        "tool_divide": "true",
+                        "tool_plusminus": "true",
+                        "tool_angle": "true",
+                        "tool_minus": "true",
+                        "tool_plus": "true",
+                        "tool_equal": "true",
+                        "tool_lower": "true",
+                        "tool_greater": "true",
+                        "tool_subscript": "true",
+                        "tool_lbrace": "true",
+                        "tool_rbrace": "true",
+                        "tool_lparen": "true",
+                        "tool_rparen": "true",
+                        "tool_integral": "true",
+                        "tool_timesdot": "true",
+                        "tool_triangle": "true",
+                        "tool_similar": "true",
+                        "tool_paral": "true",
+                        "tool_perp": "true",
+                        "tool_inmem": "true",
+                        "tool_ninmem": "true",
+                        "tool_union": "true",
+                        "tool_intersec": "true",
+                        "allowNewLine": "false",
+                        "enableAutoWrap": "false"
+                    },
+                    "xmlns": "http:\/\/www.imsglobal.org\/xsd\/portableCustomInteraction"
+                },
+                "i5fa27d44b4fc2": {
+                    "serial": "i5fa27d44b4fc2",
+                    "qtiClass": "customInteraction",
+                    "attributes": {
+                        "responseIdentifier": "RESPONSE_1"
+                    },
+                    "choices": {},
+                    "typeIdentifier": "liquidsInteraction",
+                    "markup": "\n              <div class=\"liquidsInteraction\">\n                <div class=\"prompt\"\/>\n                <canvas class=\"liquids\" width=\"400\" height=\"400\"\/>\n              <\/div>\n            ",
+                    "version": "0.4.2",
+                    "entryPoint": "liquidsInteraction\/runtime\/liquidInteraction.min.js",
+                    "libraries": [],
+                    "stylesheets": [],
+                    "mediaFiles": [],
+                    "properties": {},
+                    "xmlns": "http:\/\/www.imsglobal.org\/xsd\/portableCustomInteraction"
+                }
+            }
+        },
+        "namespaces": {
+            "": "http:\/\/www.imsglobal.org\/xsd\/imsqti_v2p2",
+            "html5": "html5",
+            "m": "http:\/\/www.w3.org\/1998\/Math\/MathML",
+            "xsi": "http:\/\/www.w3.org\/2001\/XMLSchema-instance"
+        },
+        "schemaLocations": {
+            "http:\/\/www.imsglobal.org\/xsd\/imsqti_v2p2": "http:\/\/www.imsglobal.org\/xsd\/qti\/qtiv2p2\/imsqti_v2p2.xsd"
+        },
+        "stylesheets": {
+            "i5fa27d44b4d6a": {
+                "serial": "i5fa27d44b4d6a",
+                "qtiClass": "stylesheet",
+                "attributes": {
+                    "href": "tao-user-styles.css",
+                    "type": "text\/css",
+                    "media": "all",
+                    "title": ""
+                }
+            }
+        },
+        "outcomes": {
+            "i5fa27d44b4dfc": {
+                "identifier": "SCORE",
+                "serial": "i5fa27d44b4dfc",
+                "qtiClass": "outcomeDeclaration",
+                "attributes": {
+                    "identifier": "SCORE",
+                    "cardinality": "single",
+                    "baseType": "float"
+                },
+                "defaultValue": null
+            }
+        },
+        "responses": {
+            "i5fa27d44b4d9e": {
+                "identifier": "RESPONSE",
+                "serial": "i5fa27d44b4d9e",
+                "qtiClass": "responseDeclaration",
+                "attributes": {
+                    "identifier": "RESPONSE",
+                    "cardinality": "single",
+                    "baseType": "string"
+                },
+                "defaultValue": []
+            },
+            "i5fa27d44b4dd7": {
+                "identifier": "RESPONSE_1",
+                "serial": "i5fa27d44b4dd7",
+                "qtiClass": "responseDeclaration",
+                "attributes": {
+                    "identifier": "RESPONSE_1",
+                    "cardinality": "single",
+                    "baseType": "integer"
+                },
+                "defaultValue": []
+            }
+        },
+        "feedbacks": {},
+        "apipAccessibility": ""
+    },
+    "assets": {
+        "css": {
+            "tao-user-styles.css": "tao-user-styles.css"
+        }
+    }
+}

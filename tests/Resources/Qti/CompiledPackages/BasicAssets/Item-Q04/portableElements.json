@@ -1,0 +1,43 @@
+{
+    "pci": {
+        "mathEntryInteraction": [
+            {
+                "version": "0.10.0",
+                "typeIdentifier": "mathEntryInteraction",
+                "runtime": {
+                    "hook": "mathEntryInteraction\/runtime\/mathEntryInteraction.min.js",
+                    "stylesheets": [
+                        "mathEntryInteraction\/runtime\/mathquill\/mathquill.css",
+                        "mathEntryInteraction\/runtime\/css\/mathEntryInteraction.css"
+                    ],
+                    "mediaFiles": [
+                        "mathEntryInteraction\/runtime\/mathquill\/font\/Symbola.eot",
+                        "mathEntryInteraction\/runtime\/mathquill\/font\/Symbola.otf",
+                        "mathEntryInteraction\/runtime\/mathquill\/font\/Symbola.svg",
+                        "mathEntryInteraction\/runtime\/mathquill\/font\/Symbola.ttf",
+                        "mathEntryInteraction\/runtime\/mathquill\/font\/Symbola.woff",
+                        "mathEntryInteraction\/runtime\/mathquill\/font\/Symbola.woff2",
+                        "mathEntryInteraction\/runtime\/mathquill\/font\/Symbola-basic.eot",
+                        "mathEntryInteraction\/runtime\/mathquill\/font\/Symbola-basic.ttf",
+                        "mathEntryInteraction\/runtime\/mathquill\/font\/Symbola-basic.woff",
+                        "mathEntryInteraction\/runtime\/mathquill\/font\/Symbola-basic.woff2"
+                    ],
+                    "src": []
+                }
+            }
+        ],
+        "liquidsInteraction": [
+            {
+                "version": "0.4.2",
+                "typeIdentifier": "liquidsInteraction",
+                "runtime": {
+                    "hook": "liquidsInteraction\/runtime\/liquidInteraction.min.js",
+                    "stylesheets": [],
+                    "mediaFiles": [],
+                    "src": []
+                }
+            }
+        ]
+    },
+    "pic": []
+}

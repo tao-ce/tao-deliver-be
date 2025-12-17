@@ -1,0 +1,63 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+framework:
+    cache:
+        app: cache.shared
+        pools:
+            cache.chain:
+                adapter: cache.adapter.chain
+            cache.shared:
+                adapter: cache.adapter.shared_redis
+                provider: cache.provider.shared_redis
+            cache.filesystem:
+                adapter: cache.adapter.filesystem
+            cache.document_manager:
+                tags: true
+                adapter: cache.adapter.document_manager_redis
+                provider: cache.provider.shared_redis
+                default_lifetime: '%env(DOCUMENT_REDIS_CACHE_TTL)%'
+
+services:
+    ###################
+    ### Providers   ###
+    ###################
+    cache.provider.shared_redis:
+        class: \Redis
+        factory: ['Symfony\Component\Cache\Adapter\RedisAdapter', 'createConnection']
+        arguments:
+            - '%env(REDIS_CACHE_DSN)%'
+            - persistent: 1
+              lazy: true
+
+    ###################
+    ### Adapters    ###
+    ###################
+    cache.adapter.chain:
+        class: Symfony\Component\Cache\Adapter\ChainAdapter
+        arguments:
+            - [ 'cache.adapter.in_memory', 'cache.adapter.cross_process', 'cache.shared' ]
+        tags:
+            - { name: 'cache.pool', namespace: '%env(REDIS_CACHE_NAMESPACE)%' }
+
+    cache.adapter.in_memory:
+        parent: cache.adapter.array
+        arguments:
+            $defaultLifetime: '%env(int:default:cache.default_ttl:DOCUMENT_REDIS_CACHE_TTL)%'
+
+    cache.adapter.cross_process:
+        parent: cache.adapter.apcu
+        arguments:
+            $namespace: '%env(REDIS_CACHE_NAMESPACE)%'
+            $defaultLifetime: '%env(int:default:cache.default_ttl:DOCUMENT_REDIS_CACHE_TTL)%'
+
+    cache.adapter.shared_redis:
+        parent: cache.adapter.redis
+        tags:
+            - { name: 'cache.pool', namespace: '%env(REDIS_CACHE_NAMESPACE)%' }
+
+    cache.adapter.document_manager_redis:
+        parent: cache.adapter.redis
+        tags:
+            - { name: 'cache.pool', namespace: '%env(DOCUMENT_REDIS_CACHE_NAMESPACE)%' }

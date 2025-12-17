@@ -1,0 +1,64 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+parameters:
+    .container.dumper.inline_factories: true
+    cache_enabled: true
+
+services:
+
+    _instanceof:
+        App\Generator\Asset\SignedUrlGeneratorInterface:
+            tags: ['asset.signed_url_generator']
+
+    ###############################################################################################
+    ### Application configuration                                                              ####
+    ###############################################################################################
+
+    App\Generator\Asset\CloudCdnSignedUrlGenerator:
+        arguments:
+            $assetTtl: '%asset.ttl%'
+            $cloudCdnUrl: '%cdn.url%'
+            $cloudCdnKey: '%cdn.key%'
+            $cloudCdnKeyName: '%cdn.key_name%'
+            $signedUrlCacheTtlShift: '%signed_url.cache.ttl_shift%'
+            $cacheChain: '@cache.chain'
+
+    App\Command\Migration\MigrateDeliveriesFromBigTableToElasticsearchCommand:
+      arguments:
+        $gcpBigTableInstanceId: '%env(GOOGLE_CLOUD_BIGTABLE_INSTANCE)%'
+        $deliveriesDocumentStorageName: '%env(DOCUMENT_MANAGER_TABLE_NAME_DELIVERIES)%'
+
+    OAT\Bundle\BigtableDocumentManagerBundle\Configuration\ConfigurationProviderInterface:
+        class: OAT\Bundle\BigtableDocumentManagerBundle\Configuration\AuthCacheItemPoolConfigurationProvider
+        arguments:
+            $cache: '@cache.chain'
+
+    Google\Cloud\Bigtable\BigtableClient:
+        lazy: true
+        arguments:
+            $config:
+                projectId: '%env(GOOGLE_CLOUD_BIGTABLE_PROJECT_ID)%'
+                credentialsConfig:
+                    authHttpHandler: '@http_handler'
+
+                transport: 'grpc'
+
+    storage.asset_bucket:
+        class: Google\Cloud\Storage\Bucket
+        factory: ['@App\Factory\BucketFactory', 'create']
+        arguments: ['%storage.bucket_name%']
+
+    App\Generator\Asset\CloudStorageSignedUrlGenerator:
+        arguments:
+            - '@storage.asset_bucket'
+            - '%storage.signed_url.ttl%'
+            - '%asset.url_signature_prefix_name%'
+
+    OAT\Bundle\ElasticsearchDocumentManagerBundle\Configuration\ConfigurationProviderInterface:
+        class: App\DocumentManager\Configuration\ElasticsearchConfigurationProvider
+        arguments:
+            $host: '%env(ELASTICSEARCH_HOST)%'
+            $port: '%env(ELASTICSEARCH_PORT)%'
+            $apiKey: '%env(ELASTICSEARCH_API_KEY)%'

@@ -1,0 +1,31 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+document_manager:
+  connections:
+    elasticsearch_connection:
+      driver: cached-elasticsearch
+      options: [ ]
+
+  handlers:
+    deliver_handler:
+      connection: elasticsearch_connection
+
+    battery_handler:
+      connection: elasticsearch_connection
+
+    battery_distribution_handler:
+      connection: elasticsearch_connection
+
+    delivery_execution_handler:
+      connection: elasticsearch_connection
+
+    delivery_execution_alias_handler:
+      connection: elasticsearch_connection
+
+    publication_handler:
+      connection: elasticsearch_connection
+
+    enrollment_handler:
+      connection: elasticsearch_connection

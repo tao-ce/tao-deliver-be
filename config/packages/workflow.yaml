@@ -1,0 +1,69 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+framework:
+    workflows:
+        publication:
+            type: 'state_machine'
+            audit_trail:
+                enabled: true
+            marking_store:
+                type: 'method'
+                property: status
+            supports:
+                - App\Repository\PublicationRepository
+            initial_marking: !php/const App\Domain\Publication\Model\Publication::STATUS_CREATED
+            places:
+                - !php/const App\Domain\Publication\Model\Publication::STATUS_CREATED
+                - !php/const App\Domain\Publication\Model\Publication::STATUS_STARTED
+                - !php/const App\Domain\Publication\Model\Publication::STATUS_SUCCESS
+                - !php/const App\Domain\Publication\Model\Publication::STATUS_FAILED
+            transitions:
+                process_start:
+                    from:
+                        - !php/const App\Domain\Publication\Model\Publication::STATUS_CREATED
+                        - !php/const App\Domain\Publication\Model\Publication::STATUS_FAILED
+                    to:   !php/const App\Domain\Publication\Model\Publication::STATUS_STARTED
+                process_success:
+                    from: !php/const App\Domain\Publication\Model\Publication::STATUS_STARTED
+                    to:   !php/const App\Domain\Publication\Model\Publication::STATUS_SUCCESS
+                process_failure:
+                    from: !php/const App\Domain\Publication\Model\Publication::STATUS_STARTED
+                    to:   !php/const App\Domain\Publication\Model\Publication::STATUS_FAILED
+
+        delivery_execution:
+            type: 'state_machine'
+            audit_trail:
+                enabled: true
+            marking_store:
+                type: 'method'
+                property: status
+            supports:
+                - App\Repository\DeliveryExecutionRepository
+            initial_marking: !php/const App\Domain\DeliveryExecution\Model\DeliveryExecution::STATUS_INITIAL
+            places:
+                - !php/const App\Domain\DeliveryExecution\Model\DeliveryExecution::STATUS_INITIAL
+                - !php/const App\Domain\DeliveryExecution\Model\DeliveryExecution::STATUS_INTERACTING
+                - !php/const App\Domain\DeliveryExecution\Model\DeliveryExecution::STATUS_SUSPENDED
+                - !php/const App\Domain\DeliveryExecution\Model\DeliveryExecution::STATUS_TERMINATED
+                - !php/const App\Domain\DeliveryExecution\Model\DeliveryExecution::STATUS_CLOSED
+            transitions:
+                begin_attempt:
+                    from: !php/const App\Domain\DeliveryExecution\Model\DeliveryExecution::STATUS_INITIAL
+                    to:   !php/const App\Domain\DeliveryExecution\Model\DeliveryExecution::STATUS_INTERACTING
+                close_attempt:
+                    from: !php/const App\Domain\DeliveryExecution\Model\DeliveryExecution::STATUS_INTERACTING
+                    to:   !php/const App\Domain\DeliveryExecution\Model\DeliveryExecution::STATUS_CLOSED
+                suspend_attempt:
+                    from: !php/const App\Domain\DeliveryExecution\Model\DeliveryExecution::STATUS_INTERACTING
+                    to:   !php/const App\Domain\DeliveryExecution\Model\DeliveryExecution::STATUS_SUSPENDED
+                reinitialize_suspended_attempt:
+                    from: !php/const App\Domain\DeliveryExecution\Model\DeliveryExecution::STATUS_SUSPENDED
+                    to:   !php/const App\Domain\DeliveryExecution\Model\DeliveryExecution::STATUS_INTERACTING
+                terminate_attempt:
+                    from: !php/const App\Domain\DeliveryExecution\Model\DeliveryExecution::STATUS_INTERACTING
+                    to:   !php/const App\Domain\DeliveryExecution\Model\DeliveryExecution::STATUS_TERMINATED
+                terminate_suspended_attempt:
+                    from: !php/const App\Domain\DeliveryExecution\Model\DeliveryExecution::STATUS_SUSPENDED
+                    to:   !php/const App\Domain\DeliveryExecution\Model\DeliveryExecution::STATUS_TERMINATED

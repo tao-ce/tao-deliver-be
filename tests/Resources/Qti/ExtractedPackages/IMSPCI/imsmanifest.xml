@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+
+<!--
+SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+
+SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+-->
+
+<manifest xmlns="http://www.imsglobal.org/xsd/imscp_v1p1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imscp_v1p1 http://www.imsglobal.org/xsd/qti/qtiv2p1/qtiv2p1_imscpv1p2_v1p0.xsd http://ltsc.ieee.org/xsd/LOM http://www.imsglobal.org/xsd/imsmd_loose_v1p3p2.xsd http://ltsc.ieee.org/xsd/LOM http://www.imsglobal.org/xsd/imsmd_loose_v1p3p2.xsd" identifier="QTI-TEST-MANIFEST-tao5fb2615040dff9-43584127" xmlns:imsmd="http://ltsc.ieee.org/xsd/LOM">
+    <metadata>
+        <schema>QTIv2.1 Package</schema>
+        <schemaversion>1.0.0</schemaversion>
+    </metadata>
+    <organizations/>
+    <resources>
+            <resource identifier="i5fb260920ffba14b64692994a183a26" type="imsqti_item_xmlv2p1" href="items/i5fb260920ffba14b64692994a183a26/qti.xml">
+            <metadata><imsmd:lom><imsmd:classification><imsmd:taxonPath><imsmd:source><imsmd:string xml:lang="en-US">http://www.w3.org/2000/01/rdf-schema#label</imsmd:string></imsmd:source><imsmd:taxon><imsmd:entry><imsmd:string xml:lang="en-US">IMS 1</imsmd:string></imsmd:entry></imsmd:taxon></imsmd:taxonPath></imsmd:classification></imsmd:lom></metadata><file href="items/i5fb260920ffba14b64692994a183a26/qti.xml"/>
+                        <file href="likert/runtime/js/likertInteraction.min.js"/>
+                        <file href="runtime/fractionModelInteraction.min.js"/>
+                        <file href="runtime/graphFunctionInteraction.min.js"/>
+                        <file href="runtime/graphLineAndPointInteraction.min.js"/>
+                        <file href="runtime/graphNumberLineInteraction.min.js"/>
+                        <file href="runtime/graphPointLineGraphInteraction.min.js"/>
+                        <file href="runtime/graphZoomNumberLineInteraction.min.js"/>
+                        <file href="likert/runtime/js/likertInteraction.js"/>
+                        <file href="likert/runtime/js/renderer.js"/>
+                        <file href="items/i5fb260920ffba14b64692994a183a26/style/custom/tao-user-styles.css"/>
+                        <file href="likert/runtime/likertConfig.json"/>
+                    </resource><resource identifier="i5fb2608f4cc9714e9d8af72d6ad5089" type="imsqti_test_xmlv2p1" href="tests/i5fb2608f4cc9714e9d8af72d6ad5089/test.xml"><metadata><imsmd:lom><imsmd:classification><imsmd:taxonPath><imsmd:source><imsmd:string xml:lang="en-US">http://www.w3.org/2000/01/rdf-schema#label</imsmd:string></imsmd:source><imsmd:taxon><imsmd:entry><imsmd:string xml:lang="en-US">All IMS</imsmd:string></imsmd:entry></imsmd:taxon></imsmd:taxonPath></imsmd:classification></imsmd:lom></metadata><file href="tests/i5fb2608f4cc9714e9d8af72d6ad5089/test.xml"/><dependency identifierref="i5fb260920ffba14b64692994a183a26"/></resource></resources>
+</manifest>

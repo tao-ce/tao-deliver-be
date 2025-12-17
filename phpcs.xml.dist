@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="PHP_CodeSniffer" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
+  <description>The coding standard for PHP_CodeSniffer itself.</description>
+  <file>./public/index.php</file>
+  <file>./src</file>
+  <file>./tests</file>
+  <arg name="basepath" value="."></arg>
+  <arg value="np"></arg>
+  <arg name="extensions" value="php"></arg>
+  <rule ref="PSR12"></rule>
+</ruleset>

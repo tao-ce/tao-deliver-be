@@ -1,0 +1,13 @@
+/*
+ * SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+ */
+
+.qti-customInteraction .likertScaleInteraction{
+    width:100%;
+    padding:10px 20px 16px;
+    margin-bottom:20px;
+    background-image: url("img/bg.png");
+    background-repeat: repeat;
+}

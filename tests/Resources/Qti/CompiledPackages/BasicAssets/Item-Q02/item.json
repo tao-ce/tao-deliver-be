@@ -1,0 +1,133 @@
+{
+    "type": "qti",
+    "data": {
+        "identifier": "Q02",
+        "serial": "i5d70b7b019078",
+        "qtiClass": "assessmentItem",
+        "attributes": {
+            "identifier": "Q02",
+            "title": "What are his favourite collectables?",
+            "label": "",
+            "adaptive": false,
+            "timeDependent": false,
+            "toolName": "TAO",
+            "toolVersion": "NextGen",
+            "class": ""
+        },
+        "body": {
+            "serial": "i5d70b7b019071",
+            "body": "\n        <div>\n            {{i5d70b7b019375}}\n        <\/div>\n\t\t{{i5d70b7b0191d9}}\n\t",
+            "elements": {
+                "i5d70b7b0191d9": {
+                    "serial": "i5d70b7b0191d9",
+                    "qtiClass": "choiceInteraction",
+                    "attributes": {
+                        "responseIdentifier": "RESPONSE",
+                        "shuffle": false,
+                        "maxChoices": 1,
+                        "minChoices": 0,
+                        "id": "interaction"
+                    },
+                    "choices": {
+                        "i5d70b7b019269": {
+                            "identifier": "lego",
+                            "serial": "i5d70b7b019269",
+                            "qtiClass": "simpleChoice",
+                            "attributes": {
+                                "identifier": "lego",
+                                "fixed": false
+                            },
+                            "body": {
+                                "serial": "i5d70b7b019279",
+                                "body": "A building-block game we are not allowed to say the name",
+                                "elements": {}
+                            }
+                        },
+                        "i5d70b7b0192b9": {
+                            "identifier": "cards",
+                            "serial": "i5d70b7b0192b9",
+                            "qtiClass": "simpleChoice",
+                            "attributes": {
+                                "identifier": "cards",
+                                "fixed": false
+                            },
+                            "body": {
+                                "serial": "i5d70b7b0192c2",
+                                "body": "Basket-Ball cards",
+                                "elements": {}
+                            }
+                        },
+                        "i5d70b7b0192fb": {
+                            "identifier": "socks",
+                            "serial": "i5d70b7b0192fb",
+                            "qtiClass": "simpleChoice",
+                            "attributes": {
+                                "identifier": "socks",
+                                "fixed": false
+                            },
+                            "body": {
+                                "serial": "i5d70b7b019303",
+                                "body": "Last century rainbow-stripped socks",
+                                "elements": {}
+                            }
+                        }
+                    },
+                    "prompt": {
+                        "serial": "i5d70b7b019214",
+                        "body": "What are the favourite collectables of J\u00e9r\u00f4me",
+                        "elements": {}
+                    }
+                },
+                "i5d70b7b019375": {
+                    "serial": "i5d70b7b019375",
+                    "qtiClass": "img",
+                    "attributes": {
+                        "src": "logo.png",
+                        "alt": "OAT Logo"
+                    }
+                }
+            }
+        },
+        "namespaces": {
+            "": "http:\/\/www.imsglobal.org\/xsd\/imsqti_v2p1",
+            "xsi": "http:\/\/www.w3.org\/2001\/XMLSchema-instance"
+        },
+        "schemaLocations": {
+            "http:\/\/www.imsglobal.org\/xsd\/imsqti_v2p1": "http:\/\/www.imsglobal.org\/xsd\/qti\/qtiv2p1\/imsqti_v2p1.xsd"
+        },
+        "stylesheets": {},
+        "outcomes": {
+            "i5d70b7b019130": {
+                "identifier": "SCORE",
+                "serial": "i5d70b7b019130",
+                "qtiClass": "outcomeDeclaration",
+                "attributes": {
+                    "identifier": "SCORE",
+                    "cardinality": "single",
+                    "baseType": "float"
+                },
+                "defaultValue": "0"
+            }
+        },
+        "responses": {
+            "i5d70b7b0190ea": {
+                "identifier": "RESPONSE",
+                "serial": "i5d70b7b0190ea",
+                "qtiClass": "responseDeclaration",
+                "attributes": {
+                    "identifier": "RESPONSE",
+                    "cardinality": "single",
+                    "baseType": "identifier"
+                },
+                "defaultValue": []
+            }
+        },
+        "feedbacks": {},
+        "apipAccessibility": ""
+    },
+    "assets": {
+        "img": {
+            "logo.png": "logo.png"
+        }
+    }
+}

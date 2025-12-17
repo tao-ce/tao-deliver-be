@@ -1,0 +1,122 @@
+{
+    "type": "qti",
+    "data": {
+        "identifier": "Q01",
+        "serial": "i5da9b32d56973",
+        "qtiClass": "assessmentItem",
+        "attributes": {
+            "identifier": "Q01",
+            "title": "What is TAO?",
+            "label": "What is TAO?",
+            "xml:lang": "en-US",
+            "adaptive": false,
+            "timeDependent": false,
+            "toolName": "TAO",
+            "toolVersion": "NextGen",
+            "class": ""
+        },
+        "body": {
+            "serial": "i5da9b32d56969",
+            "body": "\n    {{i5da9b32d56aa8}}\n  ",
+            "elements": {
+                "i5da9b32d56aa8": {
+                    "serial": "i5da9b32d56aa8",
+                    "qtiClass": "choiceInteraction",
+                    "attributes": {
+                        "responseIdentifier": "RESPONSE",
+                        "shuffle": false,
+                        "maxChoices": 1,
+                        "minChoices": 0,
+                        "id": "interaction"
+                    },
+                    "choices": {
+                        "i5da9b32d56b3e": {
+                            "identifier": "chinese",
+                            "serial": "i5da9b32d56b3e",
+                            "qtiClass": "simpleChoice",
+                            "attributes": {
+                                "identifier": "chinese",
+                                "fixed": false
+                            },
+                            "body": {
+                                "serial": "i5da9b32d56b53",
+                                "body": "A metaphysical Chinese concept",
+                                "elements": {}
+                            }
+                        },
+                        "i5da9b32d56b9f": {
+                            "identifier": "tao",
+                            "serial": "i5da9b32d56b9f",
+                            "qtiClass": "simpleChoice",
+                            "attributes": {
+                                "identifier": "tao",
+                                "fixed": false
+                            },
+                            "body": {
+                                "serial": "i5da9b32d56bb3",
+                                "body": "A commercial-grade, open-source assessment platform.",
+                                "elements": {}
+                            }
+                        },
+                        "i5da9b32d56bfd": {
+                            "identifier": "drink",
+                            "serial": "i5da9b32d56bfd",
+                            "qtiClass": "simpleChoice",
+                            "attributes": {
+                                "identifier": "drink",
+                                "fixed": false
+                            },
+                            "body": {
+                                "serial": "i5da9b32d56c10",
+                                "body": "A soft drink",
+                                "elements": {}
+                            }
+                        }
+                    },
+                    "prompt": {
+                        "serial": "i5da9b32d56ae5",
+                        "body": "What is TAO?",
+                        "elements": {}
+                    }
+                }
+            }
+        },
+        "namespaces": {
+            "": "http:\/\/www.imsglobal.org\/xsd\/imsqti_v2p1",
+            "xsi": "http:\/\/www.w3.org\/2001\/XMLSchema-instance"
+        },
+        "schemaLocations": {
+            "http:\/\/www.imsglobal.org\/xsd\/imsqti_v2p1": "http:\/\/www.imsglobal.org\/xsd\/qti\/qtiv2p1\/imsqti_v2p1.xsd"
+        },
+        "stylesheets": {},
+        "outcomes": {
+            "i5da9b32d56a3e": {
+                "identifier": "SCORE",
+                "serial": "i5da9b32d56a3e",
+                "qtiClass": "outcomeDeclaration",
+                "attributes": {
+                    "identifier": "SCORE",
+                    "cardinality": "single",
+                    "baseType": "float"
+                },
+                "defaultValue": "0"
+            }
+        },
+        "responses": {
+            "i5da9b32d569de": {
+                "identifier": "RESPONSE",
+                "serial": "i5da9b32d569de",
+                "qtiClass": "responseDeclaration",
+                "attributes": {
+                    "identifier": "RESPONSE",
+                    "cardinality": "single",
+                    "baseType": "identifier"
+                },
+                "defaultValue": []
+            }
+        },
+        "feedbacks": {},
+        "apipAccessibility": ""
+    },
+    "assets": []
+}

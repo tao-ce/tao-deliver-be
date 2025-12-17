@@ -1,0 +1,22 @@
+<?php
+
+// SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+// Copyright (C) 2023 (original work) Open Assessment Technologies SA;
+//
+// SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+declare(strict_types=1);
+
+namespace App\Service\Encryption\Contract;
+
+use App\Service\Encryption\Exception\EncryptionKeyNotInitializedException;
+
+interface EncryptorInterface
+{
+    /**
+     * @throws EncryptionKeyNotInitializedException
+     */
+    public function encrypt(string $data): string;
+
+    public function setEncryptionKey(string $key): static;
+}

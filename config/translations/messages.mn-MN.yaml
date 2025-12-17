@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+test:
+    not:
+        available: Шалгалт байхгүй байна.
+        access: Танд энэ шалгалтад хандах зөвшөөрөл байхгүй байна.
+        found: Уучлаарай, бид таны шалгалтыг олж чадсангүй.
+    cannot:
+        start: Уучлаарай, таны шалгалтыг эхлүүлэх боломжгүй байна.
+    relaunch:
+        contact:
+          administrator: Шалгалтаа дахин эхлүүлэх эсвэл админтайгаа холбогдоно уу.
+          test_administrator: Та шалгалтаа дахин эхлүүлэх эсвэл шалгалтын админтайгаа холбогдоно уу.
+contact:
+    administrator: Шалгалтын админтайгаа холбогдоно уу.

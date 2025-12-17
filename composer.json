@@ -1,0 +1,218 @@
+{
+  "name": "oat-sa/tao-deliver-be",
+  "description": "TAO Deliver Backend",
+  "type": "project",
+  "license": "AGPL-3.0-only OR LicenseRef-TAO-Commercial-License",
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/oat-sa/bundle-document-manager"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/oat-sa/bundle-filesystem-document-manager"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/oat-sa/bundle-bigtable-document-manager"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/oat-sa/bundle-elasticsearch-document-manager"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/oat-sa/bundle-cache-document-manager"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/oat-sa/lib-qti-item-json-compilation"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/oat-sa/lib-tenant-management"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/oat-sa/lib-em-php-client"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/oat-sa/lib-em-php-lti-client"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/oat-sa/lib-em-php-lti-events"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/oat-sa/bundle-em-client"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/oat-sa/bundle-qti"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/oat-sa/tao-timers-client.git"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/oat-sa/lib-grader-messenger-bridge.git"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/oat-sa/bundle-grader-messenger-bridge.git"
+    }
+  ],
+  "require": {
+    "php": "^8.3",
+    "ext-apcu": "*",
+    "ext-ctype": "*",
+    "ext-curl": "*",
+    "ext-dom": "*",
+    "ext-iconv": "*",
+    "ext-igbinary": "^3.1.6",
+    "ext-intl": "*",
+    "ext-json": "*",
+    "ext-mbstring": "*",
+    "ext-openssl": "*",
+    "ext-sockets": "*",
+    "ext-zip": "*",
+    "ext-zlib": "*",
+    "composer/package-versions-deprecated": "^1.11",
+    "doctrine/annotations": "^2.0",
+    "google/cloud-bigtable": "2.18.0",
+    "google/cloud-core": "1.64.2",
+    "google/cloud-pubsub": "2.13.2",
+    "google/gax": "1.36.0",
+    "google/protobuf": "4.31.1",
+    "justinrainbow/json-schema": "^6.2.1",
+    "lcobucci/jwt": "^4.3",
+    "league/csv": "^9.22",
+    "league/flysystem-bundle": "^3.4",
+    "league/flysystem-google-cloud-storage": "^3.30",
+    "league/mime-type-detection": "^1.16",
+    "league/oauth2-server": "^8.5",
+    "nelmio/cors-bundle": "^2.5",
+    "nesbot/carbon": "^3.8",
+    "nyholm/psr7": "^1.8",
+    "oat-sa/bundle-bigtable-document-manager": "^0.12",
+    "oat-sa/bundle-cache-document-manager": "^0.4",
+    "oat-sa/bundle-document-manager": "^0.7",
+    "oat-sa/bundle-elasticsearch-document-manager": "^0.5",
+    "oat-sa/bundle-em-client": "^3.10",
+    "oat-sa/bundle-filesystem-document-manager": "^0.6",
+    "oat-sa/bundle-grader-messenger-bridge": "^3.0",
+    "oat-sa/bundle-health-check": "^2.3",
+    "oat-sa/bundle-lti1p3": "^8.0",
+    "oat-sa/bundle-qti": "^1.3",
+    "oat-sa/lib-em-php-client": "^3.10",
+    "oat-sa/lib-em-php-lti-client": "~3",
+    "oat-sa/lib-em-php-lti-events": "~3",
+    "oat-sa/lib-lti1p3-deep-linking": "^4.0",
+    "oat-sa/lib-lti1p3-proctoring": "^1.0",
+    "oat-sa/lib-qti-item-json-compilation": "^0.13",
+    "oat-sa/lib-tenant-management": "^1.4.0",
+    "oat-sa/tao-timers-client": "^1.5.0",
+    "petitpress/gps-messenger-bundle": "^3.2.0",
+    "php-http/guzzle7-adapter": "^1.1",
+    "phpdocumentor/reflection-docblock": "^5.6",
+    "psr/http-message": "^2.0",
+    "psr/simple-cache": "^3.0",
+    "qtism/qtism": "^19.7.1",
+    "ramsey/uuid": "^4.7",
+    "symfony/cache": "*",
+    "symfony/console": "*",
+    "symfony/dom-crawler": "*",
+    "symfony/dotenv": "*",
+    "symfony/expression-language": "*",
+    "symfony/finder": "*",
+    "symfony/flex": "~2",
+    "symfony/framework-bundle": "*",
+    "symfony/http-client": "*",
+    "symfony/http-foundation": "*",
+    "symfony/lock": "*",
+    "symfony/messenger": "*",
+    "symfony/monolog-bundle": "^3.10",
+    "symfony/property-access": "*",
+    "symfony/property-info": "*",
+    "symfony/proxy-manager-bridge": "*",
+    "symfony/psr-http-message-bridge": "^7.2",
+    "symfony/serializer": "*",
+    "symfony/stopwatch": "*",
+    "symfony/translation": "*",
+    "symfony/twig-bundle": "*",
+    "symfony/validator": "*",
+    "symfony/workflow": "*",
+    "symfony/yaml": "*",
+    "twig/twig": "^3.20"
+  },
+  "require-dev": {
+    "ext-sqlite3": "*",
+    "friendsofphp/php-cs-fixer": "^3.80",
+    "league/flysystem-memory": "^3.0",
+    "predis/predis": "^2.0",
+    "symfony/browser-kit": "*",
+    "symfony/phpunit-bridge": "*",
+    "zoltanka/bypass-readonly": "^0.0.4"
+  },
+  "prefer-stable": true,
+  "config": {
+    "preferred-install": {
+      "*": "dist"
+    },
+    "sort-packages": true,
+    "allow-plugins": {
+      "composer/package-versions-deprecated": true,
+      "symfony/flex": true,
+      "php-http/discovery": true
+    }
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "App\\Tests\\": "tests/"
+    }
+  },
+  "replace": {
+    "paragonie/random_compat": "2.*",
+    "symfony/polyfill-ctype": "*",
+    "symfony/polyfill-iconv": "*",
+    "symfony/polyfill-php81": "*",
+    "symfony/polyfill-php82": "*",
+    "symfony/polyfill-php83": "*",
+    "symfony/polyfill-php84": "*"
+  },
+  "scripts": {
+    "auto-scripts": {
+      "cache:clear": "symfony-cmd",
+      "cache:warmup": "symfony-cmd",
+      "assets:install %PUBLIC_DIR%": "symfony-cmd",
+      "if [ \"$COMPOSER_DEV_MODE\" = \"0\" ]; then bin/console cache:clear --env=worker; fi": "script",
+      "if [ \"$COMPOSER_DEV_MODE\" = \"0\" ]; then bin/console cache:warmup --env=worker; fi": "script"
+    },
+    "post-install-cmd": [
+      "@auto-scripts"
+    ],
+    "post-update-cmd": [
+      "@auto-scripts"
+    ]
+  },
+  "extra": {
+    "symfony": {
+      "allow-contrib": true,
+      "require": "6.4.*"
+    }
+  },
+  "authors": [
+    {
+      "name": "Open Assessment Technologies S.A.",
+      "homepage": "https://www.taotesting.com"
+    }
+  ]
+}

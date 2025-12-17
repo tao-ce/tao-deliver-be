@@ -1,0 +1,228 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+metrics:
+    path: '/metrics'
+    methods: GET
+    controller: App\Action\Metrics\GetPrometheusMetricsAction
+
+api_v1_launch_lti_1p3_root:
+  path: '/api/v1/auth/launch-lti-1p3'
+  methods: GET|POST
+  controller: App\Action\Security\Lti\LaunchLti1p3Action
+
+api_v1_launch_lti_1p3:
+  path: '/api/v1/auth/launch-lti-1p3/{deliveryId}'
+  methods: GET|POST
+  controller: App\Action\Security\Lti\LaunchLti1p3Action
+
+api_v1_launch_lti_1p3_battery_root:
+  path: '/api/v1/auth/launch-lti-1p3-battery'
+  methods: GET|POST
+  controller: App\Action\Security\Lti\LaunchLti1p3BatteryAction
+
+api_v1_launch_lti_1p3_battery:
+  path: '/api/v1/auth/launch-lti-1p3-battery/{batteryId}'
+  methods: GET|POST
+  controller: App\Action\Security\Lti\LaunchLti1p3BatteryAction
+
+api_v1_battery_password_validation:
+  path: '/api/v1/auth/battery-password-validation/{id}'
+  methods: GET|POST
+  controller: App\Action\Security\Battery\BatteryPasswordValidationAction
+
+api_v1_battery_continue:
+  path: '/api/v1/auth/battery-continue/{id}'
+  methods: GET|POST
+  controller: App\Action\Security\Battery\BatteryContinueAction
+
+api_v1_set_battery_distribution_locale:
+  path: '/api/v1/battery-distributions/{batteryDistributionId}/locale'
+  methods: PUT
+  controller: App\Action\Battery\AssignLocaleToBatteryDistributionAction
+
+api_v1_post_publication:
+    path: '/api/v1/publications'
+    methods: POST
+    controller: App\Action\Publication\CreatePublicationAction
+
+api_v1_get_publication:
+    path: '/api/v1/publications/{id}'
+    methods: GET
+    controller: App\Action\Publication\GetPublicationAction
+
+api_v1_get_delivery:
+    path: '/api/v1/deliveries/{id}'
+    methods: GET
+    controller: App\Action\Delivery\GetDeliveryAction
+
+api_v1_attach_language_to_delivery:
+  path: '/api/v1/deliveries/{id}/localization/{locale}'
+  methods: PUT
+  controller: App\Action\Delivery\AttachLanguageToDeliveryAction
+
+api_v1_clone_delivery:
+    path: '/api/v1/deliveries/{id}/clone-data'
+    methods: PUT
+    controller: App\Action\Delivery\CloneDeliveryDataAction
+
+api_v1_publish_delivery:
+    path: '/api/v1/deliveries/{id}/publish-clone'
+    methods: POST
+    controller: App\Action\Delivery\PublishDeliveryCloneAction
+
+api_v1_get_delivery_statistics:
+    path: '/api/v1/deliveries/{id}/statistics'
+    methods: GET
+    controller: App\Action\Delivery\GetDeliveryStatisticsAction
+
+api_v1_delete_delivery:
+  path: '/api/v1/deliveries/{id}'
+  methods: DELETE
+  controller: App\Action\Delivery\DeleteDeliveryAction
+
+api_v1_list_deliveries:
+    path: '/api/v1/deliveries'
+    methods: GET
+    controller: App\Action\Delivery\ListDeliveriesAction
+
+api_v1_update_delivery:
+    path: '/api/v1/deliveries/{id}'
+    methods: PATCH
+    controller: App\Action\Delivery\UpdateDeliveryAction
+
+api_v1_delete_delivery_execution:
+    path: '/api/v1/delivery-executions/{id}'
+    methods: DELETE
+    controller: App\Action\DeliveryExecution\DeleteDeliveryExecutionAction
+    defaults:
+      em_oauth2_scopes:
+        - 'proctor:external-access'
+        - 'https://purl.imsglobal.org/spec/lti-ap/scope/control.all'
+
+api_v1_invalidate_delivery_execution_result:
+    path: '/api/v1/delivery-executions/{id}/invalidate-result'
+    methods: POST
+    controller: App\Action\DeliveryExecution\InvalidateResultAction
+
+api_v1_set_delivery_execution_locale:
+  path: '/api/v1/delivery-executions/{id}/locale'
+  methods: PUT
+  controller: App\Action\DeliveryExecution\SetLocaleAction
+
+api_v1_battery_review:
+  path: '/api/v1/delivery-executions/{id}/battery-review'
+  methods: GET
+  controller: App\Action\DeliveryExecution\BatteryReviewAction
+
+api_v1_auto_review:
+    path: '/api/v1/delivery-executions/{id}/auto-review'
+    methods: GET
+    controller: App\Action\DeliveryExecution\AutoReviewAction
+
+api_v1_post_delivery_execution_actions:
+    path: '/api/v1/delivery-executions/{id}/actions'
+    methods: POST
+    controller: App\Action\DeliveryExecution\ProcessActionsAction
+
+api_v1_post_delivery_execution_log:
+    path: '/api/v1/delivery-executions/{id}/log'
+    methods: POST
+    controller: App\Action\DeliveryExecution\LogAction
+    requirements:
+        id: .+
+
+api_v1_post_delivery_execution_review_internal_comment:
+    path: '/api/v1/delivery-executions/{id}/scoring/inline-comment'
+    methods: PUT
+    controller: App\Action\DeliveryExecution\SetInlineCommentAction
+    requirements:
+        id: .+
+
+api_v1_get_init_items:
+    path: '/api/v1/init-items/{id}'
+    methods: GET
+    controller: App\Action\Items\GetInitItems
+
+api_v1_get_delivery_execution_configuration:
+    path: '/api/v1/delivery-executions/{id}/configuration'
+    methods: GET
+    controller: App\Action\DeliveryExecution\GetDeliveryExecutionConfigurationAction
+
+api_v1_get_results:
+    path: '/api/v1/delivery-executions/{id}/results'
+    methods: GET
+    controller: App\Action\DeliveryExecution\GetResultAction
+    requirements:
+        id: .+
+
+api_v1_post_delivery_execution_sync:
+    path: '/api/v1/delivery-executions/sync'
+    methods: POST
+    controller: App\Action\DeliveryExecution\SynchronizeAction
+
+api_v1_delivery_execution_get_attachments_download_and_upload_path:
+  path: '/api/v1/delivery-executions/{id}/attachments'
+  methods: POST
+  controller: App\Action\DeliveryExecution\GetAttachmentsDownloadUploadUrlAction
+  requirements:
+    id: .+
+
+api_v1_create_logs:
+  path: '/api/v1/logs'
+  methods: POST
+  controller: App\Action\Log\CreateLogsAction
+
+api_v1_proctoring_end_assessment_return:
+    path: '/api/v1/delivery-executions/{deliveryExecutionId}/return-to-proctoring'
+    methods: GET
+    controller: App\Action\Security\Lti\Proctoring\EndAssessmentReturnAction
+
+api_v1_proctoring_start_assessment:
+    path: '/api/v1/proctoring/start-assessment/{deliveryExecutionId}'
+    methods: POST
+    controller: App\Action\Security\Lti\Proctoring\StartAssessmentAction
+
+api_v1_proctoring_assessment_control:
+    path: '/api/v1/proctoring/assessment-control/{deliveryExecutionId}'
+    methods: POST
+    controller: App\Action\Acs\AcsAction
+    defaults:
+      em_oauth2_scopes:
+        - 'https://purl.imsglobal.org/spec/lti-ap/scope/control.all'
+
+api_v1_external_proctoring_assessment_control:
+    path: '/api/v1/proctoring/external/assessment-control/{alias}'
+    methods: POST
+    controller: App\Action\Acs\External\AssessmentControlAction
+
+api_v1_lti_get_deep_links:
+    path: '/api/v1/lti/deep-links'
+    methods: [GET, POST]
+    controller: App\Action\Lti\DeepLinking\GetDeepLinksAction
+
+api_v1_lti_submit_deep_links:
+    path: '/api/v1/lti/deep-links/submit'
+    methods: POST
+    controller: App\Action\Lti\DeepLinking\SubmitDeepLinksAction
+
+api_v1_lti_get_deep_link_deliveries:
+    path: '/api/v1/lti/deep-links/deliveries'
+    methods: GET
+    controller: App\Action\Lti\DeepLinking\GetDeliveriesAction
+
+api_v1_lti_get_deep_link_batteries:
+    path: '/api/v1/lti/deep-links/batteries'
+    methods: GET
+    controller: App\Action\Lti\DeepLinking\GetBatteriesAction
+
+api_v1_get_hbl_report:
+    path: '/api/v1/delivery-executions/{id}/hbl/{reportId}'
+    methods: GET
+    controller: App\PlagiarismReport\Action\GetPlagiarismReport
+
+api_v1_get_compact_test_map:
+    path: '/api/v1/flat-test-map/{id}'
+    methods: GET
+    controller: App\FlatTestMap\Action\GetCompactTestMapAction

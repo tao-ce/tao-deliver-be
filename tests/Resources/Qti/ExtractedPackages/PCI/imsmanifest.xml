@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<!--
+SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+
+SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+-->
+
+<manifest xmlns="http://www.imsglobal.org/xsd/imscp_v1p1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imscp_v1p1 http://www.imsglobal.org/xsd/qti/qtiv2p2/qtiv2p2_imscpv1p2_v1p0.xsd http://ltsc.ieee.org/xsd/LOM http://www.imsglobal.org/xsd/imsmd_loose_v1p3p2.xsd http://ltsc.ieee.org/xsd/LOM http://www.imsglobal.org/xsd/imsmd_loose_v1p3p2.xsd" identifier="QTI-TEST-MANIFEST-tao5f9bf03cf35c93-29819465" xmlns:imsmd="http://ltsc.ieee.org/xsd/LOM">
+    <metadata>
+        <schema>QTIv2.2 Package</schema>
+        <schemaversion>1.0.0</schemaversion>
+    </metadata>
+    <organizations/>
+    <resources>
+            <resource identifier="Q01" type="imsqti_item_xmlv2p2" href="Q01/qti.xml">
+            <metadata><imsmd:lom><imsmd:classification><imsmd:taxonPath><imsmd:source><imsmd:string xml:lang="en-US">http://www.w3.org/2000/01/rdf-schema#label</imsmd:string></imsmd:source><imsmd:taxon><imsmd:entry><imsmd:string xml:lang="en-US">PCI 1</imsmd:string></imsmd:entry></imsmd:taxon></imsmd:taxonPath></imsmd:classification></imsmd:lom></metadata><file href="Q01/qti.xml"/>
+                        <file href="Q01/likertScaleInteraction/runtime/likertScaleInteraction.min.js"/>
+                        <file href="Q01/likertScaleInteraction/runtime/css/base.css"/>
+                        <file href="Q01/likertScaleInteraction/runtime/css/likertScaleInteraction.css"/>
+                        <file href="Q01/likertScaleInteraction/runtime/assets/ThumbDown.png"/>
+                        <file href="Q01/likertScaleInteraction/runtime/assets/ThumbUp.png"/>
+                        <file href="Q01/likertScaleInteraction/runtime/css/img/bg.png"/>
+                        <file href="Q01/likertScaleInteraction/runtime/js/likertScaleInteraction.js"/>
+                        <file href="Q01/likertScaleInteraction/runtime/js/renderer.js"/>
+                        <file href="Q01/style/custom/tao-user-styles.css"/>
+                    </resource><resource identifier="T01" type="imsqti_test_xmlv2p2" href="test.xml"><metadata><imsmd:lom><imsmd:classification><imsmd:taxonPath><imsmd:source><imsmd:string xml:lang="en-US">http://www.w3.org/2000/01/rdf-schema#label</imsmd:string></imsmd:source><imsmd:taxon><imsmd:entry><imsmd:string xml:lang="en-US">PCI Like</imsmd:string></imsmd:entry></imsmd:taxon></imsmd:taxonPath></imsmd:classification></imsmd:lom></metadata><file href="test.xml"/><dependency identifierref="Q01"/></resource></resources>
+</manifest>

@@ -1,0 +1,77 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\Twig\SignedUrlExtension:
+        tags: ['twig.extension']
+
+    App\Service\Result\ResultsDataFetcher:
+        class: App\Service\Result\ResultsDataFetcher
+        public: true
+
+    App\Repository\DeliveryExecutionRepository:
+        public: true
+
+    App\Generator\UuidGenerator:
+        public: true
+
+    App\Factory\BucketFactory:
+        class: App\Factory\BucketFactory
+        public: true
+
+    App\Service\DeliveryExecution\Contract\DeliveryExecutionServiceInterface:
+      public: true
+      alias: App\Service\DeliveryExecution\DeliveryExecutionService
+
+    App\Service\DeliveryExecution\DeliveryExecutionPropertyService:
+      public: true
+
+    App\Service\DeliveryExecution\Contract\RepositoryAwareDeliveryExecutionServiceInterface:
+      public: true
+      alias: App\Service\DeliveryExecution\LoggerAwareDeliveryExecutionService
+
+    App\TestRunner\Service\DeliveryExecutionClosureService:
+      public: true
+
+    App\DynamicQueryApi\Gateway\DynamicQueryApiGateway:
+      public: true
+      arguments:
+        $dynamicQueryApiUrl: '%dynamic_query_api.url%'
+        $dynamicQueryApiIndexBattery: '%dynamic_query_api.index.battery%'
+        $dynamicQueryApiIndexDelivery: '%dynamic_query_api.index.delivery%'
+
+    App\Lti\DeepLinking\Builder\ResourceCollectionBuilder:
+      public: true
+
+    App\Service\Lti\LtiProctoringService:
+      arguments:
+        $acsUrlReferenceType: !php/const Symfony\Component\Routing\Generator\UrlGeneratorInterface::NETWORK_PATH
+
+    OAT\Library\EnvironmentManagementClient\Repository\FeatureFlagRepositoryInterface:
+        class: App\Tests\Stubs\FeatureFlagRepositoryStub
+        public: true
+
+    OAT\Library\EnvironmentManagementClient\Repository\ConfigurationRepositoryInterface:
+      class: App\Tests\Stubs\ConfigurationRepositoryStub
+      public: true
+
+    OAT\Library\Lti1p3Proctoring\Message\Launch\Builder\StartAssessmentLaunchRequestBuilder:
+        public: true
+
+    OAT\Library\TaoTimerClient\Service\TimerServiceInterface:
+      class: App\Tests\Stubs\StubTimerService
+
+    OAT\Library\Lti1p3Core\Registration\RegistrationRepositoryInterface:
+      class: OAT\Library\EnvironmentManagementClient\Lti\Repository\RegistrationRepository
+      public: true
+
+    OAT\Library\Lti1p3Core\Message\Launch\Validator\Tool\ToolLaunchValidatorInterface:
+      public: true
+
+    OAT\Library\EnvironmentManagementLtiClient\Client\LtiAgsClientInterface:
+      public: true

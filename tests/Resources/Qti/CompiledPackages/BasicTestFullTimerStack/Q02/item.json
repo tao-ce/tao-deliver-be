@@ -1,0 +1,122 @@
+{
+    "type": "qti",
+    "data": {
+        "identifier": "Q02",
+        "serial": "i5db97d25eaf76",
+        "qtiClass": "assessmentItem",
+        "attributes": {
+            "identifier": "Q02",
+            "title": "What are his favourite collectables?",
+            "label": "What are his favourite collectables?",
+            "xml:lang": "en-US",
+            "adaptive": false,
+            "timeDependent": false,
+            "toolName": "TAO",
+            "toolVersion": "NextGen",
+            "class": ""
+        },
+        "body": {
+            "serial": "i5db97d25eaf72",
+            "body": "\n    {{i5db97d25eb069}}\n  ",
+            "elements": {
+                "i5db97d25eb069": {
+                    "serial": "i5db97d25eb069",
+                    "qtiClass": "choiceInteraction",
+                    "attributes": {
+                        "responseIdentifier": "RESPONSE",
+                        "shuffle": false,
+                        "maxChoices": 1,
+                        "minChoices": 0,
+                        "id": "interaction"
+                    },
+                    "choices": {
+                        "i5db97d25eb0de": {
+                            "identifier": "lego",
+                            "serial": "i5db97d25eb0de",
+                            "qtiClass": "simpleChoice",
+                            "attributes": {
+                                "identifier": "lego",
+                                "fixed": false
+                            },
+                            "body": {
+                                "serial": "i5db97d25eb0ec",
+                                "body": "A building-block game we are not allowed to say the name",
+                                "elements": {}
+                            }
+                        },
+                        "i5db97d25eb128": {
+                            "identifier": "cards",
+                            "serial": "i5db97d25eb128",
+                            "qtiClass": "simpleChoice",
+                            "attributes": {
+                                "identifier": "cards",
+                                "fixed": false
+                            },
+                            "body": {
+                                "serial": "i5db97d25eb134",
+                                "body": "Basket-Ball cards",
+                                "elements": {}
+                            }
+                        },
+                        "i5db97d25eb181": {
+                            "identifier": "socks",
+                            "serial": "i5db97d25eb181",
+                            "qtiClass": "simpleChoice",
+                            "attributes": {
+                                "identifier": "socks",
+                                "fixed": false
+                            },
+                            "body": {
+                                "serial": "i5db97d25eb18f",
+                                "body": "Last century rainbow-stripped socks",
+                                "elements": {}
+                            }
+                        }
+                    },
+                    "prompt": {
+                        "serial": "i5db97d25eb097",
+                        "body": "What are the favourite collectables of J\u00e9r\u00f4me",
+                        "elements": {}
+                    }
+                }
+            }
+        },
+        "namespaces": {
+            "": "http:\/\/www.imsglobal.org\/xsd\/imsqti_v2p1",
+            "xsi": "http:\/\/www.w3.org\/2001\/XMLSchema-instance"
+        },
+        "schemaLocations": {
+            "http:\/\/www.imsglobal.org\/xsd\/imsqti_v2p1": "imsqti_v2p1.xsd"
+        },
+        "stylesheets": {},
+        "outcomes": {
+            "i5db97d25eb00b": {
+                "identifier": "SCORE",
+                "serial": "i5db97d25eb00b",
+                "qtiClass": "outcomeDeclaration",
+                "attributes": {
+                    "identifier": "SCORE",
+                    "cardinality": "single",
+                    "baseType": "float"
+                },
+                "defaultValue": "0"
+            }
+        },
+        "responses": {
+            "i5db97d25eafc8": {
+                "identifier": "RESPONSE",
+                "serial": "i5db97d25eafc8",
+                "qtiClass": "responseDeclaration",
+                "attributes": {
+                    "identifier": "RESPONSE",
+                    "cardinality": "single",
+                    "baseType": "identifier"
+                },
+                "defaultValue": []
+            }
+        },
+        "feedbacks": {},
+        "apipAccessibility": ""
+    },
+    "assets": []
+}

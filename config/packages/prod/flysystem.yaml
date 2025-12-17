@@ -1,0 +1,77 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+parameters:
+    env(GOOGLE_CLOUD_STORAGE_EXTRA_ASSET_BUCKET_NAME): ''
+
+flysystem:
+    storages:
+        preuploaded_package.storage:
+            adapter: 'gcloud'
+            options:
+                client: 'Google\Cloud\Storage\StorageClient'
+                bucket: '%env(GOOGLE_CLOUD_STORAGE_PREUPLOADED_PACKAGE_BUCKET_NAME)%'
+
+        base64_zip.storage:
+            adapter: 'gcloud'
+            options:
+                client: 'Google\Cloud\Storage\StorageClient'
+                bucket: '%env(GOOGLE_CLOUD_STORAGE_BUCKET_NAME)%'
+                prefix: 'base64-zip-files'
+
+        qti_compiled_deliveries.storage:
+            adapter: 'gcloud'
+            options:
+                client: 'Google\Cloud\Storage\StorageClient'
+                bucket: '%env(GOOGLE_CLOUD_STORAGE_BUCKET_NAME)%'
+                prefix: 'compiled-deliveries'
+
+        delivery_execution_result.storage:
+            adapter: 'gcloud'
+            options:
+                client: 'Google\Cloud\Storage\StorageClient'
+                bucket: '%env(GOOGLE_CLOUD_STORAGE_BUCKET_NAME)%'
+                prefix: 'delivery-execution-results'
+
+        qti_asset_manager.storage:
+            adapter: 'gcloud'
+            options:
+                client: 'Google\Cloud\Storage\StorageClient'
+                bucket: '%env(GOOGLE_CLOUD_STORAGE_BUCKET_NAME)%'
+                prefix: 'assets'
+
+        delivery_execution_uploads.storage:
+            adapter: 'gcloud'
+            options:
+                client: 'Google\Cloud\Storage\StorageClient'
+                bucket: '%env(GOOGLE_CLOUD_STORAGE_BUCKET_NAME)%'
+                prefix: '%asset.url_signature_prefix_name%'
+
+        csv_results.storage:
+            adapter: 'gcloud'
+            options:
+                client: 'Google\Cloud\Storage\StorageClient'
+                bucket: '%env(GOOGLE_CLOUD_STORAGE_BUCKET_NAME)%'
+                prefix: 'csv-results'
+
+        data_store_results.storage:
+            adapter: 'gcloud'
+            options:
+                client: 'Google\Cloud\Storage\StorageClient'
+                bucket: '%env(GOOGLE_CLOUD_STORAGE_DATA_STORE_BUCKET_NAME)%'
+                prefix: 'data-store'
+
+        data_store_delivery_processing_input.storage:
+          adapter: 'gcloud'
+          options:
+            client: 'Google\Cloud\Storage\StorageClient'
+            bucket: '%env(GOOGLE_CLOUD_STORAGE_DELIVERY_PROCESSING_INPUT_BUCKET_NAME)%'
+#            prefix: 'dataStoreQTITests'
+
+        extra_asset.storage:
+            adapter: 'gcloud'
+            options:
+                client: 'Google\Cloud\Storage\StorageClient'
+                bucket: '%env(GOOGLE_CLOUD_STORAGE_EXTRA_ASSET_BUCKET_NAME)%'
+                prefix: '%extra_asset.storage.prefix%'

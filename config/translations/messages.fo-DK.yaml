@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
+#
+# SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
+
+test:
+    not:
+        available: Royndin er ikki tøk.
+        access: Tú hevur ikki rættindi til at fáa atgongd til hesa royndina.
+        found: Tíverri var royndin ikki funnin.
+    cannot:
+        start: Tíverri kann royndin ikki byrjast.
+    relaunch:
+        contact:
+            administrator: Vinarliga endurinnles royndina ella set teg í samband við ein umsitara.
+            test_administrator: Vinarliga endurinnles royndina ella set teg í samband royndarumsitaran.
+contact:
+    administrator: Vinarliga set teg í samband við royndarumsitaran.
