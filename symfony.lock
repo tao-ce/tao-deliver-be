@@ -85,9 +85,6 @@
     "google/auth": {
         "version": "v1.18.0"
     },
-    "google/cloud-bigtable": {
-        "version": "v2.8.0"
-    },
     "google/cloud-core": {
         "version": "v1.44.0"
     },
@@ -196,9 +193,6 @@
         "files": [
             "config/packages/nyholm_psr7.yaml"
         ]
-    },
-    "oat-sa/bundle-bigtable-document-manager": {
-        "version": "0.10.0"
     },
     "oat-sa/bundle-cache-document-manager": {
         "version": "0.4.0"

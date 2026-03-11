@@ -14,10 +14,6 @@
     },
     {
       "type": "vcs",
-      "url": "https://github.com/oat-sa/bundle-bigtable-document-manager"
-    },
-    {
-      "type": "vcs",
       "url": "https://github.com/oat-sa/bundle-elasticsearch-document-manager"
     },
     {
@@ -82,7 +78,6 @@
     "ext-zlib": "*",
     "composer/package-versions-deprecated": "^1.11",
     "doctrine/annotations": "^2.0",
-    "google/cloud-bigtable": "2.18.0",
     "google/cloud-core": "1.64.2",
     "google/cloud-pubsub": "2.13.2",
     "google/gax": "1.36.0",
@@ -97,7 +92,6 @@
     "nelmio/cors-bundle": "^2.5",
     "nesbot/carbon": "^3.8",
     "nyholm/psr7": "^1.8",
-    "oat-sa/bundle-bigtable-document-manager": "^0.12",
     "oat-sa/bundle-cache-document-manager": "^0.4",
     "oat-sa/bundle-document-manager": "^0.7",
     "oat-sa/bundle-elasticsearch-document-manager": "^0.5",
@@ -192,9 +186,7 @@
     "auto-scripts": {
       "cache:clear": "symfony-cmd",
       "cache:warmup": "symfony-cmd",
-      "assets:install %PUBLIC_DIR%": "symfony-cmd",
-      "if [ \"$COMPOSER_DEV_MODE\" = \"0\" ]; then bin/console cache:clear --env=worker; fi": "script",
-      "if [ \"$COMPOSER_DEV_MODE\" = \"0\" ]; then bin/console cache:warmup --env=worker; fi": "script"
+      "assets:install %PUBLIC_DIR%": "symfony-cmd"
     },
     "post-install-cmd": [
       "@auto-scripts"

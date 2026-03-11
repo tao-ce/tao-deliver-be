@@ -15,7 +15,7 @@ return [
     OAT\Bundle\ElasticsearchDocumentManagerBundle\ElasticsearchDocumentManagerBundle::class => ['all' => true],
     OAT\Bundle\QtiBundle\QtiBundle::class => ['all' => true],
     OAT\Bundle\FilesystemDocumentManagerBundle\FilesystemDocumentManagerBundle::class => ['all' => true],
-    OAT\Bundle\BigtableDocumentManagerBundle\BigtableDocumentManagerBundle::class => ['prod' => true, 'worker' => true],
+    // OAT\Bundle\BigtableDocumentManagerBundle\BigtableDocumentManagerBundle::class => ['prod' => true, 'worker' => true],
     OAT\Bundle\CacheDocumentManagerBundle\CacheDocumentManagerBundle::class => ['all' => true],
     OAT\Bundle\Lti1p3Bundle\Lti1p3Bundle::class => ['all' => true],
     OAT\Bundle\HealthCheckBundle\HealthCheckBundle::class => ['all' => true],

@@ -13,7 +13,7 @@ use App\DocumentManager\Driver\CachedElasticsearchDocumentDriver;
 use App\Domain\DeliveryExecution\Model\DeliveryExecution;
 use Google\Cloud\Bigtable\Filter;
 use InvalidArgumentException;
-use OAT\Bundle\BigtableDocumentManagerBundle\Driver\BigtableDocumentDriver;
+// use OAT\Bundle\BigtableDocumentManagerBundle\Driver\BigtableDocumentDriver;
 use OAT\Bundle\DocumentManagerBundle\Driver\ArrayDocumentDriver;
 use OAT\Bundle\DocumentManagerBundle\Driver\DocumentDriverInterface;
 use OAT\Bundle\DocumentManagerBundle\Filter\DocumentCollectionFilter;
