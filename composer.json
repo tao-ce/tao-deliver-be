@@ -3,64 +3,6 @@
   "description": "TAO Deliver Backend",
   "type": "project",
   "license": "AGPL-3.0-only OR LicenseRef-TAO-Commercial-License",
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/oat-sa/bundle-document-manager"
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/oat-sa/bundle-filesystem-document-manager"
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/oat-sa/bundle-elasticsearch-document-manager"
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/oat-sa/bundle-cache-document-manager"
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/oat-sa/lib-qti-item-json-compilation"
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/oat-sa/lib-tenant-management"
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/oat-sa/lib-em-php-client"
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/oat-sa/lib-em-php-lti-client"
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/oat-sa/lib-em-php-lti-events"
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/oat-sa/bundle-em-client"
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/oat-sa/bundle-qti"
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/oat-sa/tao-timers-client.git"
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/oat-sa/lib-grader-messenger-bridge.git"
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/oat-sa/bundle-grader-messenger-bridge.git"
-    }
-  ],
   "require": {
     "php": "^8.3",
     "ext-apcu": "*",
@@ -92,23 +34,24 @@
     "nelmio/cors-bundle": "^2.5",
     "nesbot/carbon": "^3.8",
     "nyholm/psr7": "^1.8",
-    "oat-sa/bundle-cache-document-manager": "^0.4",
-    "oat-sa/bundle-document-manager": "^0.7",
-    "oat-sa/bundle-elasticsearch-document-manager": "^0.5",
-    "oat-sa/bundle-em-client": "^3.10",
-    "oat-sa/bundle-filesystem-document-manager": "^0.6",
-    "oat-sa/bundle-grader-messenger-bridge": "^3.0",
-    "oat-sa/bundle-health-check": "^2.3",
-    "oat-sa/bundle-lti1p3": "^8.0",
-    "oat-sa/bundle-qti": "^1.3",
-    "oat-sa/lib-em-php-client": "^3.10",
-    "oat-sa/lib-em-php-lti-client": "~3",
-    "oat-sa/lib-em-php-lti-events": "~3",
-    "oat-sa/lib-lti1p3-deep-linking": "^4.0",
-    "oat-sa/lib-lti1p3-proctoring": "^1.0",
-    "oat-sa/lib-qti-item-json-compilation": "^0.13",
-    "oat-sa/lib-tenant-management": "^1.4.0",
-    "oat-sa/tao-timers-client": "^1.5.0",
+    "oat-sa/bundle-cache-document-manager": "*",
+    "oat-sa/bundle-document-manager": "dev-main as 0.7",
+    "oat-sa/bundle-elasticsearch-document-manager": "*",
+    "oat-sa/bundle-em-client": "dev-main",
+    "oat-sa/bundle-filesystem-document-manager": "*",
+    "oat-sa/bundle-grader-messenger-bridge": "*",
+    "oat-sa/lib-grader-messenger-bridge": "dev-main as 3.3",
+    "oat-sa/bundle-health-check": "*",
+    "oat-sa/bundle-lti1p3": "*",
+    "oat-sa/bundle-qti": "dev-main",
+    "oat-sa/lib-em-php-client": "dev-main",
+    "oat-sa/lib-em-php-lti-client": "dev-main",
+    "oat-sa/lib-em-php-lti-events": "dev-main",
+    "oat-sa/lib-lti1p3-deep-linking": "*",
+    "oat-sa/lib-lti1p3-proctoring": "*",
+    "oat-sa/lib-qti-item-json-compilation": "dev-main",
+    "oat-sa/lib-tenant-management": "dev-main",
+    "oat-sa/tao-timers-client": "dev-main",
     "petitpress/gps-messenger-bundle": "^3.2.0",
     "php-http/guzzle7-adapter": "^1.1",
     "phpdocumentor/reflection-docblock": "^5.6",
@@ -151,7 +94,8 @@
     "symfony/phpunit-bridge": "*",
     "zoltanka/bypass-readonly": "^0.0.4"
   },
-  "prefer-stable": true,
+  "minimum-stability": "dev",
+
   "config": {
     "preferred-install": {
       "*": "dist"
@@ -176,11 +120,7 @@
   "replace": {
     "paragonie/random_compat": "2.*",
     "symfony/polyfill-ctype": "*",
-    "symfony/polyfill-iconv": "*",
-    "symfony/polyfill-php81": "*",
-    "symfony/polyfill-php82": "*",
-    "symfony/polyfill-php83": "*",
-    "symfony/polyfill-php84": "*"
+    "symfony/polyfill-iconv": "*"
   },
   "scripts": {
     "auto-scripts": {
