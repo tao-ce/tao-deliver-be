@@ -23,7 +23,7 @@
     "google/cloud-core": "1.64.2",
     "google/cloud-pubsub": "2.13.2",
     "google/gax": "1.36.0",
-    "google/protobuf": "4.31.1",
+    "google/protobuf": "^4.31.1",
     "justinrainbow/json-schema": "^6.2.1",
     "lcobucci/jwt": "^4.3",
     "league/csv": "^9.22",
