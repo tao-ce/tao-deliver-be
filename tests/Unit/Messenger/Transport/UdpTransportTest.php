@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2020-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2020-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -14,6 +14,7 @@ use App\Generator\UuidGenerator;
 use App\Messenger\Message\InteractionMessage;
 use App\Messenger\Stamp\MetadataStamp;
 use App\Messenger\Transport\UdpTransport;
+use OAT\Library\Lti1p3Core\Resource\LtiResourceLink\LtiResourceLink;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -83,20 +84,21 @@ class UdpTransportTest extends TestCase
             ->willReturn('uuid');
 
         $message = new InteractionMessage(
-            deliveryExecutionId: 'deliveryExecutionId',
-            deliveryId: 'deliveryId',
-            tenantId: 'tenantId',
-            deliveryExecutionStartedAt: 0,
-            durationInSeconds: 0,
-            ipAddress: '127.0.0.1',
-            position: [],
-            progressPercentage: null,
-            title: 'test title / section / item',
-            questions: 1,
-            questionsViewed: 1,
-            answered: 1,
-            flagged: 1,
-            viewed: 1,
+            new LtiResourceLink('resourceLinkId'),
+            'deliveryExecutionId',
+            'deliveryId',
+            'tenantId',
+            0,
+            0,
+            '127.0.0.1',
+            [],
+            null,
+            'test title / section / item',
+            1,
+            1,
+            1,
+            1,
+            1,
         );
 
         $envelope = new Envelope($message, [$metadataStamp]);

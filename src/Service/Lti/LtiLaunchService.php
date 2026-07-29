@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2020-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2020-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -72,7 +72,7 @@ readonly class LtiLaunchService
         string $deliveryId,
         array $parameters,
         LtiMessagePayloadInterface $lti1p3MessagePayload,
-    ): RedirectResponse {
+    ): Response {
         $tenantId = $lti1p3MessagePayload->getToken()->getClaims()->get('tenant_id');
         try {
             $delivery = $this->deliveryRepository->find($deliveryId);
@@ -108,19 +108,16 @@ readonly class LtiLaunchService
             $parameters['result_id'] = $deliveryExecution->getId();
         }
 
-        if ($this->ltiCustomSettings->isMonitoringEnabled($parameters)) {
-            return $this->requireAuthorization(
-                new StartProctoringRequestContext($lti1p3MessagePayload, $deliveryExecution, $delivery),
-            );
-        }
-
-        return $this->launchTest($deliveryExecution, $parameters, $delivery);
+        return $this->requireAuthorization(
+            new StartProctoringRequestContext($lti1p3MessagePayload, $deliveryExecution, $delivery, $parameters),
+        );
     }
 
     public function launchTest(
         DeliveryExecution $deliveryExecution,
         array $parameters,
         ?Delivery $delivery = null,
+        bool $redirect = true,
     ): Response {
         $commonLocales = $this->getCommonLocales($delivery, $parameters);
         $isInitialLaunch = $delivery !== null;
@@ -247,7 +244,7 @@ readonly class LtiLaunchService
             $deliveryExecution,
             $parameters,
             $deliverFrontendUrl,
-            $isInitialLaunch,
+            $isInitialLaunch && $redirect,
         );
     }
 
@@ -255,24 +252,31 @@ readonly class LtiLaunchService
         StartProctoringRequestContext $startProctoringRequestContext,
         bool $redirect = true,
     ): Response {
-        $proctoringLink = $this->ltiProctoringService->getStartProctoringRequestUrl(
-            $startProctoringRequestContext,
-            $redirect,
-        );
+        $deliveryExecution = $startProctoringRequestContext->deliveryExecution;
+        $delivery = $startProctoringRequestContext->delivery;
+        $parameters = $startProctoringRequestContext->launchParameters;
+        if (!$redirect || !$this->ltiCustomSettings->isMonitoringEnabled($parameters)) {
+            return $this->launchTest($deliveryExecution, $parameters, $delivery, $redirect);
+        }
 
-        $this->deliveryExecutionService->saveDeliveryExecution($startProctoringRequestContext->deliveryExecution);
+        $proctoringLink = $this->ltiProctoringService->getStartProctoringRequestUrl($startProctoringRequestContext);
+        if (!$proctoringLink) {
+            return $this->launchTest($deliveryExecution, $parameters, $delivery, $redirect);
+        }
+
+        $this->deliveryExecutionService->saveDeliveryExecution($deliveryExecution);
 
         $this->eventDispatcher->dispatch(
             new ProctoredDeliveryExecutionInitializedEvent(
                 self::class,
-                $startProctoringRequestContext->deliveryExecution,
+                $deliveryExecution,
             ),
         );
 
         $this->auditDeliveryExecutionLogger->info(
             sprintf(
                 '[%s] - redirected to start proctoring: %s',
-                $startProctoringRequestContext->deliveryExecution->getId(),
+                $deliveryExecution->getId(),
                 $proctoringLink,
             ),
         );

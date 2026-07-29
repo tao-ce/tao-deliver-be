@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2021-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2021-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -19,8 +19,13 @@ use App\Service\Lti\LtiProctoringService;
 use App\Tests\Traits\DomainTestingTrait;
 use App\Tests\Traits\MessengerTestingTrait;
 use App\Tests\Traits\QtiTestingTrait;
+use OAT\Library\EnvironmentManagementClient\Converter\LtiRegistrationConverter;
 use OAT\Library\EnvironmentManagementClient\Model\Configuration;
+use OAT\Library\EnvironmentManagementClient\Model\LtiRegistration;
+use OAT\Library\EnvironmentManagementClient\Model\LtiRegistrationInterface;
+use OAT\Library\EnvironmentManagementClient\Model\LtiTool;
 use OAT\Library\EnvironmentManagementClient\Repository\ConfigurationRepositoryInterface;
+use OAT\Library\EnvironmentManagementClient\Repository\LtiRegistrationRepository;
 use OAT\Library\Lti1p3Core\Exception\LtiExceptionInterface;
 use OAT\Library\Lti1p3Core\Message\LtiMessageInterface;
 use OAT\Library\Lti1p3Core\Message\Payload\Claim\ContextClaim;
@@ -45,7 +50,8 @@ class LtiProctoringServiceTest extends KernelTestCase
     private const EXPECTED_USER_ID = 'test';
 
     private bool $isAcsServiceEnabled;
-    private StartProctoringLaunchRequestBuilder|MockObject $requestBuilder;
+    private StartProctoringLaunchRequestBuilder&MockObject $requestBuilder;
+    private LtiTool&MockObject $ltiTool;
     private LtiProctoringService $subject;
 
     public function setUp(): void
@@ -56,21 +62,27 @@ class LtiProctoringServiceTest extends KernelTestCase
 
         $this->requestBuilder = $this->createMock(StartProctoringLaunchRequestBuilder::class);
         $urlGenerator = $this->createMock(UrlGenerator::class);
-        $registrationRepository = $this->createMock(RegistrationRepositoryInterface::class);
+        $ltiRegistrationRepository = $this->createMock(LtiRegistrationRepository::class);
+        $ltiRegistrationConverter = $this->createMock(LtiRegistrationConverter::class);
         $configurationRepository = $this->createMock(ConfigurationRepositoryInterface::class);
         $userLocaleProvider = $this->createMock(UserLocaleProviderInterface::class);
 
+        $this->ltiTool = $this->createMock(LtiTool::class);
+        $ltiRegistrationMock = $this->createMock(LtiRegistration::class);
+        $ltiRegistrationMock->method('getLtiTool')->willReturn($this->ltiTool);
         $registrationMock = $this->createMock(RegistrationInterface::class);
         $registrationMock
             ->method('getIdentifier')
             ->willReturn('registrationId');
-        $registrationRepository->method('find')->willReturn($registrationMock);
+        $ltiRegistrationRepository->expects(self::once())->method('find')->willReturn($ltiRegistrationMock);
+        $ltiRegistrationConverter
+            ->method('convert')
+            ->with($ltiRegistrationMock)
+            ->willReturn($registrationMock);
 
         $configurationMock = $this->createMock(Configuration::class);
 
-        $urlGenerator->expects(self::exactly(2))->method('generate');
         $configurationRepository->expects(self::once())->method('find')->willReturn($configurationMock);
-        $registrationRepository->expects(self::once())->method('find');
 
         $featureFlagAdapter = $this->createMock(FeatureFlagAdapterInterface::class);
         $featureFlagAdapter
@@ -81,11 +93,21 @@ class LtiProctoringServiceTest extends KernelTestCase
         $this->subject = new LtiProctoringService(
             $this->requestBuilder,
             $urlGenerator,
-            $registrationRepository,
+            $ltiRegistrationRepository,
+            $ltiRegistrationConverter,
             $configurationRepository,
             $this->getContainer()->get(LtiCustomSettings::class),
             $userLocaleProvider,
             $featureFlagAdapter,
+        );
+    }
+
+    public function testStartProctoringRequestInterruptedWhenInternalToolIsUsed(): void
+    {
+        $this->requestBuilder->expects(self::never())->method('buildStartProctoringLaunchRequest');
+        $this->ltiTool->method('isInternal')->willReturn(true);
+        $this->subject->getStartProctoringRequestUrl(
+            $this->createStartProctoringRequestContext(),
         );
     }
 
@@ -242,6 +264,7 @@ class LtiProctoringServiceTest extends KernelTestCase
             $ltiPayload,
             $deliveryExecution,
             $delivery,
+            $deliveryExecution->getLtiLaunchParameters(),
         );
     }
 }

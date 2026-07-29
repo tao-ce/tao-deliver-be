@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2019-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2019-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -12,7 +12,8 @@ namespace App\TestRunner\Generator;
 use App\DataStore\Sender\DataStoreResultsSender;
 use App\Domain\DeliveryExecution\Model\DeliveryExecution;
 use App\Lti\LtiCustomSettings;
-use App\Service\Attachment\ItemCategoryBasedAttachmentRegistry;
+use App\Qti\Extractor\ItemResponseStatusResolver;
+use App\TestItemAttachment\Service\ItemCategoryBasedAttachmentRegistry;
 use App\TestRunner\Normalizer\TimeConstraintNormalizer;
 use qtism\data\AssessmentItemRef;
 use qtism\data\AssessmentSection;
@@ -39,6 +40,7 @@ class TestMapGenerator
         private readonly ItemCategoryBasedAttachmentRegistry $attachmentRegistry,
         private readonly TimeConstraintNormalizer $timeConstraintNormalizer,
         private readonly LtiCustomSettings $ltiCustomSettings,
+        private readonly ItemResponseStatusResolver $itemResponseStatusResolver,
     ) {
     }
 
@@ -120,7 +122,6 @@ class TestMapGenerator
                 $itemSession,
                 $attachments,
                 $deliveryExecution->hasItemState($itemIdentifier),
-                $deliveryExecution->getItemAttachments($itemIdentifier),
                 $parts,
                 $itemIdentifier,
                 $offset,
@@ -325,7 +326,6 @@ class TestMapGenerator
         AssessmentItemSession $itemSession,
         array $attachments,
         bool $hasItemState,
-        array $responseAttachments,
         array $parts,
         string $itemIdentifier,
         int $itemCount,
@@ -339,6 +339,7 @@ class TestMapGenerator
         /** @var ExtendedAssessmentItemRef $assessmentItemRef */
         $assessmentItemRef = $routeItem->getAssessmentItemRef();
         $itemAttachments = [];
+
         foreach ($assessmentItemRef->getCategories() as $category) {
             if (isset($attachments[$category])) {
                 $itemAttachments[] = $attachments[$category];
@@ -351,7 +352,7 @@ class TestMapGenerator
             'position' => $itemCount,
             'occurrence' => $routeItem->getOccurence(),
             'remainingAttempts' => $itemSession->getRemainingAttempts(),
-            'answered' => $responseAttachments || $itemSession->isResponded(false),
+            'answered' => $this->itemResponseStatusResolver->isRespondedTo($itemSession, $deliveryExecution),
             'flagged' => $deliveryExecution->getExtraStateData()->isItemFlagged($itemIdentifier),
             'viewed' => $itemSession->isPresented(),
             'categories' => $this->enrichItemCategories(

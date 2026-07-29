@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2025-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -13,8 +13,13 @@ use JsonSerializable;
 
 final readonly class Item implements JsonSerializable
 {
-    public function __construct(public string $id, public string $title, public array $responseIds)
-    {
+    public function __construct(
+        public string $id,
+        public string $title,
+        public int $testPart,
+        public ?int $position,
+        public array $responseIds,
+    ) {
     }
 
     public function jsonSerialize(): array

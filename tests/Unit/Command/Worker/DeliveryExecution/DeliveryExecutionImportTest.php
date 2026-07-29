@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2023 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2023-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -16,6 +16,8 @@ use App\Service\DeliveryExecution\SynchronizeDeliveryExecutionService;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use ReflectionClass;
+use ReflectionMethod;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use ZipArchive;
@@ -134,11 +136,10 @@ class DeliveryExecutionImportTest extends TestCase
         return $commandTester;
     }
 
-    private function getPrivateMethod($classInstance, $methodName): \ReflectionMethod
+    private function getPrivateMethod($classInstance, $methodName): ReflectionMethod
     {
-        $reflection = new \ReflectionClass($classInstance);
+        $reflection = new ReflectionClass($classInstance);
         $method = $reflection->getMethod($methodName);
-        $method->setAccessible(true);
 
         return $method;
     }

@@ -61,6 +61,32 @@ framework:
                     max_retries: 5
                     delay: 1000
                     multiplier: 2
+            data-policy-removal-request:
+                serializer: messenger.transport.data-policy.removal-request.serializer
+                dsn: '%env(MESSENGER_DROP_DELIVERY_EXECUTION_TRANSPORT_DSN)%'
+                retry_strategy:
+                    max_retries: 5
+                    delay: 1000
+                    multiplier: 2
+            data-policy-removal-confirmation:
+                dsn: '%env(MESSENGER_DROP_DELIVERY_EXECUTION_CONFIRMATION_TRANSPORT_DSN)%'
+                retry_strategy:
+                    max_retries: 5
+                    delay: 1000
+                    multiplier: 2
+            data-policy-validation-request:
+                serializer: messenger.transport.data-policy.validation-request.serializer
+                dsn: '%env(MESSENGER_CHECK_DELIVERY_EXECUTION_BE_REMOVED_TRANSPORT_DSN)%'
+                retry_strategy:
+                    max_retries: 5
+                    delay: 1000
+                    multiplier: 2
+            data-policy-validation-confirmation:
+                dsn: '%env(MESSENGER_CONFIRM_DELIVERY_EXECUTION_BE_REMOVED_TRANSPORT_DSN)%'
+                retry_strategy:
+                    max_retries: 5
+                    delay: 1000
+                    multiplier: 2
             interactions:
                 dsn: '%env(MESSENGER_INTERACTIONS_TRANSPORT_DSN)%'
                 retry_strategy:
@@ -163,6 +189,10 @@ framework:
             App\Messenger\Message\DeliveryExecution\ExecutionControlMessage: delivery-execution-assessment-log
             App\Messenger\Message\DeliveryExecution\ExecutionLogMessage: delivery-execution-assessment-log
             App\Messenger\Message\DeliveryExecution\NormalizedExecutionControlMessage: delivery-execution-assessment-log
+            App\Messenger\Message\DataPolicy\RemovalRequestMessage: data-policy-removal-request
+            App\Messenger\Message\DataPolicy\RemovalConfirmationMessage: data-policy-removal-confirmation
+            App\Messenger\Message\DataPolicy\ValidationRequestMessage: data-policy-validation-request
+            App\Messenger\Message\DataPolicy\ValidationConfirmationMessage: data-policy-validation-confirmation
             App\Messenger\Message\Delivery\SynchronousDeliveryLanguageAttachmentMessage: sync
             App\Messenger\Message\Delivery\DeliveryLanguageAttachmentMessage: delivery-language-attachment
             App\Messenger\Message\Delivery\DeliveryLanguageAttachmentSucceededMessage: delivery-language-attachment-succeeded
@@ -174,5 +204,6 @@ framework:
           messenger.bus.default:
             default_middleware: allow_no_handlers
             middleware:
-              - App\Messenger\Middleware\RemoveBusNameStampFromNonInternalMessagesMiddleware
+              - App\OpenTelemetry\Messenger\Middleware\Telemetry
               - App\Messenger\Middleware\AssessmentLogMessageFilterMiddleware
+              - App\Messenger\Middleware\RemoveBusNameStampFromNonInternalMessagesMiddleware

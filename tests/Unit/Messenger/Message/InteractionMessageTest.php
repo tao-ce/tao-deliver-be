@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2019-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2019-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Messenger\Message;
 
 use App\Messenger\Message\InteractionMessage;
+use OAT\Library\Lti1p3Core\Resource\LtiResourceLink\LtiResourceLink;
 use PHPUnit\Framework\TestCase;
 
 class InteractionMessageTest extends TestCase
@@ -30,6 +31,7 @@ class InteractionMessageTest extends TestCase
     {
         $this->assertEquals(
             [
+                'resourceLinkId' => 'resourceLinkId',
                 'position' => [
                     'item' => 0,
                     'total' => 6,
@@ -45,7 +47,7 @@ class InteractionMessageTest extends TestCase
                 'progressPercentage' => 33.33333333333333,
                 'durationInSeconds' => 123,
                 'deliveryExecution' => [
-                    'id' => 'deliveryExecutionId',
+                    'id' => 'dIresu#deliveryId#resultId#tenantId',
                     'startTs' => '1973-11-29T21:33:09+00:00',
                     'endTs' => '1973-11-29T21:33:10+00:00',
                     'delivery' => [
@@ -80,7 +82,8 @@ class InteractionMessageTest extends TestCase
     private function createInteractionMessage(?string $batteryId = null): InteractionMessage
     {
         return new InteractionMessage(
-            'deliveryExecutionId',
+            new LtiResourceLink('resourceLinkId'),
+            'dIresu#deliveryId#resultId#tenantId',
             'deliveryId',
             'tenantId',
             123456789,
@@ -100,7 +103,6 @@ class InteractionMessageTest extends TestCase
             4,
             5,
             123456790,
-            'userId',
             'userName',
             'progress',
             batteryId: $batteryId,

@@ -51,7 +51,7 @@ class GetItemActionProcessor extends AbstractActionProcessor
 
         switch (true) {
             case $requestDataType & GetItemService::DATA_TYPE_DYNAMIC
-            && $requestDataType & GetItemService::DATA_TYPE_STATIC:
+                && $requestDataType & GetItemService::DATA_TYPE_STATIC:
                 $responseParams = $this->getItemService->getItem($deliveryExecution, $itemIdentifier);
                 break;
             case $requestDataType & GetItemService::DATA_TYPE_DYNAMIC:

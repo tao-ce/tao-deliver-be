@@ -256,6 +256,23 @@ class DeliveryExecutionConfigurationBuilderTest extends TestCase
         ];
     }
 
+    public function testWithRefreshPlugin(): void
+    {
+        $expected = [
+            'key1' => 'value1',
+            'providers' => [
+                'plugins' => [
+                    DeliveryExecutionConfigurationBuilder::PLUGIN_CONFIG_REFRESH,
+                ],
+            ],
+        ];
+
+        $subject = new DeliveryExecutionConfigurationBuilder(['key1' => 'value1']);
+
+        $this->assertSame($subject, $subject->withRefreshPlugin());
+        $this->assertEquals($expected, $subject->build());
+    }
+
     /**
      * @dataProvider withPauseOnBlurPluginDataProvider
      */

@@ -11,7 +11,8 @@ namespace App\Action\DeliveryExecution;
 
 use App\Domain\DeliveryExecution\Model\DeliveryExecution;
 use App\Responder\SerializerResponder;
-use App\Service\DeliveryExecution\Contract\DeliveryExecutionCommentServiceInterface;
+use App\Security\Contract\DeliveryExecutionSessionController;
+use App\Service\DeliveryExecution\DeliveryExecutionCommentService;
 use App\Service\DeliveryExecution\DeliveryExecutionService;
 use App\Validator\DeliveryExecution\SetInlineCommentActionValidator;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -19,12 +20,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-class SetInlineCommentAction
+class SetInlineCommentAction implements DeliveryExecutionSessionController
 {
     public function __construct(
         private readonly SerializerResponder $responder,
         private readonly SetInlineCommentActionValidator $requestValidator,
-        private readonly DeliveryExecutionCommentServiceInterface $deliveryExecutionCommentService,
+        private readonly DeliveryExecutionCommentService $deliveryExecutionCommentService,
         private readonly DeliveryExecutionService $deliveryExecutionService,
     ) {
     }
@@ -34,7 +35,7 @@ class SetInlineCommentAction
         $this->authorize($deliveryExecution);
 
         $data = $this->requestValidator->getValidatedRequestParameters($request);
-        $this->deliveryExecutionCommentService->addItemReviewComment(
+        $this->deliveryExecutionCommentService->addItemFeedback(
             $deliveryExecution->originalDeliveryExecution,
             $data['itemId'],
             $data['comment'],

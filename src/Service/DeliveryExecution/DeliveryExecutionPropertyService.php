@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2023-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2023-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -11,6 +11,7 @@ namespace App\Service\DeliveryExecution;
 
 use App\Domain\DeliveryExecution\Model\DeliveryExecution;
 use App\Lti\LtiCustomSettings;
+use App\Service\Infrastructure\Contract\MemoizedService;
 use App\TestRunner\Factory\AssessmentTestSessionFactory;
 use LogicException;
 use OAT\Bundle\QtiBundle\Accessor\TestSessionAccessor;
@@ -22,18 +23,26 @@ use qtism\runtime\tests\RouteItem;
  * The purpose of this service is to offer access to runtime delivery-execution properties, including @see AssessmentTestSession.
  * Direct access to @see TestSessionAccessor should be replaced by this service usage.
  */
-class DeliveryExecutionPropertyService
+class DeliveryExecutionPropertyService implements MemoizedService
 {
     /** @var TestSessionAccessor[] */
-    private array $testSessionAccessors = [];
+    private array $testSessionAccessors;
 
-    private AssessmentTestSession $testSession;
+    /** @var AssessmentTestSession[] */
+    private array $testSessions;
 
     public function __construct(
         private readonly TestSessionAccessorFactory $testSessionAccessorFactory,
         private readonly LtiCustomSettings $ltiCustomSettingsReader,
         private readonly AssessmentTestSessionFactory $assessmentTestSessionFactory,
     ) {
+        $this->flush();
+    }
+
+    public function flush(): void
+    {
+        $this->testSessionAccessors = [];
+        $this->testSessions = [];
     }
 
     /**
@@ -74,30 +83,29 @@ class DeliveryExecutionPropertyService
 
     public function fetchTestSession(DeliveryExecution $deliveryExecution, bool $initAllItems = false): AssessmentTestSession
     {
-        if (!isset($this->testSession) || $this->testSession->getSessionId() !== $deliveryExecution->getId()) {
-            $this->testSession = $this->retrieveTestSession($deliveryExecution, $initAllItems);
+        $id = $deliveryExecution->getId();
+        if (!isset($this->testSessions[$id])) {
+            $this->testSessions[$id] = $this->retrieveTestSession($deliveryExecution, $initAllItems);
         }
 
-        return $this->testSession;
+        return $this->testSessions[$id];
     }
 
     public function persistTestSession(AssessmentTestSession $testSession): void
     {
-        $sessionId = $testSession->getSessionId();
-        if (!isset($this->testSessionAccessors[$sessionId])) {
+        $id = $testSession->getSessionId();
+        if (!isset($this->testSessionAccessors[$id])) {
             throw new LogicException('Assessment session must fist be fetched.');
         }
 
-        $this->testSessionAccessors[$sessionId]->persist($testSession);
-        $this->testSession = $testSession;
+        $this->testSessionAccessors[$id]->persist($testSession);
+        $this->testSessions[$id] = $testSession;
     }
 
     private function createTestSessionAccessor(DeliveryExecution $deliveryExecution): TestSessionAccessor
     {
         $id = $deliveryExecution->getId();
         if (!isset($this->testSessionAccessors[$id])) {
-            // Purge memoized session accessors of non-current delivery executions
-            $this->testSessionAccessors = [];
             $this->testSessionAccessors[$id] = $this->testSessionAccessorFactory->create($deliveryExecution);
         }
 

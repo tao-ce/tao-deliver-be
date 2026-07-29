@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2020-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2020-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -58,6 +58,7 @@ class LtiCustomSettings
     public const PARAM_REVIEW_DELIVERY_EXECUTION_ID = 'deliverySettings.review.deliveryExecutionId';
     public const PARAM_REVIEW_MODE_ALL_IN_ONE = 'deliverySettings.review.allInOne';
     public const PARAM_ITEM_RUNNER_CONFIG_ELEMENTS = 'deliverySettings.itemRunnerConfigElements';
+    public const PARAM_CUSTOM_UI_IDS = 'deliverySettings.customUiIds';
     public const PARAM_TITLES = 'deliverySettings.titles';
     public const PARAM_TTL = 'deliverySettings.ttl';
     public const PARAM_RESET = 'deliverySettings.reset';
@@ -66,11 +67,19 @@ class LtiCustomSettings
     public const PARAM_TEST_TITLE = 'deliverySettings.testTitle';
     public const PARAM_ATTEMPT_ID = 'deliverySettings.attemptId';
     public const PARAM_ATTEMPT_LIMIT = 'deliverySettings.attemptLimit';
+    public const PARAM_SCORER_ID = 'deliverySettings.scorer.id';
+    public const PARAM_SESSION_DATA = 'deliverySettings.sessionData';
     public const PARAM_OUTCOME_SERVICE_CLIENT_ID = 'outcome_service.client_id';
     public const PARAM_DELIVERY_EXECUTION_ALIAS_ID = 'deliveryExecution.alias.id';
     public const PARAM_EXPORT_SETTINGS_ENABLED = 'exportSettings.enabled';
     public const PARAM_EXTRA_TIME = 'extraTime';
     public const PARAM_BATTERY_DELIVERY_ID = 'batterySettings.deliveryId';
+    public const PARAM_KIOSK_ENABLED = 'deliverySettings.kiosk.enabled';
+    public const PARAM_KIOSK_PROVIDER_ID = 'deliverySettings.kiosk.providerId';
+    public const PARAM_KIOSK_MINVERSION = 'deliverySettings.kiosk.minVersion';
+    public const PARAM_KIOSK_PAUSEONBREACH = 'deliverySettings.kiosk.pauseOnBreach';
+    public const PARAM_TEST_TAKER_NAME = 'testTakerName';
+    public const PARAM_IS_ANONYMOUS_SCORING = 'isAnonymousScoring';
 
     private array $optionsRuntimeCache = [];
 
@@ -374,6 +383,12 @@ class LtiCustomSettings
         return is_array($itemRunnerConfigElements) ? $itemRunnerConfigElements : [];
     }
 
+    public function getCustomUiIds(array $ltiLaunchParameters = []): ?array
+    {
+        $rawClaimValue = trim($this->getOption($ltiLaunchParameters, self::PARAM_CUSTOM_UI_IDS, ''));
+        return $rawClaimValue ? array_values(array_filter(array_map('trim', explode(',', $rawClaimValue)))) : [];
+    }
+
     public function getAttemptId(array $ltiLaunchParameters = []): ?string
     {
         $attemptId = $this->getOption($ltiLaunchParameters, self::PARAM_ATTEMPT_ID);
@@ -386,6 +401,21 @@ class LtiCustomSettings
         $attemptLimit = $this->getOption($ltiLaunchParameters, self::PARAM_ATTEMPT_LIMIT);
 
         return $attemptLimit === '' ? null : $attemptLimit;
+    }
+
+    public function getScorerId(array $ltiLaunchParameters = []): ?string
+    {
+        $scorerId = $this->getOption($ltiLaunchParameters, self::PARAM_SCORER_ID);
+
+        return $scorerId === '' ? null : $scorerId;
+    }
+
+    public function getSessionData(array $ltiLaunchParameters = []): array
+    {
+        /** @noinspection JsonEncodingApiUsageInspection */
+        $sessionData = json_decode($this->getOption($ltiLaunchParameters, self::PARAM_SESSION_DATA, ''), true);
+
+        return is_array($sessionData) ? $sessionData : [];
     }
 
     public function getOutcomeServiceClientId(array $ltiLaunchParameters = []): ?string
@@ -412,6 +442,40 @@ class LtiCustomSettings
         $batteryDeliveryId = $this->getOption($ltiLaunchParameters, self::PARAM_BATTERY_DELIVERY_ID);
 
         return $batteryDeliveryId === '' ? null : $batteryDeliveryId;
+    }
+
+    public function isKioskEnabled(array $ltiLaunchParameters = []): bool
+    {
+        return $this->isOptionEnabled($ltiLaunchParameters, self::PARAM_KIOSK_ENABLED);
+    }
+
+    public function getKioskProviderId(array $ltiLaunchParameters = []): ?string
+    {
+        $kioskProviderId = $this->getOption($ltiLaunchParameters, self::PARAM_KIOSK_PROVIDER_ID);
+        return $kioskProviderId === '' ? null : $kioskProviderId;
+    }
+
+    public function getKioskMinVersion(array $ltiLaunchParameters = []): ?string
+    {
+        $kioskMinVersion = $this->getOption($ltiLaunchParameters, self::PARAM_KIOSK_MINVERSION);
+        return $kioskMinVersion === '' ? null : $kioskMinVersion;
+    }
+
+    public function isKioskPauseOnBreach(array $ltiLaunchParameters = []): bool
+    {
+        return $this->isOptionEnabled($ltiLaunchParameters, self::PARAM_KIOSK_PAUSEONBREACH);
+    }
+
+    public function getTestTakerName(array $ltiLaunchParameters = []): ?string
+    {
+        $testTakerName = $this->getOption($ltiLaunchParameters, self::PARAM_TEST_TAKER_NAME);
+
+        return $testTakerName === '' ? null : $testTakerName;
+    }
+
+    public function isAnonymousScoring(array $ltiLaunchParameters = []): bool
+    {
+        return $this->isOptionEnabled($ltiLaunchParameters, self::PARAM_IS_ANONYMOUS_SCORING, false);
     }
 
     /**
@@ -475,8 +539,8 @@ class LtiCustomSettings
         return $this->getCachedOptionValue(
             "{$option}_value",
             fn() => $customClaims[$option]
-                ?? $customClaims[$this->toSnakeCase($option)]
-                ?? $default,
+            ?? $customClaims[$this->toSnakeCase($option)]
+            ?? $default,
         );
     }
 
@@ -488,8 +552,8 @@ class LtiCustomSettings
             "{$option}_flag",
             fn() => filter_var(
                 $customClaims[$option]
-                    ?? $customClaims[$this->toSnakeCase($option)]
-                    ?? $default,
+                ?? $customClaims[$this->toSnakeCase($option)]
+                ?? $default,
                 FILTER_VALIDATE_BOOLEAN,
             ),
         );
@@ -526,8 +590,8 @@ class LtiCustomSettings
         $claims = array_replace(
             [LtiMessagePayloadInterface::CLAIM_LTI_CUSTOM => $parametersCustomClaims],
             null === $token
-                ? []
-                : $token->claims()->all(),
+            ? []
+            : $token->claims()->all(),
         );
 
         return $claims[LtiMessagePayloadInterface::CLAIM_LTI_CUSTOM];

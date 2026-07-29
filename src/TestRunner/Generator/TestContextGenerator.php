@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2019-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2019-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -34,8 +34,8 @@ class TestContextGenerator
         ?string $forcedItemId = null,
     ): array {
         $isTestSessionRunning = $testSession->isRunning();
-        $currentRouteItem = $isTestSessionRunning
-            ? $testSession->getRoute()->current()
+        $itemSession = $isTestSessionRunning
+            ? $testSession->getCurrentAssessmentItemSession()
             : null;
 
         $ltiParameters = $deliveryExecution->getLtiLaunchParameters();
@@ -51,10 +51,10 @@ class TestContextGenerator
             'itemIdentifier' => $forcedItemId
                 ?: ($isTestSessionRunning ? $testSession->getCurrentAssessmentItemRef()->getIdentifier() : null),
             'attempt' => $isTestSessionRunning
-                ? $testSession->getCurrentAssessmentItemSession()['numAttempts']->getValue()
+                ? $itemSession['numAttempts']?->getValue()
                 : null,
             'itemSessionState' => $isTestSessionRunning
-                ? $testSession->getCurrentAssessmentItemSession()->getState()
+                ? $itemSession->getState()
                 : null,
             'needMapUpdate' => false,
             'itemPosition' => $testSession->getRoute()->getPosition(),
@@ -64,10 +64,10 @@ class TestContextGenerator
             'canMoveBackward' => $isTestSessionRunning ? $testSession->canMoveBackward() : null,
             'rubrics' => $isTestSessionRunning ? $this->getRubricBlocks($testSession, $deliveryExecution) : '',
             'allowSkipping' => $isTestSessionRunning
-                ? $currentRouteItem->getItemSessionControl()->getItemSessionControl()->doesAllowSkipping()
+                ? $itemSession->getItemSessionControl()->doesAllowSkipping()
                 : null,
             'validateResponses' => $isTestSessionRunning
-                ? $currentRouteItem->getItemSessionControl()->getItemSessionControl()->mustValidateResponses()
+                ? $itemSession->getItemSessionControl()->mustValidateResponses()
                 : null,
         ];
     }

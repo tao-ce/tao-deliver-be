@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2020-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2020-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -9,34 +9,37 @@ declare(strict_types=1);
 
 namespace App\Messenger\Message;
 
-class InteractionMessage
+use App\Domain\DeliveryExecution\Helper\DeliveryExecutionKeyHelper;
+use OAT\Library\Lti1p3Core\Resource\LtiResourceLink\LtiResourceLinkInterface;
+
+readonly class InteractionMessage
 {
     private const VERSION = '0.2.0';
 
     public function __construct(
-        private readonly string $deliveryExecutionId,
-        private readonly string $deliveryId,
-        private readonly string $tenantId,
-        private readonly int $deliveryExecutionStartedAt, // @deprecated, @see $durationInSeconds
-        private readonly int $durationInSeconds,
-        private readonly ?string $ipAddress,
-        private readonly array $position = [],
-        private readonly ?float $progressPercentage = 0.0,
-        private readonly string $title = '',
-        private readonly int $questions = 0,
-        private readonly int $questionsViewed = 0,
-        private readonly int $answered = 0,
-        private readonly int $flagged = 0,
-        private readonly int $viewed = 0,
-        private readonly ?int $deliveryExecutionFinishedAt = null,
-        private readonly ?string $userId = null,
-        private readonly ?string $userName = null,
-        private readonly ?string $deliveryExecutionStatus = null,
-        private readonly ?array $positionDetails = null,
-        private readonly ?bool $hasTimers = null,
-        private readonly ?string $batteryId = null,
-        private readonly ?string $batteryName = null,
-        private readonly ?string $locale = null,
+        private LtiResourceLinkInterface $resourceLink,
+        private string $deliveryExecutionId,
+        private string $deliveryId,
+        private string $tenantId,
+        private int $deliveryExecutionStartedAt, // @deprecated, @see $durationInSeconds
+        private int $durationInSeconds,
+        private ?string $ipAddress,
+        private array $position = [],
+        private ?float $progressPercentage = 0.0,
+        private string $title = '',
+        private int $questions = 0,
+        private int $questionsViewed = 0,
+        private int $answered = 0,
+        private int $flagged = 0,
+        private int $viewed = 0,
+        private ?int $deliveryExecutionFinishedAt = null,
+        private ?string $userName = null,
+        private ?string $deliveryExecutionStatus = null,
+        private ?array $positionDetails = null,
+        private ?bool $hasTimers = null,
+        private ?string $batteryId = null,
+        private ?string $batteryName = null,
+        private ?string $locale = null,
     ) {
     }
 
@@ -65,6 +68,7 @@ class InteractionMessage
             'isTimerExists' => $this->hasTimers,
             'battery' => $this->getBattery(),
             'locale' => $this->locale,
+            'resourceLinkId' => $this->resourceLink->getIdentifier(),
         ];
     }
 
@@ -88,8 +92,12 @@ class InteractionMessage
 
     private function getUser(): array
     {
+        $deliveryExecutionIdKeyInfo = DeliveryExecutionKeyHelper::createDeliveryExecutionKeyInfo(
+            $this->deliveryExecutionId,
+        );
+
         return [
-            'id' => $this->userId,
+            'id' => $deliveryExecutionIdKeyInfo?->getUserId() ?? $deliveryExecutionIdKeyInfo?->getOriginalUserId(),
             'name' => $this->userName,
         ];
     }

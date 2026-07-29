@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2019-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2019-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -18,6 +18,7 @@ use App\Generator\UrlGenerator;
 use App\ImageResponse\Service\ImageResponseReaderService;
 use App\Lti\LtiCustomSettings;
 use App\Registry\SignedUrlGeneratorRegistry;
+use App\Service\DeliveryExecution\DeliveryExecutionCommentService;
 use App\Service\DeliveryExecution\DeliveryExecutionPropertyService;
 use App\Service\Lti\LtiTokenResolverInterface;
 use App\TestRunner\ItemEnricher\Contract\ItemEnricherInterface;
@@ -56,6 +57,7 @@ class GetItemService
         private readonly LtiTokenResolverInterface $ltiTokenResolver,
         private readonly TestSessionInitiator $testSessionInitiator,
         private readonly ImageResponseReaderService $imageResponseReaderService,
+        private readonly DeliveryExecutionCommentService $deliveryExecutionCommentService,
     ) {
     }
 
@@ -222,10 +224,19 @@ class GetItemService
                 ),
             );
         }
+
         $itemState = $this->imageResponseReaderService->read($deliveryExecution, $itemIdentifier, $itemState);
 
         $extraData = $this->getExtraData($deliveryExecution, $itemIdentifier);
-        $extraData['scoring']['comments']['inline'] = $this->getReviewInlineComment($deliveryExecution, $itemIdentifier);
+        $extraData['scoring']['comments']['inline'] = $this->deliveryExecutionCommentService->getItemFeedback(
+            $deliveryExecution,
+            $itemIdentifier,
+        );
+
+        $extraData['scoring']['comments']['annotations'] = $this->deliveryExecutionCommentService->getItemAnnotationComment(
+            $deliveryExecution,
+            $itemIdentifier,
+        );
 
         $reviewResponse = array_merge(
             $response,
@@ -359,30 +370,6 @@ class GetItemService
     private function getSignedUrlGenerator(string $generatorName): SignedUrlGeneratorInterface
     {
         return $this->signedUrlGeneratorRegistry->getGenerator($generatorName);
-    }
-
-
-    private function getReviewInlineComment(DeliveryExecution $deliveryExecution, string $itemIdentifier): array
-    {
-        if (
-            !$this->ltiTokenResolver->hasOneOfRoles(
-                [
-                    LtiTokenResolverInterface::LTI_ROLE_INSTRUCTOR,
-                    LtiTokenResolverInterface::LTI_ROLE_LEARNER,
-                ],
-            )
-        ) {
-            return [];
-        }
-
-        if (
-            $this->ltiTokenResolver->hasOneOfRoles([ LtiTokenResolverInterface::LTI_ROLE_LEARNER])
-            && !$deliveryExecution->isItemScoredExternally($itemIdentifier)
-        ) {
-            return [];
-        }
-
-        return $deliveryExecution->getReviewInlineComment()?->getFeedback($itemIdentifier) ?: [];
     }
 
     private function getExtraData(DeliveryExecution $deliveryExecution, string $itemIdentifier): array

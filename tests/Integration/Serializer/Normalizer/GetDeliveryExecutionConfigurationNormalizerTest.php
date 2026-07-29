@@ -12,8 +12,11 @@ namespace App\Tests\Integration\Serializer\Normalizer;
 use App\Domain\Delivery\Model\Delivery;
 use App\Domain\DeliveryExecution\Model\DeliveryExecution;
 use App\Domain\Tenant\Model\EmptyTestRunnerTheme;
+use App\Generator\UrlGenerator;
+use App\Lti\LtiCustomSettings;
 use App\Response\GetDeliveryExecutionConfigurationResponse;
 use App\Serializer\Normalizer\GetDeliveryExecutionConfigurationNormalizer;
+use App\Service\Locale\Contract\UserLocaleProviderInterface;
 use App\Tests\Traits\DomainTestingTrait;
 use App\Tests\Traits\QtiTestingTrait;
 use OAT\Library\TenantManagement\Model\TestRunnerTheme;
@@ -269,6 +272,69 @@ class GetDeliveryExecutionConfigurationNormalizerTest extends KernelTestCase
         foreach ($normalization['data']['testTaker'] as $key => $value) {
             $this->assertNull($value, "testTaker['$key'] is expected to be `null`");
         }
+    }
+
+    public function testItShowsRealNameWhenNoLtiTokenIsPresent(): void
+    {
+        $deliveryExecution = $this->createTestDeliveryExecution(
+            id: 'di_resu#deliveryId#resultId#tenantId',
+            ltiLaunchParameters: [
+                'user_id' => 'user_id',
+                'user_name' => 'Real User Name',
+                'given_name' => 'Real',
+                'family_name' => 'Name',
+            ],
+            testSession: '',
+        );
+        $configurationResponse = new GetDeliveryExecutionConfigurationResponse(
+            $this->delivery,
+            $deliveryExecution,
+            new EmptyTestRunnerTheme(),
+        );
+
+        $normalization = $this->subject->normalize($configurationResponse);
+
+        $this->assertEquals('user_id', $normalization['data']['testTaker']['id']);
+        $this->assertEquals('Real User Name', $normalization['data']['testTaker']['name']);
+        $this->assertEquals('Real', $normalization['data']['testTaker']['firstName']);
+        $this->assertEquals('Name', $normalization['data']['testTaker']['lastName']);
+    }
+
+    public function testItShowsAnonymizedNameWhenIsAnonymousScoringClaimIsTrueAndIsReview(): void
+    {
+        $deliveryExecution = $this->createTestDeliveryExecution(
+            id: 'review#di_resu#deliveryId#resultId#tenantId',
+            ltiLaunchParameters: [
+                'user_id' => 'user_id',
+                'user_name' => 'Real User Name',
+                'given_name' => 'Real',
+                'family_name' => 'Name',
+            ],
+            testSession: '',
+        );
+
+        $ltiCustomSettingsMock = $this->createMock(LtiCustomSettings::class);
+        $ltiCustomSettingsMock->method('isAnonymousScoring')->willReturn(true);
+        $ltiCustomSettingsMock->method('getTestTakerName')->willReturn('anon_abc123');
+
+        $normalizer = new GetDeliveryExecutionConfigurationNormalizer(
+            static::getContainer()->get(UserLocaleProviderInterface::class),
+            static::getContainer()->get(UrlGenerator::class),
+            $ltiCustomSettingsMock,
+        );
+
+        $configurationResponse = new GetDeliveryExecutionConfigurationResponse(
+            $this->delivery,
+            $deliveryExecution,
+            new EmptyTestRunnerTheme(),
+        );
+
+        $normalization = $normalizer->normalize($configurationResponse);
+
+        $this->assertEquals('user_id', $normalization['data']['testTaker']['id']);
+        $this->assertEquals('anon_abc123', $normalization['data']['testTaker']['name']);
+        $this->assertNull($normalization['data']['testTaker']['firstName']);
+        $this->assertNull($normalization['data']['testTaker']['lastName']);
     }
 
     public function testItMergesDeepArrayProperly(): void

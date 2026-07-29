@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2019-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2019-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -26,12 +26,16 @@ use OAT\Bundle\DocumentManagerBundle\Exception\DocumentNormalizerException;
 
 class BigtableDeliveryExecutionNormalizer extends AbstractBigtableNormalizer
 {
-    private const COLUMN_ATTEMPT = 'attempt';
-    private const COLUMN_ATTACHMENTS = 'attachments';
-    private const COLUMN_ITEM_STATES = 'itemStates';
-    private const COLUMN_TEMPORARY_ITEM_STATES = 'temporaryItemStates';
-    private const COLUMN_REQUEST_IP = 'requestIp';
-    private const EXTRACTED_EXTRA_DATA_COLUMNS = [
+    private const array COLUMNS = [
+        ...self::EXTRACTED_EXTRA_DATA_COLUMNS,
+        ...DeliveryExecutionNormalizer::COLUMNS,
+    ];
+    private const string COLUMN_ATTEMPT = 'attempt';
+    private const string COLUMN_ATTACHMENTS = 'attachments';
+    private const string COLUMN_ITEM_STATES = 'itemStates';
+    private const string COLUMN_TEMPORARY_ITEM_STATES = 'temporaryItemStates';
+    private const string COLUMN_REQUEST_IP = 'requestIp';
+    private const array EXTRACTED_EXTRA_DATA_COLUMNS = [
         self::COLUMN_ATTACHMENTS,
         self::COLUMN_ITEM_STATES,
         self::COLUMN_TEMPORARY_ITEM_STATES,
@@ -47,7 +51,9 @@ class BigtableDeliveryExecutionNormalizer extends AbstractBigtableNormalizer
     ): DocumentInterface {
         try {
             $deliveryExecutionData = $documentData->getData()[self::DATA_COLUMN_FAMILY];
-            $extraStateData = unserialize(gzuncompress($deliveryExecutionData['extraStateData'][0]['value']));
+            $extraStateData = unserialize(
+                gzuncompress($deliveryExecutionData[DeliveryExecutionNormalizer::COLUMN_EXTRA_STATE_DATA][0]['value']),
+            );
             foreach (self::EXTRACTED_EXTRA_DATA_COLUMNS as $extraDataColumn) {
                 if (empty($deliveryExecutionData[$extraDataColumn][0]['value'])) {
                     continue;
@@ -71,8 +77,10 @@ class BigtableDeliveryExecutionNormalizer extends AbstractBigtableNormalizer
             }
 
             $invalidation = null;
-            if (!empty($deliveryExecutionData['invalidation'][0]['value'])) {
-                $invalidationData = igbinary_unserialize($deliveryExecutionData['invalidation'][0]['value']);
+            if (!empty($deliveryExecutionData[DeliveryExecutionNormalizer::COLUMN_INVALIDATION][0]['value'])) {
+                $invalidationData = igbinary_unserialize(
+                    $deliveryExecutionData[DeliveryExecutionNormalizer::COLUMN_INVALIDATION][0]['value'],
+                );
                 if ($invalidationData !== null) {
                     $invalidation = Invalidation::fromArray($invalidationData);
                 }
@@ -80,25 +88,42 @@ class BigtableDeliveryExecutionNormalizer extends AbstractBigtableNormalizer
 
             $deliveryExecution = DeliveryExecutionFactory::create(
                 $documentData->getId(),
-                unserialize(gzuncompress($deliveryExecutionData['ltiLaunchParameters'][0]['value'])),
-                $deliveryExecutionData['qtiSdkEncodedTestSession'][0]['value'] === ''
+                unserialize(
+                    gzuncompress(
+                        $deliveryExecutionData[DeliveryExecutionNormalizer::COLUMN_LTI_LAUNCH_PARAMETERS][0]['value'],
+                    ),
+                ),
+                $deliveryExecutionData[DeliveryExecutionNormalizer::COLUMN_QTI_SDK_ENCODED_TEST_SESSION][0]['value'] === ''
                     ? null
-                    : gzuncompress($deliveryExecutionData['qtiSdkEncodedTestSession'][0]['value']),
+                    : gzuncompress(
+                        $deliveryExecutionData[DeliveryExecutionNormalizer::COLUMN_QTI_SDK_ENCODED_TEST_SESSION][0]['value'],
+                    ),
                 DeliveryExecutionExtraStateData::fromArray($extraStateData),
-                $deliveryExecutionData['status'][0]['value'],
-                Date::createFromDefaultFormat($deliveryExecutionData['startedAt'][0]['value']),
-                Date::createFromDefaultFormat($deliveryExecutionData['finishedAt'][0]['value']),
-                Date::createFromDefaultFormat($deliveryExecutionData['closeAt'][0]['value']),
-                Date::createFromDefaultFormat($deliveryExecutionData['updatedAt'][0]['value'] ?? null),
+                $deliveryExecutionData[DeliveryExecutionNormalizer::COLUMN_STATUS][0]['value'],
+                Date::createFromDefaultFormat(
+                    $deliveryExecutionData[DeliveryExecutionNormalizer::COLUMN_STARTED_AT][0]['value'],
+                ),
+                Date::createFromDefaultFormat(
+                    $deliveryExecutionData[DeliveryExecutionNormalizer::COLUMN_FINISHED_AT][0]['value'],
+                ),
+                Date::createFromDefaultFormat(
+                    $deliveryExecutionData[DeliveryExecutionNormalizer::COLUMN_CLOSE_AT][0]['value'],
+                ),
+                Date::createFromDefaultFormat(
+                    $deliveryExecutionData[DeliveryExecutionNormalizer::COLUMN_UPDATED_AT][0]['value'] ?? null,
+                ),
                 $reviewInlineComment ? new InlineFeedbackCollection($reviewInlineComment) : null,
-                (bool)($deliveryExecutionData['isDeleted'][0]['value'] ?? false),
-                isset($deliveryExecutionData['locale'][0]['value']) && $deliveryExecutionData['locale'][0]['value'] !== ''
-                    ? $deliveryExecutionData['locale'][0]['value']
+                (bool)($deliveryExecutionData[DeliveryExecutionNormalizer::COLUMN_IS_DELETED][0]['value'] ?? false),
+                isset($deliveryExecutionData[DeliveryExecutionNormalizer::COLUMN_LOCALE][0]['value'])
+                && $deliveryExecutionData[DeliveryExecutionNormalizer::COLUMN_LOCALE][0]['value'] !== ''
+                    ? $deliveryExecutionData[DeliveryExecutionNormalizer::COLUMN_LOCALE][0]['value']
                     : null,
                 $invalidation,
-                empty($deliveryExecutionData['initiallyScoredQtiSdkEncodedTestSession'][0]['value'])
+                empty($deliveryExecutionData[DeliveryExecutionNormalizer::COLUMN_INITIALLY_SCORED_QTI_SDK_ENCODED_TEST_SESSION][0]['value'])
                     ? null
-                    : gzuncompress($deliveryExecutionData['initiallyScoredQtiSdkEncodedTestSession'][0]['value']),
+                    : gzuncompress(
+                        $deliveryExecutionData[DeliveryExecutionNormalizer::COLUMN_INITIALLY_SCORED_QTI_SDK_ENCODED_TEST_SESSION][0]['value'],
+                    ),
             );
 
             $deliveryExecution->clearUpdates();
@@ -132,40 +157,46 @@ class BigtableDeliveryExecutionNormalizer extends AbstractBigtableNormalizer
             $temporaryItemStates = $extraStateData[self::COLUMN_TEMPORARY_ITEM_STATES];
             $requestIp = $extraStateData[self::COLUMN_REQUEST_IP];
             $extraStateData = array_diff_key($extraStateData, array_flip(self::EXTRACTED_EXTRA_DATA_COLUMNS));
+            $updatedColumns = $document->getUpdates();
+            if (!array_diff($updatedColumns, self::COLUMNS)) {
+                $updatedColumns = array_values(
+                    array_diff($updatedColumns, [DeliveryExecutionNormalizer::COLUMN_EXTRA_STATE_DATA]),
+                );
+            }
             return new DocumentDriverData(
                 $document->getId(),
                 [
                     self::DATA_COLUMN_FAMILY => [
-                        'startedAt' => $document->getStartedAt()->format(Date::DEFAULT_FORMAT),
-                        'extraStateData' => gzcompress(serialize($extraStateData)),
+                        DeliveryExecutionNormalizer::COLUMN_STARTED_AT => $document->getStartedAt()->format(Date::DEFAULT_FORMAT),
+                        DeliveryExecutionNormalizer::COLUMN_EXTRA_STATE_DATA => gzcompress(serialize($extraStateData)),
                         self::COLUMN_ATTEMPT => (int)$attempt,
                         self::COLUMN_ATTACHMENTS => igbinary_serialize($attachments),
                         self::COLUMN_ITEM_STATES => igbinary_serialize($itemStates),
                         self::COLUMN_REQUEST_IP => $requestIp ? igbinary_serialize($requestIp) : '',
                         self::COLUMN_TEMPORARY_ITEM_STATES => igbinary_serialize($temporaryItemStates),
                         DeliveryExecutionNormalizer::COLUMN_REVIEW_INLINE_COMMENT => igbinary_serialize($reviewInlineComment),
-                        'ltiLaunchParameters' => gzcompress(serialize($document->getLtiLaunchParameters())),
-                        'qtiSdkEncodedTestSession' => gzcompress($document->getQtiSdkEncodedTestSession() ?? ''),
-                        'initiallyScoredQtiSdkEncodedTestSession' =>
+                        DeliveryExecutionNormalizer::COLUMN_LTI_LAUNCH_PARAMETERS => gzcompress(serialize($document->getLtiLaunchParameters())),
+                        DeliveryExecutionNormalizer::COLUMN_QTI_SDK_ENCODED_TEST_SESSION => gzcompress($document->getQtiSdkEncodedTestSession() ?? ''),
+                        DeliveryExecutionNormalizer::COLUMN_INITIALLY_SCORED_QTI_SDK_ENCODED_TEST_SESSION =>
                             $document->getInitiallyScoredQtiSdkEncodedTestSession()
                                 ? gzcompress($document->getInitiallyScoredQtiSdkEncodedTestSession())
                                 : null,
-                        'locale' => $document->getLocale() ?? '',
-                        'status' => $document->getStatus(),
-                        'finishedAt' => $document->getFinishedAt()
+                        DeliveryExecutionNormalizer::COLUMN_LOCALE => $document->getLocale() ?? '',
+                        DeliveryExecutionNormalizer::COLUMN_STATUS => $document->getStatus(),
+                        DeliveryExecutionNormalizer::COLUMN_FINISHED_AT => $document->getFinishedAt()
                             ? $document->getFinishedAt()->format(Date::DEFAULT_FORMAT)
                             : '',
-                        'closeAt' => $document->getCloseAt()
+                        DeliveryExecutionNormalizer::COLUMN_CLOSE_AT => $document->getCloseAt()
                             ? $document->getCloseAt()->format(Date::DEFAULT_FORMAT)
                             : '',
-                        'updatedAt' => $document->getUpdatedAt()
+                        DeliveryExecutionNormalizer::COLUMN_UPDATED_AT => $document->getUpdatedAt()
                             ? $document->getUpdatedAt()->format(Date::DEFAULT_FORMAT)
                             : '',
-                        'isDeleted' => $document->isDeleted(),
-                        'invalidation' => igbinary_serialize($document->getinvalidation()?->toArray()),
+                        DeliveryExecutionNormalizer::COLUMN_IS_DELETED => $document->isDeleted(),
+                        DeliveryExecutionNormalizer::COLUMN_INVALIDATION => igbinary_serialize($document->getinvalidation()?->toArray()),
                     ],
                 ],
-                $document->getUpdates(),
+                $updatedColumns,
             );
         } catch (Exception $exception) {
             throw new DocumentNormalizerException(

@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2025-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -23,12 +23,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-#[
-    When(env: 'worker'),
+#[When(env: 'worker'),
     AsCommand(
         name: 'app:migrate:deliveries',
-    )
-]
+    )]
 class MigrateDeliveriesFromBigTableToElasticsearchCommand extends Command
 {
     private const ARG_FORCE = 'force';

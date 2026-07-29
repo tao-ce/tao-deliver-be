@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2019-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2019-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -31,6 +31,7 @@ use App\Tests\Traits\DocumentTestingTrait;
 use App\Tests\Traits\DomainTestingTrait;
 use App\Tests\Traits\OAuth2SecurityTestingTrait;
 use App\Tests\Traits\QtiTestingTrait;
+use App\Validator\DeliveryExecution\KioskSettingsValidator;
 use Carbon\Carbon;
 use OAT\Library\Lti1p3Core\Message\Payload\LtiMessagePayloadInterface;
 use Psr\Log\LoggerInterface;
@@ -67,6 +68,16 @@ class GetDeliveryExecutionConfigurationActionTest extends WebTestCase
         'id' => 'navigatorPlugin',
         'module' => 'taoQtiNuiTest/runner/plugins/navigation/navigator/plugin',
         'category' => 'content',
+    ];
+    private const PLUGIN_CONFIG_WARNBEFORELEAVING = [
+        'id' => 'warnBeforeLeaving',
+        'module' => 'taoQtiNuiTest/runner/plugins/navigation/warnBeforeLeaving/plugin',
+        'category' => 'navigation',
+    ];
+    private const PLUGIN_CONFIG_REFRESH = [
+        'id' => 'refresh',
+        'module' => 'taoQtiNuiTest/runner/plugins/tools/refresh/plugin',
+        'category' => 'tools',
     ];
 
     private const EXPECTED_ITEM_RUNNER_CONFIG_OVERRIDES_KEYS = [
@@ -121,6 +132,7 @@ class GetDeliveryExecutionConfigurationActionTest extends WebTestCase
             $this->batteryNavigationServiceMock,
             $this->createMock(LtiTokenResolverInterface::class),
             $this->createMock(FeatureFlagAdapterInterface::class),
+            $this->createMock(KioskSettingsValidator::class),
         );
     }
 
@@ -826,6 +838,120 @@ class GetDeliveryExecutionConfigurationActionTest extends WebTestCase
         $this->assertEquals('fr-FR', $result['options']['localization']['locale']);
     }
 
+    public function testKioskOptionWhenEnabled(): void
+    {
+        $ltiParameters = $this->getDummyLtiParameters();
+        $ltiParameters['custom'][LtiCustomSettings::PARAM_KIOSK_ENABLED] = true;
+        $ltiParameters['custom'][LtiCustomSettings::PARAM_KIOSK_MINVERSION] = '11.22.33';
+        $ltiParameters['custom'][LtiCustomSettings::PARAM_PLUGIN_FORCE_FULLSCREEN_ENABLED] = true;
+        $ltiParameters['custom'][LtiCustomSettings::PARAM_PLUGIN_PAUSE_ON_BLUR_ENABLED] = true;
+
+        $tenantId = '7';
+
+        $deliveryExecution = $this->createDeliveryExecutionWithTestSession(
+            $tenantId,
+            'BasicAccessibility',
+            $ltiParameters,
+        );
+
+        $this->doRequest($deliveryExecution, $ltiParameters);
+
+        $content = json_decode($this->client->getResponse()->getContent(), true);
+
+        $this->assertsForSuccessfulCall($deliveryExecution, $content);
+
+        $this->assertArrayHasKey('kiosk', $content['data']['options']);
+        $this->assertEquals([
+            'enabled' => true,
+            'minVersion' => '11.22.33',
+            'pauseOnBreach' => false,
+        ], $content['data']['options']['kiosk']);
+
+        $this->assertNotContainsEquals(
+            self::PLUGIN_CONFIG_WARNBEFORELEAVING,
+            $content['data']['providers']['plugins'],
+        );
+        $this->assertNotContainsEquals(
+            DeliveryExecutionConfigurationBuilder::PLUGIN_CONFIG_FORCE_FULLSCREEN,
+            $content['data']['providers']['plugins'],
+        );
+        $this->assertContainsEquals(
+            DeliveryExecutionConfigurationBuilder::PLUGIN_CONFIG_PAUSE_ON_BLUR,
+            $content['data']['providers']['plugins'],
+        );
+        $this->assertContainsEquals(
+            self::PLUGIN_CONFIG_REFRESH,
+            $content['data']['providers']['plugins'],
+        );
+    }
+
+    public function testKioskOptionWhenNotEnabled(): void
+    {
+        $ltiParameters = $this->getDummyLtiParameters();
+        $ltiParameters['custom'][LtiCustomSettings::PARAM_KIOSK_ENABLED] = false;
+        $ltiParameters['custom'][LtiCustomSettings::PARAM_KIOSK_MINVERSION] = '11.22.33';
+        $ltiParameters['custom'][LtiCustomSettings::PARAM_PLUGIN_FORCE_FULLSCREEN_ENABLED] = true;
+
+        $tenantId = '7';
+
+        $deliveryExecution = $this->createDeliveryExecutionWithTestSession(
+            $tenantId,
+            'BasicAccessibility',
+            $ltiParameters,
+        );
+
+        $this->doRequest($deliveryExecution, $ltiParameters);
+
+        $content = json_decode($this->client->getResponse()->getContent(), true);
+
+        $this->assertsForSuccessfulCall($deliveryExecution, $content);
+
+        $this->assertArrayNotHasKey('kiosk', $content['data']['options']);
+
+        $this->assertContainsEquals(
+            self::PLUGIN_CONFIG_WARNBEFORELEAVING,
+            $content['data']['providers']['plugins'],
+        );
+        $this->assertContainsEquals(
+            DeliveryExecutionConfigurationBuilder::PLUGIN_CONFIG_FORCE_FULLSCREEN,
+            $content['data']['providers']['plugins'],
+        );
+        $this->assertNotContainsEquals(
+            self::PLUGIN_CONFIG_REFRESH,
+            $content['data']['providers']['plugins'],
+        );
+    }
+
+    public function testKioskOptionWhenProviderIdSet(): void
+    {
+        $ltiParameters = $this->getDummyLtiParameters();
+        $ltiParameters['custom'][LtiCustomSettings::PARAM_KIOSK_ENABLED] = true;
+        $ltiParameters['custom'][LtiCustomSettings::PARAM_KIOSK_MINVERSION] = '11.22.33';
+        $ltiParameters['custom'][LtiCustomSettings::PARAM_KIOSK_PROVIDER_ID] = 'kiosked';
+
+        $tenantId = '7';
+
+        $deliveryExecution = $this->createDeliveryExecutionWithTestSession(
+            $tenantId,
+            'BasicAccessibility',
+            $ltiParameters,
+        );
+
+        $this->doRequest($deliveryExecution, $ltiParameters);
+
+        $content = json_decode($this->client->getResponse()->getContent(), true);
+
+        $this->assertsForSuccessfulCall($deliveryExecution, $content);
+
+        $this->assertArrayHasKey('kiosk', $content['data']['options']);
+        $this->assertEquals([
+            'enabled' => true,
+            'minVersion' => '11.22.33',
+            'providerId' => 'kiosked',
+            'pauseOnBreach' => false,
+        ], $content['data']['options']['kiosk']);
+    }
+
     public function responseHonorsSecurityPluginsFromClaimsDataProvider(): array
     {
         return [
@@ -1173,6 +1299,13 @@ class GetDeliveryExecutionConfigurationActionTest extends WebTestCase
                     self::PLUGIN_CONFIG_MENUPANEL,
                     self::PLUGIN_CONFIG_JUMPMENU,
                     self::PLUGIN_CONFIG_NAVIGATOR,
+                    DeliveryExecutionConfigurationBuilder::PLUGIN_CONFIG_FORCE_FULLSCREEN,
+                    DeliveryExecutionConfigurationBuilder::PLUGIN_CONFIG_PAUSE_ON_BLUR,
+                    [
+                        'id' => 'panelA11y',
+                        'category' => 'panel',
+                        'module' => 'taoQtiNuiTest/runner/plugins/panel/a11y/plugin',
+                    ],
                     DeliveryExecutionConfigurationBuilder::PLUGIN_CONFIG_READ_ALOUD,
                     DeliveryExecutionConfigurationBuilder::PLUGIN_CONFIG_PREVENT_SCREENSHOT,
                     DeliveryExecutionConfigurationBuilder::PLUGIN_CONFIG_DISABLE_COMMANDS,
@@ -1224,6 +1357,73 @@ class GetDeliveryExecutionConfigurationActionTest extends WebTestCase
 
         $this->assertsForSuccessfulCall($deliveryExecution, $content);
         $this->assertEquals($expectedConfig, $content['data']['options']['itemRunnerConfig']['elements']['ExtendedTextInteraction']);
+    }
+
+    public function testItReturnsPredefinedCustomIds(): void
+    {
+        $ltiParameters = $this->getDummyLtiParameters();
+        $deliveryExecution = $this->createDeliveryExecutionWithTestSession(
+            'withMultipleCustomUiIds',
+            'BasicAccessibility',
+            $ltiParameters,
+        );
+
+        $this->doRequest($deliveryExecution, $ltiParameters);
+
+        $content = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertsForSuccessfulCall($deliveryExecution, $content);
+        $this->assertSame(['id-1', 'id-2'], $content['data']['options']['customUiId']);
+    }
+
+    public function testItSetsCustomIds(): void
+    {
+        $ltiParameters = $this->getDummyLtiParameters();
+        $ltiParameters['custom'][LtiCustomSettings::PARAM_CUSTOM_UI_IDS] = 'lti_id-1,lti_id-2';
+        $deliveryExecution = $this->createDeliveryExecutionWithTestSession(
+            '1',
+            'BasicAccessibility',
+            $ltiParameters,
+        );
+
+        $this->doRequest($deliveryExecution, $ltiParameters);
+
+        $content = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertsForSuccessfulCall($deliveryExecution, $content);
+        $this->assertSame(['lti_id-1', 'lti_id-2'], $content['data']['options']['customUiId']);
+    }
+
+    public function testItMergesCustomIds(): void
+    {
+        $ltiParameters = $this->getDummyLtiParameters();
+        $ltiParameters['custom'][LtiCustomSettings::PARAM_CUSTOM_UI_IDS] = 'lti_id-1,lti_id-2,id-1';
+        $deliveryExecution = $this->createDeliveryExecutionWithTestSession(
+            'withMultipleCustomUiIds',
+            'BasicAccessibility',
+            $ltiParameters,
+        );
+
+        $this->doRequest($deliveryExecution, $ltiParameters);
+
+        $content = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertsForSuccessfulCall($deliveryExecution, $content);
+        $this->assertSame(['id-1', 'id-2', 'lti_id-1', 'lti_id-2'], $content['data']['options']['customUiId']);
+    }
+
+    public function testItMergesCustomIdsWithSingleConfigurationValue(): void
+    {
+        $ltiParameters = $this->getDummyLtiParameters();
+        $ltiParameters['custom'][LtiCustomSettings::PARAM_CUSTOM_UI_IDS] = 'lti_id-1,lti_id-2';
+        $deliveryExecution = $this->createDeliveryExecutionWithTestSession(
+            'withSingleCustomUiId',
+            'BasicAccessibility',
+            $ltiParameters,
+        );
+
+        $this->doRequest($deliveryExecution, $ltiParameters);
+
+        $content = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertsForSuccessfulCall($deliveryExecution, $content);
+        $this->assertSame(['id-1', 'lti_id-1', 'lti_id-2'], $content['data']['options']['customUiId']);
     }
 
     private function doRequest(

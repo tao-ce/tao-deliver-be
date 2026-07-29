@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2022 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2022-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -77,7 +77,6 @@ class ExternalTimerDefinitionNormalizerTraitTest extends KernelTestCase
     {
         $class = new ReflectionClass($this->subject);
         $method = $class->getMethod($name);
-        $method->setAccessible(true);
         return $method;
     }
 }

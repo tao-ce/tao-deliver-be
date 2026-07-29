@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2023 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2023-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -18,6 +18,7 @@ use qtism\common\enums\BaseType;
 use qtism\common\enums\Cardinality;
 use qtism\runtime\common\OutcomeVariable;
 use qtism\runtime\tests\AssessmentTestSession;
+use qtism\runtime\tests\RouteItem;
 
 class TouchedItemQtiResultExtractorPreProcessor implements QtiResultExtractorPreProcessorInterface
 {
@@ -25,10 +26,8 @@ class TouchedItemQtiResultExtractorPreProcessor implements QtiResultExtractorPre
     private const TOUCHED_OUTCOME_VARIABLE_NAME = 'TOUCHED';
     private const ITEM_STATE_TOUCHED_PARAM_NAME = 'touched';
 
-    public function __construct(
-        private readonly LoggerInterface $logger,
-        private readonly FeatureFlagAdapterInterface $featureFlagAdapter,
-    ) {
+    public function __construct(private readonly FeatureFlagAdapterInterface $featureFlagAdapter)
+    {
     }
 
     public function process(DeliveryExecution $deliveryExecution, AssessmentTestSession $testSession): void
@@ -40,26 +39,21 @@ class TouchedItemQtiResultExtractorPreProcessor implements QtiResultExtractorPre
 
         $routeItems = $testSession->getRoute()->getAllRouteItems();
 
+        /** @var RouteItem $routeItem */
         foreach ($routeItems as $routeItem) {
-            $isItemTouched = false;
-            $itemIdentifier = $routeItem->getAssessmentItemRef()->getIdentifier();
-            $itemState = $deliveryExecution->getExtraStateData()->getItemState($itemIdentifier);
-            $itemSessions = $testSession->getAssessmentItemSessions($itemIdentifier);
-
-            if (!$itemSessions || !$itemSessions->valid()) {
-                continue;
-            }
-
-            $currentItemSession = $itemSessions->current();
-
+            $assessmentItem = $routeItem->getAssessmentItemRef();
+            $itemState = $deliveryExecution->getExtraStateData()->getItemState($assessmentItem->getIdentifier());
             try {
                 $decodedItemState = json_decode($itemState ?? '', true, 512, JSON_THROW_ON_ERROR);
                 $isItemTouched = $decodedItemState[self::ITEM_STATE_TOUCHED_PARAM_NAME] ?? false;
             } catch (JsonException) {
-                // do nothing, we will not set the touched variable
+                $isItemTouched = false;
             }
-
-            $currentItemSession->setVariable(new OutcomeVariable(
+            $itemSession = $testSession->getAssessmentItemSessionStore()->getAssessmentItemSession(
+                $assessmentItem,
+                $routeItem->getOccurence(),
+            );
+            $itemSession->setVariable(new OutcomeVariable(
                 self::TOUCHED_OUTCOME_VARIABLE_NAME,
                 Cardinality::SINGLE,
                 BaseType::BOOLEAN,

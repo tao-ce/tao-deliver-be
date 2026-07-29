@@ -614,33 +614,6 @@ paths:
           $ref: '#/components/responses/NotFoundResponse'
         500:
           $ref: '#/components/responses/InternalServerErrorResponse'
-  /api/v1/deliveries/{id}/statistics:
-    get:
-      summary: Get delivery statistics by ID
-      security:
-        - oAuth2ClientCredentials: []
-      description: Returns a specific delivery statistics
-      operationId: GetDeliveryStatisticsAction
-      tags:
-        - Deliveries
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-          description: The delivery ID
-      responses:
-        200:
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetDeliveryStatisticsResponse'
-        404:
-          $ref: '#/components/responses/NotFoundResponse'
-        500:
-          $ref: '#/components/responses/InternalServerErrorResponse'
   /api/v1/deliveries:
     get:
       summary: Get list of deliveries
@@ -1309,6 +1282,37 @@ paths:
           $ref: '#/components/responses/NotFoundResponse'
         500:
           $ref: '#/components/responses/InternalServerErrorResponse'
+  /api/v1/deliveries/{id}/attachments:
+    get:
+      security:
+        - oAuth2ItemAttachmentScopeClientCredentials: []
+      tags:
+        - Deliveries
+      summary: Get All Item Test Attachments
+      description: Returns all attachments assigned to test items by test authors
+      operationId: GetTestItemAttachments
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 'Delivery ID'
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetTestItemAttachmentsResponse'
+        400:
+          $ref: '#/components/responses/BadRequestResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+        500:
+          $ref: '#/components/responses/InternalServerErrorResponse'
 components:
   securitySchemes:
     oAuth2ClientCredentials:
@@ -1317,6 +1321,13 @@ components:
       flows:
         clientCredentials:
           tokenUrl: https://auth-server.docker.localhost/v1/oauth2/tokens
+    oAuth2ItemAttachmentScopeClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth-server.docker.localhost/v1/oauth2/tokens
+          scopes:
+            deliver:item-attachment: Required scope to access the API
   schemas:
     Action:
       type: object
@@ -1864,33 +1875,6 @@ components:
               description: URL of publication
     GetDeliveryResponse:
       $ref: '#/components/schemas/Delivery'
-    GetDeliveryStatisticsResponse:
-      type: object
-      properties:
-        data:
-          type: object
-          properties:
-            totalDeliveryExecutions:
-              type: integer
-              description: Total of delivery executions
-            deliveryExecutionsStatusInitial:
-              type: integer
-              description: Count of delivery executions in status initial
-            deliveryExecutionsStatusInteracting:
-              type: integer
-              description: Count of delivery executions in status interacting
-            deliveryExecutionsStatusSuspended:
-              type: integer
-              description: Count of delivery executions in status suspended
-            deliveryExecutionsStatusClosed:
-              type: integer
-              description: Count of delivery executions in status closed
-            deliveryExecutionsStatusCancelled:
-              type: integer
-              description: Count of delivery executions in status cancelled
-            deliveryExecutionsStatusTerminated:
-              type: integer
-              description: Count of delivery executions in status terminated
     Delivery:
       type: object
       properties:
@@ -2250,10 +2234,44 @@ components:
                 type: string
               title:
                 type: string
+              testPart:
+                type: integer
+                description: test part (starting at 1)
+              position:
+                type: integer
+                nullable: true
+                description: position of the item in a test part (starting at 1); null for informational items
               responseIds:
                 type: array
                 items:
                   type: string
+    GetTestItemAttachmentsResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              itemId:
+                type: string
+              attachments:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: Content Service attachment ID
+                    url:
+                      type: string
+                      description: Signed URL to access the file
+                    name:
+                      type: string
+                      description: File name
+                    type:
+                      type: string
+                      description: MIME type
   responses:
     BadRequestResponse:
       description: Bad request

@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2019-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2019-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -12,7 +12,6 @@ namespace App\Action\DeliveryExecution;
 use App\Builder\DeliveryExecution\DeliveryExecutionConfigurationBuilder;
 use App\Domain\Delivery\Model\Delivery;
 use App\Domain\DeliveryExecution\Model\DeliveryExecution;
-use App\Domain\Tenant\Model\EmptyTestRunnerTheme;
 use App\Domain\Tenant\Model\TestRunnerSettings;
 use App\Domain\Tenant\Model\TestRunnerSettingsRepositoryInterface;
 use App\Environment\FeatureFlagAdapterInterface;
@@ -28,7 +27,9 @@ use App\Service\Lti\LtiLaunchService;
 use App\Service\Lti\LtiTokenResolverInterface;
 use App\TestRunner\Service\BatteryNavigationService;
 use App\TestRunner\Service\RealTimeService;
+use App\Validator\DeliveryExecution\KioskSettingsValidator;
 use OAT\Library\TenantManagement\Model\TestRunnerTheme;
+use OAT\Library\TenantManagement\Model\TestRunnerThemeInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -51,6 +52,7 @@ readonly class GetDeliveryExecutionConfigurationAction implements DeliveryExecut
         private BatteryNavigationService $batteryNavigationService,
         private LtiTokenResolverInterface $ltiTokenResolver,
         private FeatureFlagAdapterInterface $featureFlagAdapter,
+        private KioskSettingsValidator $kioskSettingsValidator,
     ) {
     }
 
@@ -100,7 +102,7 @@ readonly class GetDeliveryExecutionConfigurationAction implements DeliveryExecut
     {
         $builder = new DeliveryExecutionConfigurationBuilder($configuration);
 
-        $this->configureAssessmentPlugins($deliveryExecution, $builder);
+        $this->configureAssessmentPlugins($deliveryExecution, $builder, $configuration);
         $this->configureCommonPlugins($deliveryExecution, $builder);
 
         return $builder->build();
@@ -109,9 +111,11 @@ readonly class GetDeliveryExecutionConfigurationAction implements DeliveryExecut
     private function configureAssessmentPlugins(
         DeliveryExecution $deliveryExecution,
         DeliveryExecutionConfigurationBuilder $builder,
+        array $configuration,
     ): void {
         $ltiLaunchParameters = $deliveryExecution->getLtiLaunchParameters();
-        if ($deliveryExecution->isReview()) {
+        // Skip plugin configuration in auto-review mode to avoid accidental configuration collisions
+        if ($deliveryExecution->isReview() && !$this->ltiCustomSettings->isReviewModeEnabled($ltiLaunchParameters)) {
             return;
         }
 
@@ -135,6 +139,10 @@ readonly class GetDeliveryExecutionConfigurationAction implements DeliveryExecut
             );
         } elseif ($this->ltiCustomSettings->isPauseOnBlurPresent($ltiLaunchParameters)) {
             $builder->withoutPauseOnBlurPlugin();
+        }
+
+        if (!empty($configuration['options']['kiosk']['enabled'])) {
+            $builder->withKioskPlugin();
         }
 
         $builder->overridePluginOptions(
@@ -222,12 +230,24 @@ readonly class GetDeliveryExecutionConfigurationAction implements DeliveryExecut
         $configuration['options']['testTitle'] = $this->ltiCustomSettings->getTestTitle($ltiLaunchParameters)
             ?? $this->deliveryExecutionPropertyService->getQtiTestTitle($deliveryExecution);
 
+        if ($this->ltiCustomSettings->getCustomUiIds($ltiLaunchParameters)) {
+            $configuration['options']['customUiId'] = array_values(
+                array_unique(
+                    array_merge(
+                        (array)($configuration['options']['customUiId'] ?? []),
+                        $this->ltiCustomSettings->getCustomUiIds($ltiLaunchParameters),
+                    ),
+                ),
+            );
+        }
+
         if (
             $this->ltiTokenResolver->hasOneOfRoles([
                 LtiTokenResolverInterface::LTI_ROLE_INSTRUCTOR,
             ])
         ) {
             $configuration['options']['plugins']['inlineComments']['mode'] = ['read', 'write'];
+            $configuration['options']['plugins']['markingSymbols']['mode'] = ['read', 'write'];
         }
 
         $configuration['options']['itemRunnerConfig']['elements'] = array_replace_recursive(
@@ -235,7 +255,7 @@ readonly class GetDeliveryExecutionConfigurationAction implements DeliveryExecut
             $this->ltiCustomSettings->getItemRunnerConfigElements($ltiLaunchParameters),
         );
 
-        return $configuration;
+        return $this->setKioskOptions($deliveryExecution, $configuration);
     }
 
     private function filterPlugins(DeliveryExecution $deliveryExecution, array $configuration): array
@@ -251,6 +271,15 @@ readonly class GetDeliveryExecutionConfigurationAction implements DeliveryExecut
         if ($this->ltiCustomSettings->isReviewModeAllInOneEnabled($ltiLaunchParameters)) {
             $configuration = $this->removePlugin('titlePlugin', $configuration);
             $configuration = $this->removePlugin('navigatorPlugin', $configuration);
+        }
+
+        if (!empty($configuration['options']['kiosk']['enabled'])) {
+            $configuration = $this->removePlugin('warnBeforeLeaving', $configuration);
+
+            $builder = new DeliveryExecutionConfigurationBuilder($configuration);
+            $builder->withRefreshPlugin();
+            $builder->withoutForceFullScreenPlugin();
+            $configuration = $builder->build();
         }
 
         return $configuration;
@@ -289,14 +318,16 @@ readonly class GetDeliveryExecutionConfigurationAction implements DeliveryExecut
     private function getTestRunnerTheme(
         TestRunnerSettings $testRunnerSettings,
         array $configuration,
-    ): TestRunnerTheme|EmptyTestRunnerTheme {
+    ): TestRunnerThemeInterface {
         $theme = $testRunnerSettings->getTheme();
 
         // no menuPanel plugin loaded => also hide its button
-        if (!in_array(
-            DeliveryExecutionConfigurationBuilder::PLUGIN_CONFIG_MENU_PANEL,
-            $configuration['providers']['plugins'],
-        )) {
+        if (
+            !in_array(
+                DeliveryExecutionConfigurationBuilder::PLUGIN_CONFIG_MENU_PANEL,
+                $configuration['providers']['plugins'],
+            )
+        ) {
             $testRunnerTheme = $theme->getTestRunner();
             $testRunnerTheme['hideMenuButton'] = true;
 
@@ -506,6 +537,30 @@ readonly class GetDeliveryExecutionConfigurationAction implements DeliveryExecut
             $configuration['options']['localization']['supportedLocales'] = $delivery->getSupportedLocales();
             $configuration['options']['localization']['isMultiLanguage'] = $delivery->isMultiLanguage();
         }
+
+        return $configuration;
+    }
+
+    private function setKioskOptions(DeliveryExecution $deliveryExecution, array $configuration): array
+    {
+        $ltiLaunchParameters = $deliveryExecution->getLtiLaunchParameters();
+        if (!$this->ltiCustomSettings->isKioskEnabled($ltiLaunchParameters)) {
+            return $configuration;
+        }
+
+        $this->kioskSettingsValidator->setDeliveryExecution($deliveryExecution);
+        $configuration['options']['kiosk'] = $this->kioskSettingsValidator->getValidatedRequestParameters();
+        $kioskMinVersion = $this->ltiCustomSettings->getKioskMinVersion($ltiLaunchParameters);
+        if ($kioskMinVersion) {
+            $configuration['options']['kiosk']['minVersion'] = $kioskMinVersion;
+        }
+        $kioskProviderId = $this->ltiCustomSettings->getKioskProviderId($ltiLaunchParameters);
+        if ($kioskProviderId) {
+            $configuration['options']['kiosk']['providerId'] = $kioskProviderId;
+        }
+        $configuration['options']['kiosk']['pauseOnBreach'] = $this->ltiCustomSettings->isKioskPauseOnBreach(
+            $ltiLaunchParameters,
+        );
 
         return $configuration;
     }

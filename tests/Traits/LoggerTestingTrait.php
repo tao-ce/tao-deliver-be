@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2019-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2019-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -18,14 +18,11 @@ use Monolog\Level;
 
 trait LoggerTestingTrait
 {
-    /** @var TestHandler */
-    private $testLogHandler;
+    private TestHandler $testLogHandler;
 
-    /** @var TestHandler */
-    private $testAuditPlatformLogHandler;
+    private TestHandler $testAuditPlatformLogHandler;
 
-    /** @var TestHandler */
-    private $testAuditDeliveryExecutionLogHandler;
+    private TestHandler $testAuditDeliveryExecutionLogHandler;
 
     protected function setUp(): void
     {
@@ -59,61 +56,62 @@ trait LoggerTestingTrait
         return $this->getHandlerForChannel($channel)->getRecords();
     }
 
-    protected function assertHasLogRecord(array $record, int $level, string $channel = 'default'): void
+    protected function assertHasLogRecord(array $record, Level|int $level, string $channel = 'default'): void
     {
+        $level = $level instanceof Level ? $level : Level::from($level);
         $this->assertTrue(
-            $this->getHandlerForChannel($channel)->hasRecord($record, Level::fromValue($level)),
+            $this->getHandlerForChannel($channel)->hasRecord($record, $level),
             sprintf(
                 'Failed asserting that Logger contains record: [%s] %s',
-                Logger::getLevelName($level),
+                $level->getName(),
                 json_encode($record),
             ),
         );
     }
 
-    protected function assertHasLogRecordWithMessage(string $message, int $level, string $channel = 'default'): void
+    protected function assertHasLogRecordWithMessage(string $message, Level|int $level, string $channel = 'default'): void
+    {
+        $level = $level instanceof Level ? $level : Level::from($level);
+        $this->assertTrue(
+            $this->getHandlerForChannel($channel)->hasRecordThatContains($message, $level),
+            sprintf(
+                'Failed asserting that Logger contains record: [%s] %s',
+                $level->getName(),
+                $message,
+            ),
+        );
+    }
+
+    protected function assertHasNoLogRecordWithMessage(string $message, Level|int $level): void
+    {
+        $level = $level instanceof Level ? $level : Level::from($level);
+        $this->assertFalse(
+            $this->testLogHandler->hasRecordThatContains($message, $level),
+            sprintf(
+                'Failed asserting that Logger does not contain record: [%s] %s',
+                $level->getName(),
+                $message,
+            ),
+        );
+    }
+
+    protected function assertHasRecordThatPasses(callable $callable, Level|int $level, string $channel = 'default'): void
     {
         $this->assertTrue(
-            $this->getHandlerForChannel($channel)->hasRecordThatContains($message, Level::fromValue($level)),
-            sprintf(
-                'Failed asserting that Logger contains record: [%s] %s',
-                Logger::getLevelName($level),
-                $message,
+            $this->getHandlerForChannel($channel)->hasRecordThatPasses(
+                $callable,
+                $level instanceof Level ? $level : Level::from($level),
             ),
         );
-    }
-
-    protected function assertHasNoLogRecordWithMessage(string $message, int $level): void
-    {
-        $this->assertFalse(
-            $this->testLogHandler->hasRecordThatContains($message, Level::fromValue($level)),
-            sprintf(
-                'Failed asserting that Logger contains record: [%s] %s',
-                Logger::getLevelName($level),
-                $message,
-            ),
-        );
-    }
-
-    protected function assertHasRecordThatPasses(callable $callable, int $level, string $channel = 'default'): void
-    {
-        $this->assertTrue($this->getHandlerForChannel($channel)->hasRecordThatPasses($callable, Level::fromValue($level)));
     }
 
     private function getHandlerForChannel(string $channel = 'default'): TestHandler
     {
-        switch ($channel) {
-            case 'default':
-                return $this->testLogHandler;
-
-            case 'audit_platform':
-                return $this->testAuditPlatformLogHandler;
-
-            case 'audit_delivery_execution':
-                return $this->testAuditDeliveryExecutionLogHandler;
-
-            default:
-                throw new InvalidArgumentException(sprintf('Invalid channel provided: %s', $channel));
-        }
+        return match ($channel) {
+            'default' => $this->testLogHandler,
+            'audit_platform' => $this->testAuditPlatformLogHandler,
+            'audit_delivery_execution' => $this->testAuditDeliveryExecutionLogHandler,
+            default => throw new InvalidArgumentException(sprintf('Invalid channel provided: %s', $channel)),
+        };
     }
 }

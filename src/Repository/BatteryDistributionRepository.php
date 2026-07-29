@@ -56,7 +56,7 @@ class BatteryDistributionRepository extends DocumentRepository
     /**
      * @throws EmptyBatteryException
      */
-    private function createByBatteryAndUserId(Battery $battery, string $userId, ?string $attemptId): BatteryDistribution
+    public function createByBatteryAndUserId(Battery $battery, string $userId, ?string $attemptId): BatteryDistribution
     {
         if (empty($battery->deliveries)) {
             throw new EmptyBatteryException('The battery does not contain any delivery');

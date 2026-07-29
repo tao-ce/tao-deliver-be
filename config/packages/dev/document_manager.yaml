@@ -26,6 +26,3 @@ document_manager:
 
     publication_handler:
       connection: elasticsearch_connection
-
-    enrollment_handler:
-      connection: elasticsearch_connection

@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2019-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2019-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -16,6 +16,7 @@ use Carbon\Carbon;
 class DeliveryExecutionExtraStateData
 {
     use SubData\AliasIdTrait;
+    use SubData\AnnotationCommentTrait;
     use SubData\AssessmentEventsTrait;
     use SubData\AttachmentsTrait;
     use SubData\AttemptTrait;
@@ -71,6 +72,7 @@ class DeliveryExecutionExtraStateData
         $extraStateData->toolStates = $data['toolStates'] ?? [];
         $extraStateData->traceData = $data['traceData'] ?? [];
         $extraStateData->uiEvents = isset($data['uiEvents']) ? json_decode($data['uiEvents'], true) : [];
+        $extraStateData->hydrateAnnotationCommentFromArray($data['annotationComments'] ?? null);
 
         foreach (self::createManuallyGradedItem($data['finalManuallyGradedItems'] ?? []) as $finalManuallyGradedItem) {
             $extraStateData = $extraStateData->withFinalManuallyGradedItem(...$finalManuallyGradedItem);
@@ -111,6 +113,7 @@ class DeliveryExecutionExtraStateData
             'toolStates' => $this->getToolStates(),
             'traceData' => $this->getTraceData(),
             'uiEvents' => json_encode($this->getUiEvents()),
+            'annotationComments' => $this->getAnnotationComments()->toArray(),
         ];
     }
 

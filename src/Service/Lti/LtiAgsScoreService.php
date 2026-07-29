@@ -41,7 +41,7 @@ class LtiAgsScoreService
         $ltiParameters['ags_claim']['scope'] = $ltiParameters['ags_claim']['scope'] ?? [];
         $agsClaim = AgsClaim::denormalize($ltiParameters['ags_claim']);
 
-        if (!ScopePermissionVoter::canWriteScore($agsClaim->getScopes())) {
+        if ($agsClaim->getLineItemUrl() === null || !ScopePermissionVoter::canWriteScore($agsClaim->getScopes())) {
             return false;
         }
 

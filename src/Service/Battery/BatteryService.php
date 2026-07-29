@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2023-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2023-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -18,11 +18,12 @@ use App\Repository\BatteryDistributionRepository;
 use App\Repository\BatteryRepository;
 use App\Repository\DeliveryRepository;
 use App\Service\BatteryDistribution\BatteryDeliveryToExecuteRetriever;
+use App\Service\Infrastructure\Contract\MemoizedService;
 use OAT\Bundle\DocumentManagerBundle\Exception\DocumentNotFoundException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use WeakMap;
 
-class BatteryService
+class BatteryService implements MemoizedService
 {
     private WeakMap $deliveries;
 
@@ -33,6 +34,11 @@ class BatteryService
         private readonly DeliveryRepository $deliveryRepository,
         private readonly LtiCustomSettings $ltiCustomSettings,
     ) {
+        $this->flush();
+    }
+
+    public function flush(): void
+    {
         $this->deliveries = new WeakMap();
     }
 
@@ -63,6 +69,14 @@ class BatteryService
             $ltiLaunchParameters,
         );
         $attemptId = $ltiLaunchParameters['custom'][LtiCustomSettings::PARAM_ATTEMPT_ID] ?? null;
+        if ($this->ltiCustomSettings->isResetEnabled($ltiLaunchParameters)) {
+            return $this->batteryDistributionRepository->createByBatteryAndUserId(
+                $battery,
+                $userId,
+                $attemptId,
+            )->battery->getFirstDelivery();
+        }
+
         $batteryDistribution = $this->batteryDistributionRepository->findOrCreate($battery, $userId, $attemptId);
         return $this->batteryDeliveryToExecuteRetriever->retrieve(
             $batteryDistribution,

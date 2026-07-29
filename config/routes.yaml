@@ -42,15 +42,39 @@ api_v1_set_battery_distribution_locale:
   methods: PUT
   controller: App\Action\Battery\AssignLocaleToBatteryDistributionAction
 
+external_api_v1_post_publication:
+    path: '/external-api/v1/publications'
+    methods: POST
+    controller: App\Action\Publication\CreatePublicationAction
+    defaults:
+      em_oauth2_scopes:
+        - ContentDeveloper
+
 api_v1_post_publication:
     path: '/api/v1/publications'
     methods: POST
     controller: App\Action\Publication\CreatePublicationAction
 
+external_api_v1_get_publication:
+    path: '/external-api/v1/publications/{id}'
+    methods: GET
+    controller: App\Action\Publication\GetPublicationAction
+    defaults:
+      em_oauth2_scopes:
+        - ContentDeveloper
+
 api_v1_get_publication:
     path: '/api/v1/publications/{id}'
     methods: GET
     controller: App\Action\Publication\GetPublicationAction
+
+external_api_v1_get_delivery:
+    path: '/external-api/v1/deliveries/{id}'
+    methods: GET
+    controller: App\Action\Delivery\GetDeliveryAction
+    defaults:
+      em_oauth2_scopes:
+        - ContentDeveloper
 
 api_v1_get_delivery:
     path: '/api/v1/deliveries/{id}'
@@ -72,20 +96,34 @@ api_v1_publish_delivery:
     methods: POST
     controller: App\Action\Delivery\PublishDeliveryCloneAction
 
-api_v1_get_delivery_statistics:
-    path: '/api/v1/deliveries/{id}/statistics'
+api_v1_get_delivery_attachments:
+    path: '/api/v1/deliveries/{id}/attachments'
     methods: GET
-    controller: App\Action\Delivery\GetDeliveryStatisticsAction
+    controller: App\TestItemAttachment\Action\GetTestItemAttachments
+    defaults:
+        em_oauth2_scopes:
+        - deliver:item-attachment
+
+external_api_v1_delete_delivery:
+    path: '/external-api/v1/deliveries/{id}'
+    methods: DELETE
+    controller: App\Action\Delivery\DeleteDeliveryAction
+    defaults:
+      em_oauth2_scopes:
+        - ContentDeveloper
 
 api_v1_delete_delivery:
-  path: '/api/v1/deliveries/{id}'
-  methods: DELETE
-  controller: App\Action\Delivery\DeleteDeliveryAction
+    path: '/api/v1/deliveries/{id}'
+    methods: DELETE
+    controller: App\Action\Delivery\DeleteDeliveryAction
 
-api_v1_list_deliveries:
-    path: '/api/v1/deliveries'
-    methods: GET
-    controller: App\Action\Delivery\ListDeliveriesAction
+external_api_v1_update_delivery:
+    path: '/external-api/v1/deliveries/{id}'
+    methods: PATCH
+    controller: App\Action\Delivery\UpdateDeliveryAction
+    defaults:
+      em_oauth2_scopes:
+        - ContentDeveloper
 
 api_v1_update_delivery:
     path: '/api/v1/deliveries/{id}'
@@ -140,6 +178,13 @@ api_v1_post_delivery_execution_review_internal_comment:
     requirements:
         id: .+
 
+api_v1_post_delivery_execution_review_annotation_comment:
+    path: '/api/v1/delivery-executions/{id}/scoring/annotation-comment'
+    methods: PUT
+    controller: App\Action\DeliveryExecution\SetAnnotationCommentAction
+    requirements:
+        id: .+
+
 api_v1_get_init_items:
     path: '/api/v1/init-items/{id}'
     methods: GET
@@ -149,6 +194,16 @@ api_v1_get_delivery_execution_configuration:
     path: '/api/v1/delivery-executions/{id}/configuration'
     methods: GET
     controller: App\Action\DeliveryExecution\GetDeliveryExecutionConfigurationAction
+
+external_api_v1_get_results:
+    path: '/external-api/v1/delivery-executions/{id}/results'
+    methods: GET
+    controller: App\Action\DeliveryExecution\GetResultAction
+    requirements:
+        id: .+
+    defaults:
+      em_oauth2_scopes:
+        - ContentDeveloper
 
 api_v1_get_results:
     path: '/api/v1/delivery-executions/{id}/results'
@@ -161,6 +216,9 @@ api_v1_post_delivery_execution_sync:
     path: '/api/v1/delivery-executions/sync'
     methods: POST
     controller: App\Action\DeliveryExecution\SynchronizeAction
+    defaults:
+      em_oauth2_scopes:
+        - 'tao-offline'
 
 api_v1_delivery_execution_get_attachments_download_and_upload_path:
   path: '/api/v1/delivery-executions/{id}/attachments'

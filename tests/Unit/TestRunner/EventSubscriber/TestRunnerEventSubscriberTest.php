@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2019-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2019-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -34,6 +34,7 @@ use DateInterval;
 use App\Messenger\Stamp\MetadataStamp;
 use Monolog\Logger;
 use OAT\Library\Lti1p3Core\Exception\LtiException;
+use OAT\Library\Lti1p3Core\Resource\LtiResourceLink\LtiResourceLink;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use qtism\runtime\tests\AssessmentTestSession;
@@ -108,6 +109,7 @@ class TestRunnerEventSubscriberTest extends KernelTestCase
         );
 
         $expectedMessage = new InteractionMessage(
+            new LtiResourceLink('resourceLinkId'),
             deliveryExecutionId: 'userId#Basic#resultId#tenantId',
             deliveryId: 'Basic',
             tenantId: 'tenantId',
@@ -175,6 +177,7 @@ class TestRunnerEventSubscriberTest extends KernelTestCase
         );
 
         $expectedMessage = new InteractionMessage(
+            new LtiResourceLink('resourceLinkId'),
             deliveryExecutionId: 'userId#MultiPartInformationalItems#resultId#tenantId',
             deliveryId: 'MultiPartInformationalItems',
             tenantId: 'tenantId',
@@ -241,6 +244,7 @@ class TestRunnerEventSubscriberTest extends KernelTestCase
         );
 
         $expectedMessage = new InteractionMessage(
+            new LtiResourceLink('resourceLinkId'),
             deliveryExecutionId: 'userId#MultiPartInformationalItems#resultId#tenantId',
             deliveryId: 'MultiPartInformationalItems',
             tenantId: 'tenantId',
@@ -308,6 +312,7 @@ class TestRunnerEventSubscriberTest extends KernelTestCase
         );
 
         $expectedMessage = new InteractionMessage(
+            new LtiResourceLink('resourceLinkId'),
             deliveryExecutionId: 'userId#MultiPartInformationalItems#resultId#tenantId',
             deliveryId: 'MultiPartInformationalItems',
             tenantId: 'tenantId',
@@ -369,6 +374,7 @@ class TestRunnerEventSubscriberTest extends KernelTestCase
         );
 
         $expectedMessage = new InteractionMessage(
+            new LtiResourceLink('resourceLinkId'),
             deliveryExecutionId: 'userId#MultiPart#resultId#tenantId',
             deliveryId: 'MultiPart',
             tenantId: 'tenantId',
@@ -435,6 +441,7 @@ class TestRunnerEventSubscriberTest extends KernelTestCase
         );
 
         $expectedMessage = new InteractionMessage(
+            new LtiResourceLink('resourceLinkId'),
             deliveryExecutionId: 'userId#MultiPart#resultId#tenantId',
             deliveryId: 'MultiPart',
             tenantId: 'tenantId',
@@ -501,6 +508,7 @@ class TestRunnerEventSubscriberTest extends KernelTestCase
         );
 
         $expectedMessage = new InteractionMessage(
+            new LtiResourceLink('resourceLinkId'),
             deliveryExecutionId: 'userId#MultiPart#resultId#tenantId',
             deliveryId: 'MultiPart',
             tenantId: 'tenantId',
@@ -575,6 +583,7 @@ class TestRunnerEventSubscriberTest extends KernelTestCase
         );
 
         $expectedMessage = new InteractionMessage(
+            new LtiResourceLink('resourceLinkId'),
             deliveryExecutionId: 'userId#Basic#resultId#tenantId',
             deliveryId: 'Basic',
             tenantId: 'tenantId',
@@ -636,7 +645,7 @@ class TestRunnerEventSubscriberTest extends KernelTestCase
             'userId#Basic#resultId#tenantId',
             'Basic',
             'tenantId',
-            ['custom' => [LtiCustomSettings::PARAM_ENABLE_MONITORING => true]],
+            ['resource_link_id' => 'resourceLinkId', 'custom' => [LtiCustomSettings::PARAM_ENABLE_MONITORING => true]],
             null,
         );
 
@@ -650,6 +659,7 @@ class TestRunnerEventSubscriberTest extends KernelTestCase
         $event = new ProctoredDeliveryExecutionInitializedEvent('trigger', $deliveryExecution);
 
         $expectedMessage = new InteractionMessage(
+            new LtiResourceLink('resourceLinkId'),
             deliveryExecutionId: 'userId#Basic#resultId#tenantId',
             deliveryId: 'Basic',
             tenantId: 'tenantId',
@@ -747,7 +757,7 @@ class TestRunnerEventSubscriberTest extends KernelTestCase
             'userId#deliveryId#resultId#tenantId',
             'deliveryId',
             'tenantId',
-            ['custom' => []],
+            ['resource_link_id' => 'resourceLinkId', 'custom' => []],
             null,
         );
 
@@ -815,7 +825,7 @@ class TestRunnerEventSubscriberTest extends KernelTestCase
             'userId#Basic#resultId#tenantId',
             'Basic',
             'tenantId',
-            ['custom' => [LtiCustomSettings::PARAM_ENABLE_MONITORING => true]],
+            ['resource_link_id' => 'resourceLinkId', 'custom' => [LtiCustomSettings::PARAM_ENABLE_MONITORING => true]],
             null,
         );
 
@@ -842,7 +852,7 @@ class TestRunnerEventSubscriberTest extends KernelTestCase
             'userId#MultiPartInformationalItems#resultId#tenantId',
             'MultiPartInformationalItems',
             'tenantId',
-            ['custom' => [LtiCustomSettings::PARAM_ENABLE_MONITORING => true]],
+            ['resource_link_id' => 'resourceLinkId', 'custom' => [LtiCustomSettings::PARAM_ENABLE_MONITORING => true]],
             null,
         );
 
@@ -870,7 +880,7 @@ class TestRunnerEventSubscriberTest extends KernelTestCase
             'userId#MultiPart#resultId#tenantId',
             'MultiPart',
             'tenantId',
-            ['custom' => [LtiCustomSettings::PARAM_ENABLE_MONITORING => true]],
+            ['resource_link_id' => 'resourceLinkId', 'custom' => [LtiCustomSettings::PARAM_ENABLE_MONITORING => true]],
             null,
             null,
         );

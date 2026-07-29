@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2021-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2021-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -13,8 +13,8 @@ use App\DataStore\Sender\DataStoreResultsSender;
 use App\Environment\FeatureFlagAdapterInterface;
 use App\Lti\LtiCustomSettings;
 use App\Messenger\Message\DataStoreResultMessage;
+use App\Qti\Extractor\ItemResponseStatusResolver;
 use App\Service\DeliveryExecution\DeliveryExecutionPropertyService;
-use App\Service\Enrollment\EnrollmentService;
 use App\TestRunner\Factory\AssessmentTestSessionFactory;
 use App\Tests\Traits\DataStoreTestingTrait;
 use App\Tests\Traits\MessengerTestingTrait;
@@ -38,6 +38,7 @@ class DataStoreResultsSenderTest extends KernelTestCase
 
         $this->subject = new DataStoreResultsSender(
             $this->createMock(FeatureFlagAdapterInterface::class),
+            $this->createMock(ItemResponseStatusResolver::class),
             new DeliveryExecutionPropertyService(
                 $this->getTestSessionAccessorFactoryMock(),
                 static::getContainer()->get(LtiCustomSettings::class),
@@ -47,7 +48,7 @@ class DataStoreResultsSenderTest extends KernelTestCase
             static::getContainer()->get(LoggerInterface::class),
             static::getContainer()->get(NormalizerInterface::class),
             $this->testMessageBus,
-            static::getContainer()->get(EnrollmentService::class),
+            static::getContainer()->get(LtiCustomSettings::class),
         );
     }
 

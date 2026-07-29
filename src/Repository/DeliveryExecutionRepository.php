@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2019-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2019-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -13,14 +13,16 @@ use App\DocumentManager\Filter\DeliveryExecution\DeliveryExecutionCollectionFilt
 use App\Domain\DeliveryExecution\Helper\DeliveryExecutionKeyHelper;
 use App\Domain\DeliveryExecution\Model\DeliveryExecution;
 use App\Lti\LtiCustomSettings;
+use App\Service\Infrastructure\Contract\MemoizedService;
 use Carbon\Carbon;
 use OAT\Bundle\DocumentManagerBundle\Exception\DocumentNotFoundException;
 use OAT\Bundle\DocumentManagerBundle\Manager\DocumentManagerInterface;
 use OAT\Bundle\DocumentManagerBundle\Repository\DocumentRepository;
 
-class DeliveryExecutionRepository extends DocumentRepository
+class DeliveryExecutionRepository extends DocumentRepository implements MemoizedService
 {
-    private DeliveryExecution $lastLoadDeliveryExecution;
+    /** @var DeliveryExecution[] */
+    private array $deliveryExecutions;
 
     public function __construct(
         DocumentManagerInterface $manager,
@@ -28,15 +30,19 @@ class DeliveryExecutionRepository extends DocumentRepository
         private LtiCustomSettings $ltiCustomSettings,
     ) {
         parent::__construct($manager, DeliveryExecution::class);
+        $this->flush();
+    }
+
+    public function flush(): void
+    {
+        $this->deliveryExecutions = [];
     }
 
     public function find(string $documentId): DeliveryExecution
     {
-        if (empty($this->lastLoadDeliveryExecution) || $this->lastLoadDeliveryExecution->getId() !== $documentId) {
+        if (!isset($this->deliveryExecutions[$documentId])) {
             $keyInfo = DeliveryExecutionKeyHelper::createDeliveryExecutionKeyInfo($documentId);
-            if (!$keyInfo?->isReview()) {
-                $this->lastLoadDeliveryExecution = parent::find($documentId);
-            } else {
+            if ($keyInfo?->isReview()) {
                 try {
                     $originalDeliveryExecution = $this->find((string)$keyInfo);
                     $extraState = $originalDeliveryExecution->getExtraStateData();
@@ -59,7 +65,7 @@ class DeliveryExecutionRepository extends DocumentRepository
                         $originalDeliveryExecution->getLtiLaunchParameters()['launch_presentation_return_url'] ?? null;
                 }
 
-                $this->lastLoadDeliveryExecution = new DeliveryExecution(
+                $this->deliveryExecutions[$documentId] = new DeliveryExecution(
                     $documentId,
                     $keyInfo->getDeliveryId(),
                     $keyInfo->getTenantId(),
@@ -71,10 +77,12 @@ class DeliveryExecutionRepository extends DocumentRepository
                     originalDeliveryExecution: $originalDeliveryExecution,
                     locale: $originalDeliveryExecution?->getLocale(),
                 );
+            } else {
+                $this->deliveryExecutions[$documentId] = parent::find($documentId);
             }
         }
 
-        return $this->lastLoadDeliveryExecution;
+        return $this->deliveryExecutions[$documentId];
     }
 
     /**
@@ -97,5 +105,26 @@ class DeliveryExecutionRepository extends DocumentRepository
         foreach (iterator_to_array($documentsDriverData) as $documentDriverData) {
             yield $this->getNormalizer()->denormalizeDocument($documentDriverData, $this->documentClass);
         }
+    }
+
+    public function existsForUserIdAndStatuses(string $userId, array $deliveryExecutionStatuses): bool
+    {
+        $filter = $this->filterFactory->createForUserIdAndStatuses(
+            $this->manager->getHandlerForClass(DeliveryExecution::class)->getConnection()->getDriver(),
+            $userId,
+            $deliveryExecutionStatuses,
+        );
+
+        $documentsDriverData = $this->getDriver()->getDocumentsCollectionData(
+            $this->getDocumentStorageName(),
+            $filter->getFilter(),
+            limit: 1,
+        );
+
+        foreach ($documentsDriverData as $_) {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2021-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2021-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -21,10 +21,11 @@ use App\DataStore\DTO\TestResultDTO;
 use App\Domain\DeliveryExecution\Model\DeliveryExecution;
 use App\Domain\DeliveryExecution\Model\ExtraStateData\DurationStorage\ServerDuration;
 use App\Environment\FeatureFlagAdapterInterface;
+use App\Lti\LtiCustomSettings;
 use App\Messenger\Message\DataStoreResultMessage;
+use App\Qti\Extractor\ItemResponseStatusResolver;
 use App\Service\DeliveryExecution\DeliveryExecutionPropertyService;
 use App\Service\DeliveryExecution\ExtractDeliveryExecutionResultService;
-use App\Service\Enrollment\EnrollmentService;
 use Psr\Log\LoggerInterface;
 use qtism\common\datatypes\QtiFile;
 use qtism\common\enums\BaseType;
@@ -57,12 +58,13 @@ class DataStoreResultsSender implements DataStoreSenderInterface
 
     public function __construct(
         private FeatureFlagAdapterInterface $featureFlagAdapter,
+        private ItemResponseStatusResolver $itemResponseStatusResolver,
         private DeliveryExecutionPropertyService $deliveryExecutionPropertyService,
         private ExtractDeliveryExecutionResultService $resultExtractor,
         private LoggerInterface $auditPlatformLogger,
         private NormalizerInterface $serializer,
         private MessageBusInterface $messageBus,
-        private EnrollmentService $enrollmentService,
+        private LtiCustomSettings $ltiCustomSettings,
     ) {
     }
 
@@ -75,7 +77,7 @@ class DataStoreResultsSender implements DataStoreSenderInterface
             $this->getLtiParameters(),
             $this->getAssessmentResult(),
             $deliveryExecution->getUserSelectedLocale(),
-            $this->enrollmentService->getSessionDataByDeliveryExecution($deliveryExecution),
+            $this->ltiCustomSettings->getSessionData($deliveryExecution->getLtiLaunchParameters()),
         );
 
         $payload = $this->serializer->normalize($dataStore);
@@ -244,7 +246,7 @@ class DataStoreResultsSender implements DataStoreSenderInterface
                 true,
                 isset($finalManuallyGradedItems[$id]) ? $finalManuallyGradedItems[$id]->getTimestamp() : null,
                 $this->createItemState($id),
-                $itemSession->isResponded(false),
+                $this->itemResponseStatusResolver->isRespondedTo($itemSession, $this->deliveryExecution),
             );
 
             $itemPosition++;

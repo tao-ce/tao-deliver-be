@@ -48,7 +48,7 @@ class CleanUpHandler
             // remove related timers
             $externalTimerDefinition = $this->timerService->getServerTimer($deliveryExecution);
             if ($externalTimerDefinition !== null) {
-                $this->timerService->deleteServerTimer($deliveryExecution);
+                $this->timerService->deleteServerTimer($deliveryExecution->getId());
                 $deliveryExecution->addExternalTimerDefinition($externalTimerDefinition);
                 $this->deliveryExecutionService->saveDeliveryExecution($deliveryExecution);
             }

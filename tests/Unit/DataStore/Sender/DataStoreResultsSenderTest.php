@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2021-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2021-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -13,8 +13,8 @@ use App\DataStore\Sender\DataStoreResultsSender;
 use App\Environment\FeatureFlagAdapterInterface;
 use App\Lti\LtiCustomSettings;
 use App\Messenger\Message\DataStoreResultMessage;
+use App\Qti\Extractor\ItemResponseStatusResolver;
 use App\Service\DeliveryExecution\DeliveryExecutionPropertyService;
-use App\Service\Enrollment\EnrollmentService;
 use App\TestRunner\Factory\AssessmentTestSessionFactory;
 use App\Tests\Traits\DataStoreTestingTrait;
 use App\Tests\Traits\DomainTestingTrait;
@@ -45,7 +45,6 @@ class DataStoreResultsSenderTest extends KernelTestCase
     private DataStoreResultsSender $subject;
     private TestSessionAccessorFactory&MockObject $testSessionAccessorFactoryMock;
     private MessageBusInterface $messageBusMock;
-    private EnrollmentService $enrollmentService;
     private bool $isItemStatePersistenceEnabled = false;
 
     protected function setUp(): void
@@ -58,10 +57,6 @@ class DataStoreResultsSenderTest extends KernelTestCase
 
         $this->testSessionAccessorFactoryMock = $this->getTestSessionAccessorFactoryMock();
         $this->messageBusMock = $this->getMessageBusMock();
-        $this->enrollmentService = $this->createMock(EnrollmentService::class);
-        $this->enrollmentService
-            ->method('getSessionDataByDeliveryExecution')
-            ->willReturn([]);
         $featureFlagAdapter = $this->createMock(FeatureFlagAdapterInterface::class);
         $featureFlagAdapter
             ->method('isEnabled')
@@ -72,6 +67,7 @@ class DataStoreResultsSenderTest extends KernelTestCase
 
         $this->subject = new DataStoreResultsSender(
             $featureFlagAdapter,
+            $this->createMock(ItemResponseStatusResolver::class),
             new DeliveryExecutionPropertyService(
                 $this->testSessionAccessorFactoryMock,
                 static::getContainer()->get(LtiCustomSettings::class),
@@ -81,7 +77,7 @@ class DataStoreResultsSenderTest extends KernelTestCase
             static::getContainer()->get(LoggerInterface::class),
             static::getContainer()->get(NormalizerInterface::class),
             $this->messageBusMock,
-            $this->enrollmentService,
+            static::getContainer()->get(LtiCustomSettings::class),
         );
     }
 

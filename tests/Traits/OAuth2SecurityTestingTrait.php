@@ -32,8 +32,11 @@ trait OAuth2SecurityTestingTrait
         ContainerAwareTestingHelper::checkKernelTestCase(static::class);
     }
 
-    public function createOAuth2AccessToken(string $deliveryExecutionId = '1', array $ltiClaims = []): string
-    {
+    public function createOAuth2AccessToken(
+        string $deliveryExecutionId = '1',
+        array $ltiClaims = [],
+        array $scopes = [],
+    ): string {
         $info = DeliveryExecutionKeyHelper::createDeliveryExecutionKeyInfo($deliveryExecutionId)
             ?? new DeliveryExecutionKeyInfo(null, 'userId', 'deliveryId', '', $deliveryExecutionId);
         $ltiClaims[LtiMessagePayloadInterface::CLAIM_LTI_TARGET_LINK_URI] = sprintf(
@@ -56,14 +59,16 @@ trait OAuth2SecurityTestingTrait
                 DateTimeImmutable $issuedAt,
             ) use (
                 $info,
-                $ltiClaims
+                $ltiClaims,
+                $scopes,
             ): Builder {
                 $builder
                     ->issuedBy('https://deliver.ngs.test')
                     ->permittedFor('tests')
                     ->expiresAt($issuedAt->modify('+1 minute'))
                     ->withClaim('tenant_id', $info->getTenantId())
-                    ->withClaim('ltiClaims', $ltiClaims);
+                    ->withClaim('ltiClaims', $ltiClaims)
+                    ->withClaim('scopes', $scopes);
 
                 foreach ($ltiClaims as $key => $value) {
                     if ($key === 'sub') {

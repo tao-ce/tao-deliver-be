@@ -44,9 +44,3 @@ document_manager:
       classes:
         App\Domain\Publication\Model\Publication:
           storageName: '%env(DOCUMENT_MANAGER_TABLE_NAME_PUBLICATIONS)%'
-
-    enrollment_handler:
-      connection: memory_connection
-      classes:
-        App\Domain\Enrollment\Model\Enrollment:
-          storageName: '%env(DOCUMENT_MANAGER_TABLE_NAME_ENROLLMENT)%'

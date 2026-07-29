@@ -10,8 +10,8 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Service\Attachment;
 
 use App\ContentServiceApi\Gateway\ContentServiceApiGateway;
-use App\Service\Attachment\AttachmentRegistry;
-use App\Service\Attachment\ItemCategoryBasedAttachmentRegistry;
+use App\TestItemAttachment\Service\AttachmentRegistry;
+use App\TestItemAttachment\Service\ItemCategoryBasedAttachmentRegistry;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;

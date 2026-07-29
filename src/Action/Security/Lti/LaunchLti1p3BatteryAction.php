@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2023-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2023-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -21,8 +21,8 @@ use App\Service\Lti\LtiLaunchService;
 use Exception;
 use OAT\Library\Lti1p3Core\Message\Payload\LtiMessagePayloadInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class LaunchLti1p3BatteryAction
 {
@@ -42,7 +42,7 @@ class LaunchLti1p3BatteryAction
      * @throws LtiLaunchAuthException
      * @throws LtiCustomSettingsException
      */
-    public function __invoke(Request $request, LtiMessagePayloadInterface $ltiMessagePayload): RedirectResponse
+    public function __invoke(Request $request, LtiMessagePayloadInterface $ltiMessagePayload): Response
     {
         $this->validateRoles($ltiMessagePayload);
 

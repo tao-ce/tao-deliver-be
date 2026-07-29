@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2019-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2019-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -20,7 +20,8 @@ use App\Lti\LtiCustomSettings;
 use App\Qti\Compiler\QtiPackageCompiler;
 use App\Registry\SignedUrlGeneratorRegistry;
 use App\Service\ApplicationInfoService;
-use App\Service\Attachment\AttachmentRegistry;
+use App\TestItemAttachment\Service\AttachmentRegistry;
+use App\Service\DeliveryExecution\DeliveryExecutionCommentService;
 use App\Service\DeliveryExecution\DeliveryExecutionPropertyService;
 use App\Service\Lti\LtiTokenResolverInterface;
 use App\TestRunner\Factory\AssessmentTestSessionFactory;
@@ -38,6 +39,7 @@ use League\Flysystem\UnableToReadFile;
 use Monolog\Logger;
 use OAT\Bundle\QtiBundle\Accessor\TestSessionAccessor;
 use OAT\Bundle\QtiBundle\Factory\TestSessionAccessorFactory;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use qtism\common\datatypes\QtiDuration;
@@ -734,6 +736,7 @@ class GetItemServiceTest extends KernelTestCase
                 ],
             ],
         );
+
         $deliveryExecution->addPlagiarismReport(
             new PlagiarismReport(
                 'provider',
@@ -744,7 +747,9 @@ class GetItemServiceTest extends KernelTestCase
                 'suspicious',
             ),
         );
+
         $subject = $this->getSubject();
+
         $response = $subject->getItem($deliveryExecution, self::ITEM_ID);
 
         $expected = [
@@ -761,8 +766,9 @@ class GetItemServiceTest extends KernelTestCase
                     ],
                 ],
             ],
-            'scoring' => ['comments' => ['inline' => []]],
+            'scoring' => ['comments' => ['inline' => [], 'annotations' => []]],
         ];
+
         $this->assertSame($expected, $response['extraData']);
     }
 
@@ -779,6 +785,7 @@ class GetItemServiceTest extends KernelTestCase
             ],
         );
         $deliveryExecution->addReviewInlineComment(
+            'scorer-1',
             self::ITEM_ID,
             ['comment' => 'text'],
         );
@@ -786,7 +793,7 @@ class GetItemServiceTest extends KernelTestCase
         $response = $subject->getItem($deliveryExecution, self::ITEM_ID);
 
         $expected = [
-            'scoring' => ['comments' => ['inline' => ['comment' => 'text']]],
+            'scoring' => ['comments' => ['inline' => ['comment' => 'text'], 'annotations' => []]],
         ];
 
         $this->assertSame($expected, $response['extraData']);
@@ -964,6 +971,38 @@ class GetItemServiceTest extends KernelTestCase
         );
     }
 
+    public function testReviewAnnotationsCommentIsResponded(): void
+    {
+        $this->mockRequestTokenValue($this->tokenStub());
+        $deliveryExecution = $this->launchDeliveryExecutionReview(
+            '{"RESPONSE":{"response":{"base":{"string":"value2"}}}}',
+            [
+                'custom' => [
+                    LtiCustomSettings::PARAM_REVIEW_EXTRA_INFO => json_encode(['provider']),
+                ],
+            ],
+        );
+        $deliveryExecution->addAnnotationComment(
+            'scorer-1',
+            self::ITEM_ID,
+            ['markingSymbols' => ['color' => 'red']],
+        );
+        $subject = $this->getSubject();
+        $response = $subject->getItem($deliveryExecution, self::ITEM_ID);
+
+        $expected = [
+            'scoring' => [
+                'comments' => [
+                    'inline' => [],
+                    'annotations' => [
+                        'markingSymbols' => ['color' => 'red'],
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertSame($expected, $response['extraData']);
+    }
     private function createAttachmentsItemState(array $urls): string
     {
         return implode(
@@ -1071,6 +1110,7 @@ class GetItemServiceTest extends KernelTestCase
                 $this->attachmentRegistry,
                 static::getContainer()->get(Environment::class),
             ),
+            static::getContainer()->get(DeliveryExecutionCommentService::class),
         );
     }
 

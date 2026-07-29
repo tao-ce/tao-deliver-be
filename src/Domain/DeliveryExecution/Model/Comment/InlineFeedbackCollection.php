@@ -11,28 +11,50 @@ namespace App\Domain\DeliveryExecution\Model\Comment;
 
 class InlineFeedbackCollection
 {
-    public function __construct(private array $comments = [])
+    private const GROUPED_FEEDBACK_KEY = 'feedbackOwners';
+
+    public function __construct(private array $feedbacks = [])
     {
     }
 
     public function toArray(): array
     {
-        return $this->comments;
+        return $this->feedbacks;
     }
 
-    public function addFeedback(string $itemId, mixed $feedback): self
+    public function addFeedback(string $itemId, array $feedback): void
     {
-        if (empty($feedback)) {
-            unset($this->comments[$itemId]);
-        } else {
-            $this->comments[$itemId] = $feedback;
-        }
+        unset($this->feedbacks[$itemId][self::GROUPED_FEEDBACK_KEY]);
+        $this->feedbacks[$itemId] = $feedback;
+    }
 
-        return $this;
+    public function addOwnerFeedback(string $owner, string $itemId, array $feedback): void
+    {
+        if (!isset($this->feedbacks[$itemId][self::GROUPED_FEEDBACK_KEY])) {
+            $this->removeFeedback($itemId);
+        }
+        $this->feedbacks[$itemId][self::GROUPED_FEEDBACK_KEY][$owner] = $feedback;
+    }
+
+    public function removeFeedback(string $itemId): void
+    {
+        unset($this->feedbacks[$itemId]);
     }
 
     public function getFeedback(string $itemId): array
     {
-        return $this->comments[$itemId] ?? [];
+        return array_merge_recursive(...array_values($this->feedbacks[$itemId][self::GROUPED_FEEDBACK_KEY] ?? [[]]))
+            ?: $this->feedbacks[$itemId]
+            ?? [];
+    }
+
+    public function getOwnerFeedback(string $owner, string $itemId): array
+    {
+        $legacyFeedbacks = $this->feedbacks[$itemId] ?? [];
+        unset($legacyFeedbacks[self::GROUPED_FEEDBACK_KEY]);
+        return array_merge_recursive(
+            $this->feedbacks[$itemId][self::GROUPED_FEEDBACK_KEY][$owner] ?? [],
+            $legacyFeedbacks,
+        );
     }
 }

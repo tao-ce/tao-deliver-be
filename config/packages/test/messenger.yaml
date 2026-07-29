@@ -23,3 +23,7 @@ framework:
             scoring-deliveries: 'in-memory:///'
             tracing-span-collector: 'in-memory:///'
             delivery-execution-assessment-log: 'in-memory:///'
+            data-policy-removal-request: 'in-memory:///'
+            data-policy-removal-confirmation: 'in-memory:///'
+            data-policy-validation-request: 'in-memory:///'
+            data-policy-validation-confirmation: 'in-memory:///'

@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2020-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2020-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -316,7 +316,7 @@ class LtiCustomSettingsTest extends KernelTestCase
     }
 
     /**
-     * @dataProvider pluginsSettingsDataProvider
+     * @dataProvider jsonClaimProvider
      */
     public function testGetPluginSettings(mixed $input, mixed $expected = []): void
     {
@@ -332,7 +332,24 @@ class LtiCustomSettingsTest extends KernelTestCase
         );
     }
 
-    public function pluginsSettingsDataProvider(): array
+    /**
+     * @dataProvider jsonClaimProvider
+     */
+    public function testGetSessionData(mixed $input, mixed $expected = []): void
+    {
+        $this->assertSame(
+            $expected,
+            $this->createSubject()->getSessionData(['custom' => [LtiCustomSettings::PARAM_SESSION_DATA => $input]]),
+        );
+        $this->assertSame(
+            $expected,
+            $this->createSubject()->getSessionData(
+                ['custom' => [$this->toSnakeCase(LtiCustomSettings::PARAM_SESSION_DATA) => $input]],
+            ),
+        );
+    }
+
+    public function jsonClaimProvider(): array
     {
         return [
             'No settings' => [null],
@@ -989,7 +1006,7 @@ class LtiCustomSettingsTest extends KernelTestCase
     }
 
     /**
-     * @dataProvider pluginsSettingsDataProvider
+     * @dataProvider itemRunnerConfigElementsDataProvider
      */
     public function testGetItemRunnerConfigElements(mixed $input, mixed $expected = []): void
     {
@@ -1020,6 +1037,35 @@ class LtiCustomSettingsTest extends KernelTestCase
                 json_encode(['ExtendedTextInteraction' => ['propertyOverride' => ['uploadTimeout' => 10]]]),
                 ['ExtendedTextInteraction' => ['propertyOverride' => ['uploadTimeout' => 10]]],
             ],
+        ];
+    }
+
+    /**
+     * @dataProvider customUiIdsProvider
+     */
+    public function testGetCustomUiIds(mixed $input, mixed $expected = []): void
+    {
+        $this->assertSame(
+            $expected,
+            $this->createSubject()->getCustomUiIds(['custom' => [LtiCustomSettings::PARAM_CUSTOM_UI_IDS => $input]]),
+        );
+        $this->assertSame(
+            $expected,
+            $this->createSubject()->getCustomUiIds(
+                ['custom' => [$this->toSnakeCase(LtiCustomSettings::PARAM_CUSTOM_UI_IDS) => $input]],
+            ),
+        );
+    }
+
+    public function customUiIdsProvider(): array
+    {
+        return [
+            'No ids' => [''],
+            'Single id' => ['id1', ['id1']],
+            'Single id with spaces' => [' id1  ', ['id1']],
+            'Multiple ids' => ['id.1,id-2,Id3', ['id.1', 'id-2', 'Id3']],
+            'Multiple ids with spaces' => [' id.1  ,   id-2, Id3  ', ['id.1', 'id-2', 'Id3']],
+            'Multiple ids with intruders' => ['id.1,,id-2,', ['id.1', 'id-2']],
         ];
     }
 
@@ -1161,6 +1207,80 @@ class LtiCustomSettingsTest extends KernelTestCase
 
         $this->assertEquals('deliveryId', $this->createSubject()->getBatteryDeliveryId($ltiLaunchParameters));
         $this->assertEquals('deliveryId', $this->createSubject()->getBatteryDeliveryId($this->allToSnakeCase($ltiLaunchParameters)));
+    }
+
+    /**
+     * @dataProvider optionBoolDataProvider
+     */
+    public function testIsKioskEnabled($expected, $actual): void
+    {
+        $this->assertFalse($this->createSubject()->isKioskEnabled($this->createLtiLaunchParameters([])));
+
+        $this->assertEquals(
+            $expected,
+            $this->createSubject()->isKioskEnabled(
+                $this->createLtiLaunchParameters([LtiCustomSettings::PARAM_KIOSK_ENABLED => $actual]),
+            ),
+        );
+        $this->assertEquals(
+            $expected,
+            $this->createSubject()->isKioskEnabled(
+                $this->createLtiLaunchParameters(
+                    [$this->toSnakeCase(LtiCustomSettings::PARAM_KIOSK_ENABLED) => $actual],
+                ),
+            ),
+        );
+    }
+
+    public function testGetKioskMinVersion(): void
+    {
+        $this->assertNull($this->createSubject()->getKioskMinVersion());
+        $this->assertNull($this->createSubject()->getKioskMinVersion([
+            LtiCustomSettings::PARAM_KIOSK_MINVERSION => '',
+        ]));
+        $ltiLaunchParameters = $this->createLtiLaunchParameters([
+            LtiCustomSettings::PARAM_KIOSK_MINVERSION => '11.22.33',
+        ]);
+
+        $this->assertEquals('11.22.33', $this->createSubject()->getKioskMinVersion($ltiLaunchParameters));
+        $this->assertEquals('11.22.33', $this->createSubject()->getKioskMinVersion($this->allToSnakeCase($ltiLaunchParameters)));
+    }
+
+    public function testGetKioskProviderId(): void
+    {
+        $this->assertNull($this->createSubject()->getKioskProviderId());
+        $this->assertNull($this->createSubject()->getKioskProviderId([
+            LtiCustomSettings::PARAM_KIOSK_PROVIDER_ID => '',
+        ]));
+        $ltiLaunchParameters = $this->createLtiLaunchParameters([
+            LtiCustomSettings::PARAM_KIOSK_PROVIDER_ID => 'abc',
+        ]);
+
+        $this->assertEquals('abc', $this->createSubject()->getKioskProviderId($ltiLaunchParameters));
+        $this->assertEquals('abc', $this->createSubject()->getKioskProviderId($this->allToSnakeCase($ltiLaunchParameters)));
+    }
+
+    /**
+     * @dataProvider optionBoolDataProvider
+     */
+    public function testIsKioskPauseOnBreach($expected, $actual): void
+    {
+        $this->assertFalse($this->createSubject()->isKioskPauseOnBreach($this->createLtiLaunchParameters([])));
+
+        $this->assertEquals(
+            $expected,
+            $this->createSubject()->isKioskPauseOnBreach(
+                $this->createLtiLaunchParameters([LtiCustomSettings::PARAM_KIOSK_PAUSEONBREACH => $actual]),
+            ),
+        );
+        $this->assertEquals(
+            $expected,
+            $this->createSubject()->isKioskPauseOnBreach(
+                $this->createLtiLaunchParameters(
+                    [$this->toSnakeCase(LtiCustomSettings::PARAM_KIOSK_PAUSEONBREACH) => $actual],
+                ),
+            ),
+        );
     }
 
     private function createLtiLaunchParameters(array $params): array

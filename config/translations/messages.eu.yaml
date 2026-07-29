@@ -3,15 +3,15 @@
 # SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
 test:
-    not:
-        available: Proba ez dago erabilgarri.
-        access: Ez duzu proba honetara sartzeko baimenik.
-        found: Barkatu, ezin dugu zure proba aurkitu.
-    cannot:
-        start: Barkatu, ezin dugu zure proba hasi.
-    relaunch:
-        contact:
-            administrator: Abiaraz ezazu proba berriro, edo jar zaitez harremanetan zure administratzailearekin.
-            test_administrator: Abiaraz ezazu proba berriro, edo jar zaitez harremanetan probako administratzailearekin.
+  not:
+    available: Proba ez dago eskuragarri.
+    access: Ez duzu proba honetara sartzeko baimenik.
+    found: Barkatu, ezin dugu zure proba aurkitu.
+  cannot:
+    start: Barkatu, ezin dugu zure proba hasi.
+  relaunch:
+    contact:
+      administrator: Mesedez, abiarazi berriro proba edo jarri harremanetan administratzailearekin.
+      test_administrator: Mesedez, abiarazi berriro proba edo jarri harremanetan zure probaren administratzailearekin.
 contact:
-    administrator: Jar zaitez harremanetan probako administratzailearekin.
+  administrator: Jarri harremanetan zure probaren administratzailearekin.

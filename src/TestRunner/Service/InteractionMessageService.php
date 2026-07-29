@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2022-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2022-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -107,6 +107,7 @@ readonly class InteractionMessageService
             ?: Carbon::now()->getTimestamp();
 
         return new InteractionMessage(
+            $deliveryExecution->getResourceLink(),
             $deliveryExecution->getId(),
             $deliveryExecution->getDeliveryId(),
             $deliveryExecution->getTenantId(),
@@ -122,14 +123,13 @@ readonly class InteractionMessageService
             $map['stats']['flagged'] ?? 0,
             $map['stats']['viewed'] ?? 0,
             $deliveryExecutionFinishedAt,
-            $deliveryExecution->getLtiLaunchParameters()['user_id'] ?? null,
             $deliveryExecution->getLtiLaunchParameters()['user_name'] ?? null,
             $status ?? $deliveryExecution->getStatus(),
             PositionsHelper::getPositionDetails($testSession),
             $deliveryExecution->getExtraStateData()->getExternalTimerDefinition() === null ? null : true,
             $deliveryExecution->getLtiLaunchParameters()['battery_id'] ?? null,
             $deliveryExecution->getLtiLaunchParameters()['battery_name'] ?? null,
-            $deliveryExecution->getUserSelectedLocale(),
+            $deliveryExecution->getUserSelectedLocaleForMultiLanguage(),
         );
     }
 

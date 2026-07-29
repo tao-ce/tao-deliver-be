@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2022-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2022-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -34,7 +34,6 @@ class CleanUpHandlerTest extends KernelTestCase
     use LoggerTestingTrait;
     use DocumentTestingTrait;
     use MessengerTestingTrait;
-    use DomainTestingTrait;
     use FilesystemTrait;
     use QtiTestingTrait;
     use DomainTestingTrait;
@@ -76,7 +75,7 @@ class CleanUpHandlerTest extends KernelTestCase
         $this->assertHasLogRecordWithMessage("with id 'invalidId' not found", Logger::WARNING);
     }
 
-    public function testRemoveHistoryFromState(): void
+    private function prepareDeliveryExecutionWithItemState(string $itemState): DeliveryExecution
     {
         $this->copyCompiledTestToStorage([
             'compact-test.xml',
@@ -94,14 +93,49 @@ class CleanUpHandlerTest extends KernelTestCase
             null,
             DeliveryExecution::STATUS_CLOSED,
         );
-        $deliveryExecution->addItemState('item-1', $this->getItemState());
+        $deliveryExecution->addItemState('item-1', $itemState);
 
         $this->saveDocument($deliveryExecution);
+
+        return $deliveryExecution;
+    }
+
+    public function testRemoveHistoryFromState(): void
+    {
+        $this->prepareDeliveryExecutionWithItemState($this->getItemState());
 
         $deliveryExecutionService = $this->createMock(DeliveryExecutionServiceInterface::class);
         $deliveryExecutionService->expects($this->once())->method('saveDeliveryExecution');
 
         $timeService = $this->createMock(ExternalTimerService::class);
+        $subject = new CleanUpHandler(
+            static::getContainer()->get(RepositoryAwareDeliveryExecutionServiceInterface::class),
+            static::getContainer()->get(LoggerInterface::class),
+            $timeService,
+            $deliveryExecutionService,
+        );
+
+        $message = new QtiClassValueCleanUpMessage($this->deliveryExecutionId);
+
+        $subject->__invoke($message);
+    }
+
+    public function testRemoveHistoryFromStateWithExistingTimerDefinition(): void
+    {
+        $this->prepareDeliveryExecutionWithItemState($this->getItemState());
+
+        $deliveryExecutionService = $this->createMock(DeliveryExecutionServiceInterface::class);
+        $deliveryExecutionService->expects($this->exactly(2))->method('saveDeliveryExecution');
+
+        $externalTimerDefinition = $this->createExternalDefinitionTimerFromArray($this->timerDataExample);
+
+        $timeService = $this->createMock(ExternalTimerService::class);
+        $timeService->expects($this->once())
+            ->method('getServerTimer')
+            ->with($this->isInstanceOf(DeliveryExecution::class))
+            ->willReturn($externalTimerDefinition);
+        $timeService->expects($this->once())->method('deleteServerTimer')->with($this->deliveryExecutionId);
+
         $subject = new CleanUpHandler(
             static::getContainer()->get(RepositoryAwareDeliveryExecutionServiceInterface::class),
             static::getContainer()->get(LoggerInterface::class),
@@ -167,36 +201,36 @@ class CleanUpHandlerTest extends KernelTestCase
     private function getItemState(): string
     {
         return '{
-  "RESPONSE": {
-    "response": {
-      "base": {
-        "string": "<final_response>"
-      }
-    },
-    "history": [
-      {
-        "response": {
-          "base": {
-            "string": "<draft_response_1>"
-          }
-        }
-      },
-      {
-        "response": {
-          "base": {
-            "string": "<draft_response_2>"
-          }
-        }
-      }
-    ],
-    "validity": true,
-    "count": {
-      "words": 1,
-      "chars": 16,
-      "maxCharLimitExceeded": false
-    }
-  },
-  "touched": false
-}';
+            "RESPONSE": {
+                "response": {
+                "base": {
+                    "string": "<final_response>"
+                }
+                },
+                "history": [
+                {
+                    "response": {
+                    "base": {
+                        "string": "<draft_response_1>"
+                    }
+                    }
+                },
+                {
+                    "response": {
+                    "base": {
+                        "string": "<draft_response_2>"
+                    }
+                    }
+                }
+                ],
+                "validity": true,
+                "count": {
+                "words": 1,
+                "chars": 16,
+                "maxCharLimitExceeded": false
+                }
+            },
+            "touched": false
+        }';
     }
 }

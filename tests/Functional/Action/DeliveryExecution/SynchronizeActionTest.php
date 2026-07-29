@@ -75,7 +75,7 @@ class SynchronizeActionTest extends WebTestCase
         $this->client->request(
             Request::METHOD_POST,
             self::BASE_URL,
-            server: ['HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createOAuth2AccessToken())],
+            server: ['HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createAccessToken())],
             content: json_encode($content),
         );
         $response = $this->client->getResponse();
@@ -117,7 +117,7 @@ class SynchronizeActionTest extends WebTestCase
         $this->client->request(
             Request::METHOD_POST,
             self::BASE_URL,
-            server: ['HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createOAuth2AccessToken())],
+            server: ['HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createAccessToken())],
             content: json_encode($content),
         );
         $response = $this->client->getResponse();
@@ -191,7 +191,7 @@ class SynchronizeActionTest extends WebTestCase
         $this->client->request(
             Request::METHOD_POST,
             self::BASE_URL,
-            server: ['HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createOAuth2AccessToken())],
+            server: ['HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createAccessToken())],
             content: json_encode($content),
         );
         $response = $this->client->getResponse();
@@ -244,7 +244,7 @@ class SynchronizeActionTest extends WebTestCase
         $this->client->request(
             Request::METHOD_POST,
             self::BASE_URL,
-            server: ['HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createOAuth2AccessToken())],
+            server: ['HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createAccessToken())],
             content: json_encode($overrideContent),
         );
 
@@ -275,7 +275,7 @@ class SynchronizeActionTest extends WebTestCase
         $this->client->request(
             Request::METHOD_POST,
             self::BASE_URL,
-            server: ['HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createOAuth2AccessToken())],
+            server: ['HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createAccessToken())],
             content: json_encode($content),
         );
         $response = $this->client->getResponse();
@@ -301,7 +301,7 @@ class SynchronizeActionTest extends WebTestCase
         $this->client->request(
             Request::METHOD_POST,
             self::BASE_URL,
-            server: ['HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createOAuth2AccessToken())],
+            server: ['HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createAccessToken())],
             content: json_encode($content),
         );
         $response = $this->client->getResponse();
@@ -311,5 +311,10 @@ class SynchronizeActionTest extends WebTestCase
             json_decode($response->getContent(), true)['error']['message'],
         );
         $this->assertHasNoDocumentWithId(DeliveryExecution::class, $content['deliveryExecutionId']);
+    }
+
+    private function createAccessToken(): string
+    {
+        return $this->createOAuth2AccessToken(scopes: ['tao-offline']);
     }
 }

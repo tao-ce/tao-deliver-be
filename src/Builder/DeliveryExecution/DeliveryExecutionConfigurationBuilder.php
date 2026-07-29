@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2023-2024 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2023-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -49,6 +49,12 @@ class DeliveryExecutionConfigurationBuilder
         'module' => 'taoQtiNuiTest/runner/plugins/tools/fullscreen/plugin',
     ];
 
+    public const PLUGIN_CONFIG_REFRESH = [
+        'id' => 'refresh',
+        'category' => 'tools',
+        'module' => 'taoQtiNuiTest/runner/plugins/tools/refresh/plugin',
+    ];
+
     public const PLUGIN_CONFIG_READ_ALOUD = [
         'id' => 'readAloud',
         'module' => 'taoQtiNuiTest/runner/plugins/tools/readAloud/plugin',
@@ -59,6 +65,12 @@ class DeliveryExecutionConfigurationBuilder
         'id' => 'menuPanelPlugin',
         'module' => 'taoQtiNuiTest/runner/plugins/panel/menu/plugin',
         'category' => 'content',
+    ];
+
+    public const PLUGIN_CONFIG_KIOSK = [
+        'id' => 'kiosk',
+        'category' => 'security',
+        'module' => 'taoQtiNuiTest/runner/plugins/security/kiosk/plugin',
     ];
 
     private const PLUGIN_OPTION_AUTORESUME = 'autoresume';
@@ -102,6 +114,11 @@ class DeliveryExecutionConfigurationBuilder
     public function withoutFullScreenPlugin(): self
     {
         return $this->removePluginProvider(self::PLUGIN_CONFIG_FULLSCREEN);
+    }
+
+    public function withRefreshPlugin(): self
+    {
+        return $this->addPluginProvider(self::PLUGIN_CONFIG_REFRESH);
     }
 
     public function withPauseOnBlurPlugin(bool $autoresume): self
@@ -168,9 +185,15 @@ class DeliveryExecutionConfigurationBuilder
             ->removePluginOptions(self::PLUGIN_CONFIG_DISABLE_RIGHT_CLICK);
     }
 
+    public function withKioskPlugin(): self
+    {
+        return $this
+            ->addPluginProvider(self::PLUGIN_CONFIG_KIOSK);
+    }
+
     public function overridePluginOptions(array $pluginSettings): self
     {
-        $this->configuration['options']['plugins'] = array_replace_recursive(
+        $this->configuration['options']['plugins'] = $this->mergePluginConfiguration(
             $this->configuration['options']['plugins'] ?? [],
             $pluginSettings,
         );
@@ -272,5 +295,19 @@ class DeliveryExecutionConfigurationBuilder
         unset($this->configuration['options']['plugins'][$plugin['id']]);
 
         return $this;
+    }
+
+    private function mergePluginConfiguration(array $configuration1, array $configuration2): array
+    {
+        foreach ($configuration2 as $key => $value) {
+            $configuration1[$key] =
+                is_array($configuration1[$key] ?? null)
+                && is_array($value)
+                && !array_is_list($value)
+                    ? $this->mergePluginConfiguration($configuration1[$key], $value)
+                    : $value;
+        }
+
+        return $configuration1;
     }
 }

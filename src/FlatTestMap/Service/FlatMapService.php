@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2025-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -12,6 +12,7 @@ namespace App\FlatTestMap\Service;
 use App\FlatTestMap\Input\FlatMapSearchInput;
 use App\FlatTestMap\Output\FlatMap;
 use App\FlatTestMap\Output\Item;
+use App\Helper\PositionsHelper;
 use App\TestRunner\Service\GetItemDataService;
 use OAT\Bundle\QtiBundle\Accessor\TestSessionAccessor;
 use OAT\Bundle\QtiBundle\Factory\TestSessionAccessorFactory;
@@ -21,6 +22,12 @@ use qtism\runtime\tests\RouteItem;
 
 final readonly class FlatMapService
 {
+    private const READONLY_INTERACTIONS = [
+        'customInteraction',
+        'endAttemptInteraction',
+        'mediaInteraction',
+    ];
+
     public function __construct(
         private TestSessionAccessorFactory $testSessionAccessorFactory,
         private GetItemDataService $itemDataService,
@@ -31,10 +38,22 @@ final readonly class FlatMapService
     {
         $testMap = new FlatMap();
         $testSession = $this->createSessionAccessor($input)->instantiate();
+        $currentTestPart = null;
+        $testPart = 0;
+        $itemPosition = 0;
         /** @var RouteItem $routeItem */
         foreach ($testSession->getRoute()->getAllRouteItems() as $routeItem) {
+            if ($routeItem->getTestPart() !== $currentTestPart) {
+                $currentTestPart = $routeItem->getTestPart();
+                $testPart++;
+                $itemPosition = 0;
+            }
             /** @var IAssessmentItem&AssessmentItemRef $item */
             $item = $routeItem->getAssessmentItemRef();
+            $isItemInformational = PositionsHelper::isItemInformational($item);
+            if (!$isItemInformational) {
+                $itemPosition++;
+            }
             $itemData = $this->itemDataService->getItemDataByDelivery(
                 $item->getIdentifier(),
                 $input->delivery,
@@ -46,7 +65,10 @@ final readonly class FlatMapService
             $responseIds = [];
             foreach ($itemData['data']['body']['elements'] as $element) {
                 if (!in_array($element['qtiClass'], $input->includeOnlyInteraction)) {
-                    if ($element['qtiClass'] === 'include') {
+                    if (
+                        !str_ends_with($element['qtiClass'], 'Interaction')
+                        || in_array($element['qtiClass'], self::READONLY_INTERACTIONS)
+                    ) {
                         continue;
                     }
                     continue 2;
@@ -54,10 +76,13 @@ final readonly class FlatMapService
 
                 if (
                     !empty($element['attributes']['responseIdentifier'])
-                    && (empty($element['attributes']['format']) || in_array(
-                        $element['attributes']['format'],
-                        $input->includeOnlyFormat,
-                    ))
+                    && (
+                        empty($element['attributes']['format'])
+                        || in_array(
+                            $element['attributes']['format'],
+                            $input->includeOnlyFormat,
+                        )
+                    )
                 ) {
                     $responseIds[] = $element['attributes']['responseIdentifier'];
                 }
@@ -71,6 +96,8 @@ final readonly class FlatMapService
                 new Item(
                     $item->getIdentifier(),
                     $item->getTitle(),
+                    $testPart,
+                    $isItemInformational ? null : $itemPosition,
                     $responseIds,
                 ),
             );

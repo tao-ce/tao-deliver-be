@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2021-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2021-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Service\Lti;
 
+use App\Domain\Delivery\Model\Delivery;
 use App\Domain\DeliveryExecution\Model\DeliveryExecution;
 use App\Domain\DeliveryExecution\Model\DeliveryExecutionExtraStateData;
 use App\Generator\UuidGenerator;
@@ -38,6 +39,7 @@ use Carbon\Carbon;
 use League\Flysystem\FilesystemReader;
 use OAT\Bundle\EnvironmentManagementClientBundle\Http\ResponseHelper;
 use OAT\Library\EnvironmentManagementClient\Repository\ConfigurationRepositoryInterface;
+use OAT\Library\Lti1p3Core\Message\Payload\LtiMessagePayload;
 use OAT\Library\Lti1p3Core\Message\Payload\LtiMessagePayloadInterface;
 use OAT\Library\Lti1p3Core\User\UserIdentity;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -408,6 +410,7 @@ class LtiLaunchServiceTest extends KernelTestCase
             'platform_issuer' => 'platform_issuer',
             'client_id' => 'client_id',
             'context_id' => 'test',
+            'resource_link_id' => 'resourceLinkId',
             'custom' => [
                 'proctoringSettings.enableMonitoring' => 'true',
             ],
@@ -460,6 +463,7 @@ class LtiLaunchServiceTest extends KernelTestCase
             'platform_issuer' => 'platform_issuer',
             'client_id' => 'client_id',
             'context_id' => 'test',
+            'resource_link_id' => 'resourceLinkId',
             'custom' => [
                 'proctoringSettings.enableMonitoring' => 'true',
             ],
@@ -482,6 +486,7 @@ class LtiLaunchServiceTest extends KernelTestCase
             $ltiParameters,
             null,
         );
+        $ltiParameters['result_id'] = $deliveryExecution->getId();
         $this->deliveryExecutionServiceMock
             ->expects(self::exactly(1))
             ->method('saveDeliveryExecution')
@@ -505,6 +510,7 @@ class LtiLaunchServiceTest extends KernelTestCase
                     $this->ltiMessagePayload,
                     $deliveryExecution,
                     $delivery,
+                    $ltiParameters,
                 ),
             )->willReturn(self::EXPECTED_PROCTORING_URL);
         $response = $this->subject->launch('Basic', $ltiParameters, $this->ltiMessagePayload);
@@ -815,6 +821,7 @@ class LtiLaunchServiceTest extends KernelTestCase
             'platform_issuer' => 'platform_issuer',
             'client_id' => 'client_id',
             'context_id' => 'test',
+            'resource_link_id' => 'resourceLinkId',
             'custom' => [
                 'proctoringSettings.enableMonitoring' => 'true',
             ],
@@ -828,8 +835,12 @@ class LtiLaunchServiceTest extends KernelTestCase
             $ltiParameters,
             null,
         );
-        $startProctoringRequestContext = $this->createMock(StartProctoringRequestContext::class);
-        $startProctoringRequestContext->deliveryExecution = $deliveryExecution;
+        $startProctoringRequestContext = new StartProctoringRequestContext(
+            $this->createMock(LtiMessagePayload::class),
+            $deliveryExecution,
+            $this->createMock(Delivery::class),
+            $ltiParameters,
+        );
 
         $this->deliveryExecutionServiceMock
             ->expects(self::exactly(1))
@@ -837,7 +848,6 @@ class LtiLaunchServiceTest extends KernelTestCase
             ->with($deliveryExecution);
 
         $this->ltiProctoringServiceMock
-            ->expects(self::once())
             ->method('getStartProctoringRequestUrl')
             ->with($startProctoringRequestContext)
             ->willReturn(self::EXPECTED_PROCTORING_URL);
@@ -897,7 +907,6 @@ class LtiLaunchServiceTest extends KernelTestCase
     public function testGetCommonLocalesWithNoParameters(): void
     {
         $refMethod = new ReflectionMethod(LtiLaunchService::class, 'getCommonLocales');
-        $refMethod->setAccessible(true);
 
         $supportedLocales = ['en-US', 'fr-FR'];
         $delivery = $this->createTestDelivery('deliveryId', supportedLocales: $supportedLocales);
@@ -910,7 +919,6 @@ class LtiLaunchServiceTest extends KernelTestCase
     public function testGetCommonLocalesWithNoDeliveryAndNoParameters(): void
     {
         $refMethod = new ReflectionMethod(LtiLaunchService::class, 'getCommonLocales');
-        $refMethod->setAccessible(true);
 
         $result = $refMethod->invoke($this->subject, null, []);
 
@@ -920,7 +928,6 @@ class LtiLaunchServiceTest extends KernelTestCase
     public function testGetCommonLocalesWithBatteryId(): void
     {
         $refMethod = new ReflectionMethod(LtiLaunchService::class, 'getCommonLocales');
-        $refMethod->setAccessible(true);
 
         $supportedLocales = ['en-US', 'fr-FR'];
         $delivery = $this->createTestDelivery('deliveryId', supportedLocales: $supportedLocales);
@@ -942,7 +949,6 @@ class LtiLaunchServiceTest extends KernelTestCase
             ->willReturn(['fr-FR']);
 
         $property = new ReflectionProperty(LtiLaunchService::class, 'batteryService');
-        $property->setAccessible(true);
         $property->setValue($this->subject, $batteryServiceMock);
 
         $result = $refMethod->invoke($this->subject, $delivery, ['battery_id' => $batteryId]);
@@ -961,7 +967,6 @@ class LtiLaunchServiceTest extends KernelTestCase
         ];
 
         $refMethod = new ReflectionMethod(LtiLaunchService::class, 'getCommonLocales');
-        $refMethod->setAccessible(true);
 
         $result = $refMethod->invoke($this->subject, $delivery, $ltiParameters);
 

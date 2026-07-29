@@ -222,7 +222,7 @@ class ExternalTimerServiceTest extends KernelTestCase
             ->with($this->deliveryExecutionMock->getId())
             ->will($this->throwException(new DeleteTimerException('error')));
 
-        $this->subject->deleteServerTimer($this->deliveryExecutionMock);
+        $this->subject->deleteServerTimer($this->deliveryExecutionMock->getId());
 
         $this->assertHasLogRecordWithMessage(
             sprintf('Timer cannot be removed for deliveryExecutionId [ %s ], reason: error', $this->deliveryExecutionMock->getId()),
@@ -238,8 +238,46 @@ class ExternalTimerServiceTest extends KernelTestCase
             ->method('deleteTimer')
             ->with($this->deliveryExecutionMock->getId());
 
-        $this->subject->deleteServerTimer($this->deliveryExecutionMock);
+        $this->subject->deleteServerTimer($this->deliveryExecutionMock->getId());
     }
+
+    public function testDeleteServerTimerLogsWhenNoTimerWasSetup(): void
+    {
+        $this->expectTimeConstraint(10);
+        $this->oatTimerServiceMock
+            ->expects($this->once())
+            ->method('deleteTimer')
+            ->with($this->deliveryExecutionMock->getId())
+            ->will($this->throwException(new GetTimerException()));
+
+        $this->subject->deleteServerTimer($this->deliveryExecutionMock->getId());
+
+        $this->assertHasLogRecordWithMessage(
+            sprintf('No Timer was setup for delivery execution %s', $this->deliveryExecutionMock->getId()),
+            Logger::DEBUG,
+        );
+    }
+
+    public function testDeleteServerTimerHandlesUnexpectedException(): void
+    {
+        $this->expectTimeConstraint(10);
+        $this->oatTimerServiceMock
+            ->expects($this->once())
+            ->method('deleteTimer')
+            ->with($this->deliveryExecutionMock->getId())
+            ->will($this->throwException(new \RuntimeException('Error writing document by key: someId')));
+
+        $this->subject->deleteServerTimer($this->deliveryExecutionMock->getId());
+
+        $this->assertHasLogRecordWithMessage(
+            sprintf(
+                'Unexpected error deleting timer for deliveryExecutionId [ %s ], reason: Error writing document by key: someId',
+                $this->deliveryExecutionMock->getId(),
+            ),
+            Logger::WARNING,
+        );
+    }
+
 
     public function testTimerDisableForReviewMode(): void
     {

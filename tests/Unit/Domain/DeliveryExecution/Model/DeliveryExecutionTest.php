@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2019-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2019-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Domain\DeliveryExecution\Model;
 
+use App\Domain\DeliveryExecution\Model\Comment\InlineFeedbackCollection;
 use App\Domain\DeliveryExecution\Model\DeliveryExecution;
 use App\Domain\DeliveryExecution\Model\DeliveryExecutionActorIdentity;
 use App\Domain\DeliveryExecution\Model\DeliveryExecutionActorRole;
@@ -346,6 +347,7 @@ class DeliveryExecutionTest extends KernelTestCase
         $durationStorage = $this->subject->getExtraStateData()->getDurationStorage();
         $this->assertEmpty($durationStorage->getServerDurations());
     }
+
     public function testStartServerTimer(): void
     {
         $this->assertSame($this->subject, $this->subject->startServerTimer('id'));
@@ -497,10 +499,216 @@ class DeliveryExecutionTest extends KernelTestCase
     {
         $itemId = 'item-1';
         $comment = ['comment' => 'value'];
-        $this->subject->addReviewInlineComment($itemId, $comment);
+        $this->subject->addReviewInlineComment('scorer-1', $itemId, $comment);
 
         $this->assertSame(
             $comment,
+            $this->subject->getReviewInlineComment()->getFeedback($itemId),
+        );
+    }
+
+    public function testItAppendsUnassignedComments(): void
+    {
+        $itemId = 'item-1';
+        $feedbacks = new InlineFeedbackCollection(
+            [
+                $itemId => [
+                    'responses' => [
+                        'RESPONSE' => [
+                            'highlights' => [
+                                [
+                                    'c' => 'tao--g8swgzho',
+                                    'path2' => [
+                                        4,
+                                        -1,
+                                    ],
+                                    'groupId' => '1',
+                                    'textLength' => 1,
+                                    'offsetBefore' => 0,
+                                ],
+                            ],
+                            'comments' => [
+                                'tao--g8swgzho' => 'feedback 1',
+                            ],
+                        ],
+                    ],
+                    'feedbackOwners' => [
+                        'scorer-1' => [
+                            'responses' => [
+                                'RESPONSE' => [
+                                    'highlights' => [
+                                        [
+                                            'c' => 'tao--p2qxnn26',
+                                            'path2' => [
+                                                0,
+                                                -1,
+                                            ],
+                                            'groupId' => '1',
+                                            'textLength' => 1,
+                                            'offsetBefore' => 10,
+                                        ],
+                                    ],
+                                    'comments' => [
+                                        'tao--p2qxnn26' => 'feedback 2',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        );
+
+        $this->assertSame(
+            [
+                'responses' => [
+                    'RESPONSE' => [
+                        'highlights' => [
+                            [
+                                'c' => 'tao--p2qxnn26',
+                                'path2' => [
+                                    0,
+                                    -1,
+                                ],
+                                'groupId' => '1',
+                                'textLength' => 1,
+                                'offsetBefore' => 10,
+                            ],
+                            [
+                                'c' => 'tao--g8swgzho',
+                                'path2' => [
+                                    4,
+                                    -1,
+                                ],
+                                'groupId' => '1',
+                                'textLength' => 1,
+                                'offsetBefore' => 0,
+                            ],
+                        ],
+                        'comments' => [
+                            'tao--p2qxnn26' => 'feedback 2',
+                            'tao--g8swgzho' => 'feedback 1',
+                        ],
+                    ],
+                ],
+            ],
+            $feedbacks->getOwnerFeedback('scorer-1', $itemId),
+        );
+        $this->assertSame(
+            [
+                'responses' => [
+                    'RESPONSE' => [
+                        'highlights' => [
+                            [
+                                'c' => 'tao--g8swgzho',
+                                'path2' => [
+                                    4,
+                                    -1,
+                                ],
+                                'groupId' => '1',
+                                'textLength' => 1,
+                                'offsetBefore' => 0,
+                            ],
+                        ],
+                        'comments' => [
+                            'tao--g8swgzho' => 'feedback 1',
+                        ],
+                    ],
+                ],
+            ],
+            $feedbacks->getOwnerFeedback('scorer-2', $itemId),
+        );
+    }
+
+    public function testItSegregatesInlineComments(): void
+    {
+        $itemId = 'item-1';
+        $feedback1 = [
+            'responses' => [
+                'RESPONSE' => [
+                    'highlights' => [
+                        [
+                            'c' => 'tao--g8swgzho',
+                            'path2' => [
+                                4,
+                                -1,
+                            ],
+                            'groupId' => '1',
+                            'textLength' => 1,
+                            'offsetBefore' => 0,
+                        ],
+                    ],
+                    'comments' => [
+                        'tao--g8swgzho' => 'feedback 1',
+                    ],
+                ],
+            ],
+        ];
+        $feedback2 = [
+            'responses' => [
+                'RESPONSE' => [
+                    'highlights' => [
+                        [
+                            'c' => 'tao--p2qxnn26',
+                            'path2' => [
+                                0,
+                                -1,
+                            ],
+                            'groupId' => '1',
+                            'textLength' => 1,
+                            'offsetBefore' => 10,
+                        ],
+                    ],
+                    'comments' => [
+                        'tao--p2qxnn26' => 'feedback 2',
+                    ],
+                ],
+            ],
+        ];
+        $this->subject->addReviewInlineComment('scorer-1', $itemId, $feedback1);
+        $this->subject->addReviewInlineComment('scorer-2', $itemId, $feedback2);
+
+        $this->assertSame(
+            $feedback1,
+            $this->subject->getReviewInlineComment()->getOwnerFeedback('scorer-1', $itemId),
+        );
+        $this->assertSame(
+            $feedback2,
+            $this->subject->getReviewInlineComment()->getOwnerFeedback('scorer-2', $itemId),
+        );
+        $this->assertSame(
+            [
+                'responses' => [
+                    'RESPONSE' => [
+                        'highlights' => [
+                            [
+                                'c' => 'tao--g8swgzho',
+                                'path2' => [
+                                    4,
+                                    -1,
+                                ],
+                                'groupId' => '1',
+                                'textLength' => 1,
+                                'offsetBefore' => 0,
+                            ],
+                            [
+                                'c' => 'tao--p2qxnn26',
+                                'path2' => [
+                                    0,
+                                    -1,
+                                ],
+                                'groupId' => '1',
+                                'textLength' => 1,
+                                'offsetBefore' => 10,
+                            ],
+                        ],
+                        'comments' => [
+                            'tao--g8swgzho' => 'feedback 1',
+                            'tao--p2qxnn26' => 'feedback 2',
+                        ],
+                    ],
+                ],
+            ],
             $this->subject->getReviewInlineComment()->getFeedback($itemId),
         );
     }
@@ -511,8 +719,8 @@ class DeliveryExecutionTest extends KernelTestCase
         $comment1 = ['comment' => 'value1'];
         $itemId2 = 'item-2';
         $comment2 = ['comment' => 'value2'];
-        $this->subject->addReviewInlineComment($itemId1, $comment1);
-        $this->subject->addReviewInlineComment($itemId2, $comment2);
+        $this->subject->addReviewInlineComment('scorer-1', $itemId1, $comment1);
+        $this->subject->addReviewInlineComment('scorer-2', $itemId2, $comment2);
         $this->subject->addItemState($itemId1, '');
 
         $this->assertEmpty(
@@ -528,7 +736,7 @@ class DeliveryExecutionTest extends KernelTestCase
     {
         $itemId = 'item-1';
         $comment = ['comment' => 'value'];
-        $this->subject->addReviewInlineComment($itemId, $comment);
+        $this->subject->addReviewInlineComment('scorer-1', $itemId, $comment);
         $this->subject->clearAllItemState();
 
         $this->assertNull($this->subject->getReviewInlineComment());
@@ -660,6 +868,63 @@ class DeliveryExecutionTest extends KernelTestCase
         $this->assertFalse($deliveryExecution2->doesBelongToBattery());
     }
 
+    public function testItCanAddMarkingSymbolsToInlineComments(): void
+    {
+        $itemId = 'item-with-symbols';
+        $scorerId = 'scorer-1';
+
+        $feedbackPayload = [
+            'responses' => [
+                'RESPONSE' => [
+                    'markingSymbols' => [
+                        [
+                            'c' => 'symbol-unique-id-1',
+                            'path2' => [0, -1],
+                            'groupId' => '1',
+                            'offsetBefore' => 5,
+                            'shapeId' => 'circle',
+                            'color' => '#ff0000',
+                            'label' => 'Grammar Error',
+                        ],
+                        [
+                            'c' => 'symbol-unique-id-2',
+                            'path2' => [0, -1],
+                            'groupId' => '1',
+                            'offsetBefore' => 10,
+                            'shapeId' => 'rectangle',
+                            'color' => '#00ff00',
+                            'label' => 'Good Point',
+                        ],
+                    ],
+                    'comments' => [
+                        'symbol-unique-id-1' => 'Please fix this.',
+                        'symbol-unique-id-2' => 'Well done.',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->subject->addReviewInlineComment($scorerId, $itemId, $feedbackPayload);
+
+        $storedFeedback = $this->subject->getReviewInlineComment()->getFeedback($itemId);
+
+        $this->assertArrayHasKey('responses', $storedFeedback);
+        $this->assertArrayHasKey('markingSymbols', $storedFeedback['responses']['RESPONSE']);
+
+        $symbols = $storedFeedback['responses']['RESPONSE']['markingSymbols'];
+        $this->assertCount(2, $symbols);
+
+        $this->assertEquals('symbol-unique-id-1', $symbols[0]['c']);
+        $this->assertEquals('circle', $symbols[0]['shapeId']);
+        $this->assertEquals('#ff0000', $symbols[0]['color']);
+        $this->assertEquals('Grammar Error', $symbols[0]['label']);
+
+        $this->assertEquals('symbol-unique-id-2', $symbols[1]['c']);
+        $this->assertEquals('rectangle', $symbols[1]['shapeId']);
+        $this->assertEquals('#00ff00', $symbols[1]['color']);
+        $this->assertEquals('Good Point', $symbols[1]['label']);
+    }
+
     public function getUserSelectedLocaleDataProvider(): array
     {
         return [
@@ -686,7 +951,7 @@ class DeliveryExecutionTest extends KernelTestCase
                 'status' => DeliveryExecution::STATUS_INTERACTING,
             ],
             'Both locales in initial status' => [
-                'expected' => null ,
+                'expected' => null,
                 'locale' => 'en-US',
                 'mainLocale' => 'en-GB',
             ],
@@ -700,14 +965,72 @@ class DeliveryExecutionTest extends KernelTestCase
                 'expected' => null,
                 'locale' => null,
                 'mainLocale' => 'en-GB',
-                'state' => DeliveryExecution::STATUS_INITIAL,
+                'status' => DeliveryExecution::STATUS_INITIAL,
                 'isMultiLanguage' => true,
             ],
             'Main locale as multi-lang' => [
                 'expected' => 'en-GB',
                 'locale' => null,
                 'mainLocale' => 'en-GB',
-                'state' => DeliveryExecution::STATUS_INTERACTING,
+                'status' => DeliveryExecution::STATUS_INTERACTING,
+                'isMultiLanguage' => true,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider getUserSelectedLocaleForMultiLanguageDataProvider
+     */
+    public function testGetUserSelectedLocaleForMultiLanguage(
+        ?string $expected,
+        ?string $locale,
+        ?string $mainLocale,
+        string $status,
+        bool $isMultiLanguage,
+    ): void {
+        $this->subject->setStatus($status);
+        if ($isMultiLanguage) {
+            $this->subject->setMultiLanguage();
+        }
+        if ($locale) {
+            $this->subject->setLocale($locale);
+        }
+        if ($mainLocale) {
+            $this->subject->setMainLocale($mainLocale);
+        }
+
+        $this->assertSame($expected, $this->subject->getUserSelectedLocaleForMultiLanguage());
+    }
+
+    public function getUserSelectedLocaleForMultiLanguageDataProvider(): array
+    {
+        return [
+            'Single-language returns null' => [
+                'expected' => null,
+                'locale' => null,
+                'mainLocale' => 'en-GB',
+                'status' => DeliveryExecution::STATUS_INTERACTING,
+                'isMultiLanguage' => false,
+            ],
+            'Multi-language returns mainLocale' => [
+                'expected' => 'en-GB',
+                'locale' => null,
+                'mainLocale' => 'en-GB',
+                'status' => DeliveryExecution::STATUS_INTERACTING,
+                'isMultiLanguage' => true,
+            ],
+            'Multi-language returns user selected locale' => [
+                'expected' => 'ja-JP',
+                'locale' => 'ja-JP',
+                'mainLocale' => 'en-GB',
+                'status' => DeliveryExecution::STATUS_INTERACTING,
+                'isMultiLanguage' => true,
+            ],
+            'Multi-language in initial state returns null' => [
+                'expected' => null,
+                'locale' => 'ja-JP',
+                'mainLocale' => 'en-GB',
+                'status' => DeliveryExecution::STATUS_INITIAL,
                 'isMultiLanguage' => true,
             ],
         ];

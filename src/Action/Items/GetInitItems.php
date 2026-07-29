@@ -12,13 +12,14 @@ namespace App\Action\Items;
 use App\Action\DeliveryExecution\Traits\DeliveryExecutionActionProcessorTrait;
 use App\Domain\DeliveryExecution\Model\DeliveryExecution;
 use App\Responder\SerializerResponder;
+use App\Security\Contract\DeliveryExecutionSessionController;
 use App\TestRunner\ActionProcessor\GetItemActionProcessor;
 use App\Validator\Exception\RequestValidationException;
 use App\Validator\Items\GetInitItemsRequestValidator;
 use Carbon\Carbon;
 use Symfony\Component\HttpFoundation\Request;
 
-readonly class GetInitItems
+readonly class GetInitItems implements DeliveryExecutionSessionController
 {
     use DeliveryExecutionActionProcessorTrait;
 

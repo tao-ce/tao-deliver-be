@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2023 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2023-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -18,6 +18,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 class SecurityLogActionProcessor extends AbstractActionProcessor
 {
     protected const AVAILABLE_STATUSES = [
+        DeliveryExecution::STATUS_INITIAL,
         DeliveryExecution::STATUS_INTERACTING,
         DeliveryExecution::STATUS_SUSPENDED,
     ];
@@ -34,11 +35,12 @@ class SecurityLogActionProcessor extends AbstractActionProcessor
     public function process(DeliveryExecution $deliveryExecution, array $actionParameters): array
     {
         $parameters = $actionParameters['parameters'];
+        $reason = $parameters['reason'];
 
         $this->eventDispatcher->dispatch(new DeliveryExecutionControlEvent(
             $deliveryExecution,
             ControlType::from($parameters['action']),
-            new DeliveryExecutionControlReason($parameters['reason']),
+            new DeliveryExecutionControlReason(reason: $reason, details: $parameters['details'] ?? []),
         ));
 
         return $this->getActionProcessorResponse($actionParameters, []);

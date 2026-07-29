@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2025-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -11,6 +11,7 @@ namespace App\Action\Security\Lti\Proctoring;
 
 use App\Lti\UserIdentity\AnonymousUserIdentity;
 use App\Repository\DeliveryRepository;
+use App\Responder\SerializerResponder;
 use App\Security\Contract\DeliveryExecutionSessionController;
 use App\Service\DeliveryExecution\Contract\RepositoryAwareDeliveryExecutionServiceInterface;
 use App\Service\Locale\Contract\UserLocaleProviderInterface;
@@ -39,6 +40,7 @@ readonly class EndAssessmentReturnAction implements DeliveryExecutionSessionCont
         private RegistrationRepositoryInterface $registrationRepository,
         private EndAssessmentLaunchRequestBuilder $endAssessmentLaunchRequestBuilder,
         private UserLocaleProviderInterface $userLocaleProvider,
+        private SerializerResponder $responder,
     ) {
     }
 
@@ -58,13 +60,11 @@ readonly class EndAssessmentReturnAction implements DeliveryExecutionSessionCont
             return new RedirectResponse($this->deliverFrontendEndAssessmentUrl);
         }
         $ltiLaunchParameters = $deliveryExecution->getLtiLaunchParameters();
-        $redirectUrl = $request->query->get('redirectUrl', '');
-        if (
-            !$redirectUrl
-            || parse_url($redirectUrl, PHP_URL_HOST)
-            !== parse_url($ltiLaunchParameters['launch_presentation_return_url'] ?? '', PHP_URL_HOST)) {
-            $redirectUrl = $this->deliverFrontendEndAssessmentUrl;
-        }
+        $originalRedirectUrl = $ltiLaunchParameters['launch_presentation_return_url'] ?? '';
+        [
+            'redirectUrl' => $redirectUrl,
+            'redirectParameters' => $redirectParameters,
+        ] = $this->resolveRedirectUrl($originalRedirectUrl, (string)$request->query->get('redirectUrl', ''));
         if (
             empty($ltiLaunchParameters['assessment_platform_issuer'])
             || empty($ltiLaunchParameters['assessment_platform_client_id'])
@@ -106,14 +106,12 @@ readonly class EndAssessmentReturnAction implements DeliveryExecutionSessionCont
                 null,
                 $ltiLaunchParameters['user_locale'] ?? null,
             );
-        $loginHint = array_merge(
-            $userIdentity->normalize(),
-            [
-                'delivery_execution_id' => $deliveryExecutionId,
-            ],
-        );
-        parse_str(parse_url($redirectUrl, PHP_URL_QUERY) ?: '', $redirectParameters);
+        $loginHint = [
+            ...$userIdentity->normalize(),
+            'delivery_execution_id' => $deliveryExecutionId,
+        ];
         $claims = [
+            'test_taker_id' => $userIdentity->getIdentifier(),
             LtiMessagePayloadInterface::CLAIM_LTI_CONTEXT => empty($ltiLaunchParameters['context_id'])
                 ? null
                 : new ContextClaim($ltiLaunchParameters['context_id']),
@@ -149,6 +147,90 @@ readonly class EndAssessmentReturnAction implements DeliveryExecutionSessionCont
             ),
         );
 
-        return new RedirectResponse($endAssessmentUrl);
+        return $request->get('redirect', 1)
+            ? new RedirectResponse($endAssessmentUrl)
+            : $this->responder->createJsonResponse(compact('endAssessmentUrl'));
+    }
+
+    private function reconstructUrl(array $urlParts, array $queryParameters): string
+    {
+        return sprintf(
+            '%s://%s%s%s%s%s',
+            $urlParts['scheme'] ?? 'https',
+            $urlParts['host'] ?? '',
+            isset($urlParts['port']) ? ':' . $urlParts['port'] : '',
+            $urlParts['path'] ?? '',
+            $queryParameters ? '?' : '',
+            http_build_query($queryParameters, arg_separator: '&'),
+        );
+    }
+
+    /**
+     * @return array{redirectUrl: string, redirectParameters: array<string, mixed>}
+     */
+    private function resolveRedirectUrl(string $originalRedirectUrl, string $redirectUrl): array
+    {
+        if (!$redirectUrl || !($redirectUrlParts = parse_url($redirectUrl))) {
+            return [
+                'redirectUrl' => $this->deliverFrontendEndAssessmentUrl,
+                'redirectParameters' => [],
+            ];
+        }
+
+        parse_str($redirectUrlParts['query'] ?? '', $redirectParameters);
+        ksort($redirectParameters);
+
+        if (!$this->isAllowedRedirectUrl($originalRedirectUrl, $redirectUrlParts, $redirectParameters)) {
+            return [
+                'redirectUrl' => $this->deliverFrontendEndAssessmentUrl,
+                'redirectParameters' => $redirectParameters,
+            ];
+        }
+
+        return [
+            'redirectUrl' => $this->reconstructUrl($redirectUrlParts, $redirectParameters),
+            'redirectParameters' => $redirectParameters,
+        ];
+    }
+
+    private function isAllowedRedirectUrl(
+        string $originalRedirectUrl,
+        array $redirectUrlParts,
+        array $redirectParameters,
+    ): bool {
+        return $this->hasSameHost(
+            $this->reconstructUrl($redirectUrlParts, $redirectParameters),
+            $originalRedirectUrl,
+        ) || $this->isAllowedThankYouRedirectUrl($originalRedirectUrl, $redirectUrlParts, $redirectParameters);
+    }
+
+    private function isAllowedThankYouRedirectUrl(
+        string $originalRedirectUrl,
+        array $redirectUrlParts,
+        array $redirectParameters,
+    ): bool {
+        $returnUrl = $redirectParameters['returnUrl'] ?? null;
+
+        return is_string($returnUrl)
+            && $this->matchesConfiguredThankYouUrl($redirectUrlParts)
+            && $this->hasSameHost($returnUrl, $originalRedirectUrl);
+    }
+
+    private function matchesConfiguredThankYouUrl(array $redirectUrlParts): bool
+    {
+        return ($redirectUrlParts['scheme'] ?? null) === parse_url($this->deliverFrontendEndAssessmentUrl, PHP_URL_SCHEME)
+            && ($redirectUrlParts['host'] ?? null) === parse_url($this->deliverFrontendEndAssessmentUrl, PHP_URL_HOST)
+            && ($redirectUrlParts['port'] ?? null) === parse_url($this->deliverFrontendEndAssessmentUrl, PHP_URL_PORT)
+            && ($redirectUrlParts['path'] ?? null) === parse_url($this->deliverFrontendEndAssessmentUrl, PHP_URL_PATH);
+    }
+
+    private function hasSameHost(string $firstUrl, string $secondUrl): bool
+    {
+        $firstHost = parse_url($firstUrl, PHP_URL_HOST);
+        $secondHost = parse_url($secondUrl, PHP_URL_HOST);
+
+        return is_string($firstHost)
+            && is_string($secondHost)
+            && strcasecmp($firstHost, $secondHost) === 0;
     }
 }

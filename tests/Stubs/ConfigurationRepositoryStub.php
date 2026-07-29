@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2025-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -33,6 +33,16 @@ class ConfigurationRepositoryStub implements ConfigurationRepositoryInterface
                         'module' => 'taoQtiNuiTest/runner/plugins/tools/readAloud/plugin',
                         'category' => 'tools',
                     ],
+                    [
+                        'category' => 'tools',
+                        'id' => 'fullscreen',
+                        'module' => 'taoQtiNuiTest/runner/plugins/tools/fullscreen/plugin',
+                    ],
+                    [
+                        'id' => 'warnBeforeLeaving',
+                        'module' => 'taoQtiNuiTest/runner/plugins/navigation/warnBeforeLeaving/plugin',
+                        'category' => 'navigation',
+                    ],
                 ];
             }
             return new Configuration(
@@ -40,7 +50,7 @@ class ConfigurationRepositoryStub implements ConfigurationRepositoryInterface
                 [
                     'origin' => 'origin',
                     'providers' => $providers,
-                    'options' => $this->getOptions(),
+                    'options' => $this->getOptions($tenantId),
                     "exportProviders" => [
                         "proxy" => [
                             "module" => "taoQtiNuiTest/runner/proxy/actionProxy",
@@ -105,6 +115,10 @@ class ConfigurationRepositoryStub implements ConfigurationRepositoryInterface
             );
         }
 
+        if ($configId === 'portal.secure_browser_settings') {
+            return new Configuration('portal.secure_browser_settings', ['enabled' => true]);
+        }
+
         throw new RuntimeException("incorrect config id $configId");
     }
 
@@ -151,9 +165,9 @@ class ConfigurationRepositoryStub implements ConfigurationRepositoryInterface
         ];
     }
 
-    public function getOptions(): array
+    public function getOptions(string $tenantId): array
     {
-        return [
+        $options = [
             'itemRunnerConfig' => [
                 'elements' => [
                     'ExtendedTextInteraction' => [
@@ -217,5 +231,16 @@ class ConfigurationRepositoryStub implements ConfigurationRepositoryInterface
                 'preloadStrategy' => 'sectionItems',
             ],
         ];
+
+        switch ($tenantId) {
+            case 'withMultipleCustomUiIds':
+                $options['customUiId'] = ['id-1', 'id-2'];
+                break;
+            case 'withSingleCustomUiId':
+                $options['customUiId'] = 'id-1';
+                break;
+        }
+
+        return $options;
     }
 }

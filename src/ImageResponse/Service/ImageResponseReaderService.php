@@ -12,7 +12,7 @@ namespace App\ImageResponse\Service;
 use App\Domain\DeliveryExecution\Model\DeliveryExecution;
 use App\ImageResponse\Output\Attachment;
 use App\ImageResponse\Output\AttachmentList;
-use App\Service\Attachment\AttachmentRegistry;
+use App\TestItemAttachment\Service\AttachmentRegistry;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;

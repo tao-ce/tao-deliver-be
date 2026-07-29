@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2025-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -10,8 +10,6 @@ namespace App\Tests\Unit\Action\Security\Battery;
 use App\Action\Security\Battery\BatteryContinueAction;
 use App\Domain\Battery\Model\BatteryDistribution;
 use App\Domain\DeliveryExecution\Model\DeliveryExecution;
-use App\Lti\LtiCustomSettings;
-use App\Repository\DeliveryRepository;
 use App\Service\DeliveryExecution\Contract\DeliveryExecutionServiceInterface;
 use App\Service\Lti\LtiLaunchService;
 use App\TestRunner\Service\BatteryNavigationService;
@@ -31,8 +29,6 @@ class BatteryContinueActionTest extends TestCase
     private readonly BatteryNavigationService $batteryNavigationService;
     private readonly LtiLaunchService $ltiLaunchService;
     private readonly DeliveryExecutionServiceInterface $deliveryExecutionService;
-    private readonly LtiCustomSettings $ltiCustomSettings;
-    private readonly DeliveryRepository $deliveryRepository;
     private readonly LoggerInterface $logger;
     private readonly DeliveryExecution|MockObject $deliveryExecution;
     private readonly DeliveryExecution|MockObject $nextDeliveryExecution;
@@ -42,16 +38,12 @@ class BatteryContinueActionTest extends TestCase
         $this->batteryNavigationService = $this->createMock(BatteryNavigationService::class);
         $this->ltiLaunchService = $this->createMock(LtiLaunchService::class);
         $this->deliveryExecutionService =  $this->createMock(DeliveryExecutionServiceInterface::class);
-        $this->ltiCustomSettings = $this->createMock(LtiCustomSettings::class);
-        $this->deliveryRepository = $this->createMock(DeliveryRepository::class);
         $this->logger = $this->createMock(LoggerInterface::class);
 
         $this->subject = new BatteryContinueAction(
             $this->batteryNavigationService,
             $this->ltiLaunchService,
             $this->deliveryExecutionService,
-            $this->ltiCustomSettings,
-            $this->deliveryRepository,
             $this->logger,
         );
 
@@ -78,11 +70,6 @@ class BatteryContinueActionTest extends TestCase
             ->method('getNextDeliveryExecution')
             ->with($this->deliveryExecution, $batteryDistribution)
             ->willReturn($this->nextDeliveryExecution);
-
-        $this->deliveryRepository
-            ->expects($this->once())
-            ->method('find')
-            ->with($this->nextDeliveryExecution->getDeliveryId());
     }
 
     public function testInvoke(): void
@@ -95,25 +82,6 @@ class BatteryContinueActionTest extends TestCase
             ->expects($this->once())
             ->method('launchTest')
             ->with($this->nextDeliveryExecution, $this->nextDeliveryExecution->getLtiLaunchParameters())
-            ->willReturn($response);
-
-        $this->assertSame($response, ($this->subject)($this->deliveryExecution->getId()));
-    }
-
-    public function testSkipToDirectRedirectRequired(): void
-    {
-        $this->ltiCustomSettings
-            ->expects($this->once())
-            ->method('isMonitoringEnabled')
-            ->willReturn(true);
-
-        $response = new Response();
-        $this->ltiLaunchService
-            ->expects($this->never())
-            ->method('launchTest');
-        $this->ltiLaunchService
-            ->expects($this->once())
-            ->method('requireAuthorization')
             ->willReturn($response);
 
         $this->assertSame($response, ($this->subject)($this->deliveryExecution->getId()));

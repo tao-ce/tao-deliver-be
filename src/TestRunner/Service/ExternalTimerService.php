@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2022-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2022-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -64,18 +64,26 @@ readonly class ExternalTimerService
         return $this->getServerTimer($deliveryExecution);
     }
 
-    public function deleteServerTimer(DeliveryExecution $deliveryExecution): void
+    public function deleteServerTimer(string $deliveryExecutionId): void
     {
         try {
-            $this->timerServiceClient->deleteTimer($deliveryExecution->getId());
+            $this->timerServiceClient->deleteTimer($deliveryExecutionId);
         } catch (GetTimerException) {
-            // no timer setup all good move forward
-            $this->logger->debug(sprintf('No Timer was setup for delivery execution %s', $deliveryExecution->getId()));
+            $this->logger->debug(sprintf('No Timer was setup for delivery execution %s', $deliveryExecutionId));
         } catch (DeleteTimerException $exception) {
             $this->logger->warning(
                 sprintf(
                     'Timer cannot be removed for deliveryExecutionId [ %s ], reason: %s',
-                    $deliveryExecution->getId(),
+                    $deliveryExecutionId,
+                    $exception->getMessage(),
+                ),
+                compact('exception'),
+            );
+        } catch (Exception $exception) {
+            $this->logger->warning(
+                sprintf(
+                    'Unexpected error deleting timer for deliveryExecutionId [ %s ], reason: %s',
+                    $deliveryExecutionId,
                     $exception->getMessage(),
                 ),
                 compact('exception'),

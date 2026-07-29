@@ -3,6 +3,9 @@
 # SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
 parameters:
+    env(ELASTICSEARCH_LOG_REQUESTS): 'false'
+    env(ELASTICSEARCH_REQUEST_RETRIES): 1
+    logElasticSearchRequests: '%env(bool:ELASTICSEARCH_LOG_REQUESTS)%'
     empty.string: ''
     deliver.frontend.url: '%env(DELIVER_FRONTEND_URL)%'
     deliver.frontend.error_url: '%deliver.frontend.url%/error'
@@ -56,12 +59,10 @@ parameters:
             curl:
                 !php/const CURLOPT_IPRESOLVE: !php/const CURL_IPRESOLVE_V4
 #tracing
-    tracing.http.header.trace_id_key: '%env(default:tracing.http.header.trace_id_key_default:TRACING_HTTP_HEADER_TRACE_ID_KEY)%'
-    tracing.http.header.trace_id_key_default: 'X-traceID'
-    tracing.http.header.span_id_key: '%env(default:tracing.http.header.span_id_key_default:TRACING_HTTP_HEADER_SPAN_ID_KEY)%'
-    tracing.http.header.span_id_key_default: 'X-spanID'
-    tracing.disabled: '%env(default:tracing.disabled.default:bool:OTEL_SDK_DISABLED)%'
-    tracing.disabled.default: false
+    env(OTEL_PRODUCER_CAPTURE_PAYLOAD): 'false'
+    env(OTEL_CONSUMER_CAPTURE_PAYLOAD): 'true'
+    tracing.producer.capture_payloads: '%env(bool:OTEL_PRODUCER_CAPTURE_PAYLOAD)%'
+    tracing.consumer.capture_payloads: '%env(bool:OTEL_CONSUMER_CAPTURE_PAYLOAD)%'
 
 services:
 
@@ -85,8 +86,6 @@ services:
             $uploadedFileStorage: '@delivery_execution_uploads.storage'
             $dataStoreDeliveryProcessingInput: '@data_store_delivery_processing_input.storage'
             App\Service\DeliveryExecution\Contract\RepositoryAwareDeliveryExecutionServiceInterface $loggerAwareDeliveryExecutionService: '@App\Service\DeliveryExecution\LoggerAwareDeliveryExecutionService'
-            $tracingHttpHeaderTraceIdKey: '%tracing.http.header.trace_id_key%'
-            $tracingHttpHeaderSpanIdKey: '%tracing.http.header.span_id_key%'
             string $deliverFrontendEndAssessmentUrl: '%deliver.frontend.end_assessment_url%'
             iterable $acsActionProcessors: !tagged_iterator lti.acs_action_processor
             int $signedUrlCacheTtlShift: '%signed_url.cache.ttl_shift%'
@@ -119,6 +118,8 @@ services:
             tags: ['qti.extractor.qti_result_extractor.pre_processor']
         App\Service\DeliveryExecution\Contract\BatteryDeliveryFilterInterface:
             tags: ['battery.delivery.filter']
+        App\Service\Infrastructure\Contract\MemoizedService:
+            tags: ['infrastructure.memoized_service']
 
     cache.messenger.restart_workers_signal: '@cache.filesystem'
 
@@ -167,6 +168,9 @@ services:
     App\FlatTestMap\Action\GetCompactTestMapAction:
         tags: [ 'controller.service_arguments' ]
 
+    App\TestItemAttachment\Action\GetTestItemAttachments:
+      tags: [ 'controller.service_arguments' ]
+
     App\Generator\Asset\LocalSignedUrlGenerator:
         tags: ['asset.signed_url_generator']
 
@@ -181,6 +185,11 @@ services:
 
     App\Domain\Tenant\Model\DeliverProvisionedEventsSettingsRepositoryInterface:
         alias: App\Repository\TenantLibDeliverProvisionedEventsSettingsRepository
+
+    App\OpenTelemetry\Messenger\Middleware\Telemetry:
+        arguments:
+            $captureProducerPayload: '%tracing.producer.capture_payloads%'
+            $captureConsumerPayload: '%tracing.consumer.capture_payloads%'
 
     App\Registry\LoggerRegistry:
         arguments:
@@ -230,6 +239,9 @@ services:
         arguments:
             $enricherStateList: !tagged_iterator test_runner.item_state_enricher
             $enricherDataList: !tagged_iterator test_runner.item_data_enricher
+
+    App\Service\Infrastructure\MemoizationService:
+        arguments: [!tagged_iterator 'infrastructure.memoized_service']
 
     App\Service\DeliveryExecution\Contract\DeliveryExecutionCreatorInterface:
         alias: App\Service\DeliveryExecution\DeliveryExecutionService
@@ -309,12 +321,19 @@ services:
             $authServerGrpcGatewayHost: '%em.auth_server.grpc_gateway.url%'
             $cacheTtl: '%em.cache.ttl%'
 
-    App\Domain\Tenant\Model\PortalSettingsRepositoryInterface:
-        class: App\Repository\TenantLibPortalSettingsRepository
-
     ###############################################################################################
     ### Messenger serializer configuration                                                     ####
     ###############################################################################################
+
+    messenger.transport.data-policy.removal-request.serializer:
+        class: App\Messenger\Serializer\ExternalMessageSerializer
+        arguments:
+            $type: App\Messenger\Message\DataPolicy\RemovalRequestMessage
+
+    messenger.transport.data-policy.validation-request.serializer:
+        class: App\Messenger\Serializer\ExternalMessageSerializer
+        arguments:
+            $type: App\Messenger\Message\DataPolicy\ValidationRequestMessage
 
     messenger.transport.external_scoring_serializer:
         class: App\Messenger\Serializer\ExternalMessageSerializer
@@ -389,6 +408,11 @@ services:
         class: GuzzleHttp\Client
         arguments:
             - force_ip_resolve: v4
+
+    Http\Client\HttpAsyncClient:
+        alias: Http\Adapter\Guzzle7\Client
+
+    Http\Adapter\Guzzle7\Client: ~
 
     qtism\runtime\pci\json\Unmarshaller:
         arguments:
@@ -484,14 +508,12 @@ services:
         factory: ['@Google\Cloud\Core\ServiceBuilder', 'pubsub']
         arguments:
             $config:
-                projectId: '%env(GOOGLE_CLOUD_PROJECT)%'
                 transport: 'grpc'
 
     Google\Cloud\Storage\StorageClient:
         factory: ['@Google\Cloud\Core\ServiceBuilder', 'storage']
         arguments:
             $config:
-                projectId: '%env(GOOGLE_CLOUD_PROJECT)%'
                 transport: 'grpc'
 
     League\MimeTypeDetection\MimeTypeDetector:

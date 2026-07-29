@@ -7,6 +7,9 @@ parameters:
     cache_enabled: true
 
 services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
 
     _instanceof:
         App\Generator\Asset\SignedUrlGeneratorInterface:
@@ -62,3 +65,5 @@ services:
             $host: '%env(ELASTICSEARCH_HOST)%'
             $port: '%env(ELASTICSEARCH_PORT)%'
             $apiKey: '%env(ELASTICSEARCH_API_KEY)%'
+            $logger: "@=parameter('logElasticSearchRequests') ? service('monolog.logger.audit_platform') : null"
+            $retries: '%env(int:ELASTICSEARCH_REQUEST_RETRIES)%'

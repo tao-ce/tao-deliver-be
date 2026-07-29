@@ -22,6 +22,7 @@ use DOMDocument;
 use DOMNodeList;
 use DOMXPath;
 use Exception;
+use League\Flysystem\FilesystemException;
 use League\Flysystem\FilesystemOperator;
 use League\Flysystem\FilesystemWriter;
 use OAT\Bundle\QtiBundle\Factory\TestSessionAccessorFactory;
@@ -50,6 +51,7 @@ class QtiPackageCompiler
     public const JSON_ITEM_PORTABLE_ELEMENTS_FILE_NAME = 'portableElements.json';
     public const JSON_ITEM_VARIABLE_ELEMENTS_FILE_NAME = 'variableElements.json';
     private const ITEM_TITLE_LENGTH = 1024;
+    private const SCALES = 'scales';
 
     private array $compilationReports;
 
@@ -101,6 +103,10 @@ class QtiPackageCompiler
             if (is_resource($readStream)) {
                 fclose($readStream);
             }
+
+            // Copy scales JSON files from tests to scales directory
+            $manifestPathForScales = $this->buildPathFor($compilationId, $localePath, self::IMS_MANIFEST_FILE_NAME);
+            $this->copyScalesFiles($compilationId, $localePath, $manifestPathForScales);
 
             $this->qtiPackageExtractorStorage->deleteDirectory($this->buildPathFor($compilationId, $localePath));
 
@@ -481,6 +487,95 @@ class QtiPackageCompiler
                     ? $this->sanitizePattern($constraint->getPatternMask())
                     : '',
             );
+        }
+    }
+
+    /**
+     * Copies scales JSON files from test resources to a scales directory in the compiled deliveries storage.
+     *
+     * @throws FilesystemException
+     */
+    private function copyScalesFiles(string $compilationId, ?string $localePath, string $manifestPath): void
+    {
+        $scaleFiles = $this->getScalesFilesFromManifest($manifestPath);
+
+        if (empty($scaleFiles)) {
+            return;
+        }
+
+        $scalesDestinationDir = $this->buildPathFor($compilationId, $localePath, self::SCALES);
+        foreach ($scaleFiles as $scaleFile) {
+            $sourcePath = $this->buildPathFor($compilationId, $localePath, $scaleFile);
+            $destinationPath = $this->buildPathFor($scalesDestinationDir, basename($scaleFile));
+
+            if (!$this->qtiPackageExtractorStorage->fileExists($sourcePath)) {
+                $this->logger->warning(
+                    sprintf('Scale file not found: %s', $sourcePath),
+                    ['compilationId' => $compilationId, 'scaleFile' => $scaleFile],
+                );
+                continue;
+            }
+
+            $this->copyScaleFile($sourcePath, $destinationPath, $compilationId, $scaleFile);
+        }
+    }
+
+    /**
+     * Extracts scale JSON file paths from the imsmanifest.xml file.
+     * Returns an array of relative file paths (e.g., 'tests/.../scales/OUTCOME_5.json').
+     *
+     * @return array<string>
+     * @throws FilesystemException
+     */
+    private function getScalesFilesFromManifest(string $manifestPath): array
+    {
+        $manifestContent = $this->qtiPackageExtractorStorage->read($manifestPath);
+        $domDocument = new DOMDocument('1.0', 'UTF-8');
+        $domDocument->loadXML($manifestContent);
+        $domXPath = new DOMXPath($domDocument);
+
+        // Find all test resources
+        $testResources = $domXPath->query("//*[local-name()='resource' and contains(@type, 'imsqti_test_xmlv2p')]");
+
+        $scaleFiles = [];
+
+        foreach ($testResources as $testResource) {
+            // Find all file elements within this test resource that reference scales JSON files
+            $fileNodes = $domXPath->query(".//*[local-name()='file' and contains(@href, '/scales/') and contains(@href, '.json')]", $testResource);
+
+            foreach ($fileNodes as $fileNode) {
+                $href = $fileNode->getAttribute('href');
+                if ($href && !isset($scaleFiles[$href])) {
+                    $scaleFiles[$href] = $href;
+                }
+            }
+        }
+
+        return $scaleFiles;
+    }
+
+    /**
+     * @throws FilesystemException
+     */
+    public function copyScaleFile(string $sourcePath, string $destinationPath, string $compilationId, string $scaleFile): void
+    {
+        try {
+            $readStream = $this->qtiPackageExtractorStorage->readStream($sourcePath);
+            $this->qtiCompiledDeliveriesStorage->writeStream($destinationPath, $readStream);
+
+            $this->report(sprintf('[%s] copied scale file: %s', $compilationId, basename($scaleFile)));
+        } catch (FilesystemException $exception) {
+            $this->logger->error(
+                sprintf('[%s] failed to copy scales file: %s', $compilationId, basename($scaleFile)),
+                ['exception' => $exception],
+            );
+
+            // Scale files are needed - re-throw exception in case copying is failed.
+            throw $exception;
+        } finally {
+            if (isset($readStream) && is_resource($readStream)) {
+                fclose($readStream);
+            }
         }
     }
 }

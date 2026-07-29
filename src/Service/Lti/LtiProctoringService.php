@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2021-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2021-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -17,12 +17,13 @@ use App\Lti\UserIdentity\AnonymousUserIdentity;
 use App\Service\Locale\Contract\UserLocaleProviderInterface;
 use App\Service\Locale\Dto\UserLocaleProviderContext;
 use App\Service\Lti\Dto\StartProctoringRequestContext;
+use OAT\Library\EnvironmentManagementClient\Converter\LtiRegistrationConverter;
 use OAT\Library\EnvironmentManagementClient\Repository\ConfigurationRepositoryInterface;
+use OAT\Library\EnvironmentManagementClient\Repository\LtiRegistrationRepositoryInterface;
 use OAT\Library\Lti1p3Core\Exception\LtiExceptionInterface;
 use OAT\Library\Lti1p3Core\Message\Payload\Claim\ContextClaim;
 use OAT\Library\Lti1p3Core\Message\Payload\Claim\LaunchPresentationClaim;
 use OAT\Library\Lti1p3Core\Message\Payload\LtiMessagePayloadInterface;
-use OAT\Library\Lti1p3Core\Registration\RegistrationRepositoryInterface;
 use OAT\Library\Lti1p3Core\Resource\LtiResourceLink\LtiResourceLink;
 use OAT\Library\Lti1p3Proctoring\Message\Launch\Builder\StartProctoringLaunchRequestBuilder;
 use OAT\Library\Lti1p3Proctoring\Model\AcsControlInterface;
@@ -36,7 +37,8 @@ readonly class LtiProctoringService
     public function __construct(
         private StartProctoringLaunchRequestBuilder $startProctoringLaunchRequestBuilder,
         private UrlGenerator $urlGenerator,
-        private RegistrationRepositoryInterface $registrationRepository,
+        private LtiRegistrationRepositoryInterface $ltiRegistrationRepository,
+        private LtiRegistrationConverter $ltiRegistrationConverter,
         private ConfigurationRepositoryInterface $configurationRepository,
         private LtiCustomSettings $ltiCustomSettings,
         private UserLocaleProviderInterface $userLocaleProvider,
@@ -49,10 +51,8 @@ readonly class LtiProctoringService
      * @throws LtiCustomSettingsException
      * @throws LtiExceptionInterface
      */
-    public function getStartProctoringRequestUrl(
-        StartProctoringRequestContext $startProctoringRequestContext,
-        bool $allowAuthorizationRequest = true,
-    ): string {
+    public function getStartProctoringRequestUrl(StartProctoringRequestContext $startProctoringRequestContext): string
+    {
         $tenantId = $startProctoringRequestContext->delivery->getTenantId();
         $ltiMessagePayload = $startProctoringRequestContext->ltiMessagePayload;
         $this->validatePayload($ltiMessagePayload, $startProctoringRequestContext->deliveryExecution->getId());
@@ -63,8 +63,17 @@ readonly class LtiProctoringService
         $proctoringContextId = $this->ltiCustomSettings->getProctoringContextId(
             ['custom' => $ltiMessagePayload->getCustom() ?? []],
         );
+        $isSessionAuthorizable = $startProctoringRequestContext->deliveryExecution->isStateAvailableForAuthorisation();
+        $requireAuthorization = $isSessionAuthorizable
+            && $this->ltiCustomSettings->isProctorAuthorizationRequired(
+                ['custom' => $ltiMessagePayload->getCustom() ?? []],
+            );
 
-        $proctoringRegistration = $this->registrationRepository->find($proctoringToolRegistrationId);
+        $ltiProctoringRegistration = $this->ltiRegistrationRepository->find($proctoringToolRegistrationId);
+        if (!$requireAuthorization && $ltiProctoringRegistration->getLtiTool()?->isInternal()) {
+            return '';
+        }
+        $proctoringRegistration = $this->ltiRegistrationConverter->convert($ltiProctoringRegistration);
 
         $startAssessmentLink = $this->urlGenerator->generate(
             'api_v1_proctoring_start_assessment',
@@ -79,22 +88,14 @@ readonly class LtiProctoringService
 
         $userIdentity = $ltiMessagePayload->getUserIdentity()
             ?? new AnonymousUserIdentity($startProctoringRequestContext->deliveryExecution);
-        $loginHint = array_merge(
-            $userIdentity->normalize(),
-            [
-                'delivery_execution_id' => $startProctoringRequestContext->deliveryExecution->getId(),
-            ],
-        );
+        $loginHint = [
+            ...$userIdentity->normalize(),
+            'delivery_execution_id' => $startProctoringRequestContext->deliveryExecution->getId(),
+        ];
 
         $launchPresentation = $ltiMessagePayload->getLaunchPresentation();
-
-        $isSessionAuthorizable = $allowAuthorizationRequest
-            && $startProctoringRequestContext->deliveryExecution->isStateAvailableForAuthorisation();
         $proctoringCustomSettings = [
-            'requireAuthorization' => $isSessionAuthorizable
-                && $this->ltiCustomSettings->isProctorAuthorizationRequired(
-                    ['custom' => $ltiMessagePayload->getCustom() ?? []],
-                ),
+            'requireAuthorization' => $requireAuthorization,
             'forceAuthorization' => $this->ltiCustomSettings->isProctorAuthorizationForced(
                 $isSessionAuthorizable,
                 ['custom' => $ltiMessagePayload->getCustom() ?? []],
@@ -102,6 +103,7 @@ readonly class LtiProctoringService
         ];
 
         $optionalClaims = [
+            'test_taker_id' => $userIdentity->getIdentifier(),
             LtiMessagePayloadInterface::CLAIM_LTI_PROCTORING_SETTINGS => [
                 'data' => json_encode($proctoringCustomSettings),
             ],

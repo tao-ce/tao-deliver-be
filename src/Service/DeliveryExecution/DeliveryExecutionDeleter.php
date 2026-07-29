@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2023-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2023-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -18,13 +18,14 @@ use App\TestRunner\Service\ExternalTimerService;
 use Exception;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-class DeliveryExecutionDeleter
+readonly class DeliveryExecutionDeleter
 {
     public function __construct(
-        private readonly MessageBusInterface $messageBus,
-        private readonly DeliveryExecutionRepository $deliveryExecutionRepository,
-        private readonly DeliveryExecutionResultManagerService $deliveryExecutionResultManagerService,
-        private readonly ExternalTimerService $externalTimerService,
+        private MessageBusInterface $messageBus,
+        private DeliveryExecutionRepository $deliveryExecutionRepository,
+        private DeliveryExecutionResultManagerService $deliveryExecutionResultManagerService,
+        private DeliveryExecutionUploadsManagerService $deliveryExecutionUploadsManager,
+        private ExternalTimerService $externalTimerService,
     ) {
     }
 
@@ -33,7 +34,8 @@ class DeliveryExecutionDeleter
     {
         try {
             $this->deliveryExecutionResultManagerService->dropResults($deliveryExecution->getId());
-            $this->externalTimerService->deleteServerTimer($deliveryExecution);
+            $this->deliveryExecutionUploadsManager->dropUploads($deliveryExecution->getId());
+            $this->externalTimerService->deleteServerTimer($deliveryExecution->getId());
         } catch (Exception $exception) {
             $this->throw($deliveryExecution, $exception);
         }

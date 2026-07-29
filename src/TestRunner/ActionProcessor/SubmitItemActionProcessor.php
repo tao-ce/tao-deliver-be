@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2019-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2019-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -84,11 +84,11 @@ class SubmitItemActionProcessor extends AbstractActionProcessor
             );
         }
 
+        $sessionState = $testSession->getCurrentAssessmentItemSession()->getState();
         try {
             if (
-                $testSession
-                ->getCurrentAssessmentItemSession()
-                ->getState() === AssessmentItemSessionState::INTERACTING
+                $sessionState === AssessmentItemSessionState::INTERACTING
+                || $sessionState === AssessmentItemSessionState::MODAL_FEEDBACK
             ) {
                 $this->itemSessionService->submitResponse(
                     $deliveryExecution,

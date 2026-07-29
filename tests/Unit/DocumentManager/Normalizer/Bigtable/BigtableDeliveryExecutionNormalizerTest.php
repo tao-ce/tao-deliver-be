@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2019-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2019-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -12,6 +12,7 @@ namespace App\Tests\Unit\DocumentManager\Normalizer\Bigtable;
 use App\DocumentManager\Normalizer\Bigtable\BigtableDeliveryExecutionNormalizer;
 use App\Domain\DeliveryExecution\Model\DeliveryExecution;
 use App\Domain\DeliveryExecution\Model\DeliveryExecutionExtraStateData;
+use App\Domain\DeliveryExecution\Model\ExtraStateData\OverallComment;
 use App\Helper\Date;
 use App\Tests\Traits\DomainTestingTrait;
 use App\Tests\Traits\ExternalTimerDefinitionTestingTrait;
@@ -118,6 +119,51 @@ class BigtableDeliveryExecutionNormalizerTest extends TestCase
                     $data,
                 ),
             ]), DeliveryExecution::class),
+        );
+    }
+
+    public function testNormalizationExcludesExtraStateColumn(): void
+    {
+        $deliveryExecution = $this->createTestDeliveryExecution(
+            'userId#deliveryId#resultId#tenantId',
+            'deliveryId',
+            'tenantId',
+            ['ltiLaunchParams'],
+            '',
+            DeliveryExecutionExtraStateData::fromArray(['attempt' => 1]),
+            locale: 'en-US',
+        );
+        $deliveryExecution->clearUpdates();
+
+        $deliveryExecution
+            ->setItemAttachments('item-1', [])
+            ->addTemporaryItemState('item-1', '')
+            ->setRequestIp('127.0.0.1');
+        $documentDriverData = $this->subject->normalizeDocument($deliveryExecution);
+        $this->assertEquals(
+            ['attachments', 'temporaryItemStates', 'requestIp', 'updatedAt'],
+            $documentDriverData->getUpdatedData(),
+        );
+    }
+
+    public function testNormalizationKeepsExtraStateColumn(): void
+    {
+        $deliveryExecution = $this->createTestDeliveryExecution(
+            'userId#deliveryId#resultId#tenantId',
+            'deliveryId',
+            'tenantId',
+            ['ltiLaunchParams'],
+            '',
+            DeliveryExecutionExtraStateData::fromArray(['attempt' => 1]),
+            locale: 'en-US',
+        );
+        $deliveryExecution->clearUpdates();
+
+        $deliveryExecution->withItemOverallComment('item-1', new OverallComment(0, ''));
+        $documentDriverData = $this->subject->normalizeDocument($deliveryExecution);
+        $this->assertEquals(
+            ['itemsOverallComments', 'extraStateData', 'updatedAt'],
+            $documentDriverData->getUpdatedData(),
         );
     }
 

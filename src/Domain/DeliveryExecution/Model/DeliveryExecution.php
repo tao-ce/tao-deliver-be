@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2019-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2019-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -472,7 +472,7 @@ class DeliveryExecution extends AbstractDocument implements TestAwareInterface, 
             $this->extraStateData
                 ->withItemState($itemIdentifier, $itemState)
                 ->withTemporaryItemState($itemIdentifier),
-        )->addReviewInlineComment($itemIdentifier);
+        )->removeReviewInlineComment($itemIdentifier);
     }
 
     public function clearAllItemState(): self
@@ -783,14 +783,36 @@ class DeliveryExecution extends AbstractDocument implements TestAwareInterface, 
         return $this->reviewInlineComment;
     }
 
-    public function addReviewInlineComment(string $itemId, mixed $comment = []): self
+    public function removeReviewInlineComment(string $itemId): self
     {
         $this->reviewInlineComment = $this->reviewInlineComment ?? new InlineFeedbackCollection();
-        $this->reviewInlineComment->addFeedback($itemId, $comment);
+        $this->reviewInlineComment->removeFeedback($itemId);
 
         $this->addUpdate('reviewInlineComment');
 
         return $this;
+    }
+
+    public function addReviewInlineComment(?string $owner, string $itemId, array $feedback): self
+    {
+        $this->reviewInlineComment = $this->reviewInlineComment ?? new InlineFeedbackCollection();
+        if ($owner === null) {
+            $this->reviewInlineComment->addFeedback($itemId, $feedback);
+        } else {
+            $this->reviewInlineComment->addOwnerFeedback($owner, $itemId, $feedback);
+        }
+
+        $this->addUpdate('reviewInlineComment');
+
+        return $this;
+    }
+
+    public function getReviewInlineCommentForItem(?string $owner, string $itemId): array
+    {
+        $reviewInlineComment = $this->reviewInlineComment ?? new InlineFeedbackCollection();
+        return $owner === null
+            ? $reviewInlineComment->getFeedback($itemId)
+            : $reviewInlineComment->getOwnerFeedback($owner, $itemId);
     }
 
     public function setReviewInlineComment(?InlineFeedbackCollection $reviewInlineComment = null): self
@@ -824,6 +846,15 @@ class DeliveryExecution extends AbstractDocument implements TestAwareInterface, 
         }
 
         return $this->getLocale() ?: $this->getMainLocale();
+    }
+
+    public function getUserSelectedLocaleForMultiLanguage(): ?string
+    {
+        if (!$this->isMultiLanguage()) {
+            return null;
+        }
+
+        return $this->getUserSelectedLocale();
     }
 
     public function isMultiLanguage(): bool
@@ -923,5 +954,17 @@ class DeliveryExecution extends AbstractDocument implements TestAwareInterface, 
         return $this->setExtraStateData(
             $this->getExtraStateData()->withFinalManuallyGradedItem($itemId, $gradedAt),
         );
+    }
+
+    public function addAnnotationComment(?string $owner, string $itemId, array $comments): self
+    {
+        return $this->setExtraStateData(
+            $this->getExtraStateData()->withAnnotationComment($owner, $itemId, $comments),
+        );
+    }
+
+    public function getAnnotationCommentForItem(?string $owner, string $itemId): array
+    {
+        return $this->getExtraStateData()->getItemAnnotationComment($owner, $itemId);
     }
 }

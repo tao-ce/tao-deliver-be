@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2019-2024 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2019-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -16,7 +16,7 @@ use App\TestRunner\ActionProcessor\SubmitItemActionProcessor;
 use App\Tests\Traits\DomainTestingTrait;
 use App\Tests\Traits\LoggerTestingTrait;
 use App\Tests\Traits\QtiTestingTrait;
-use Monolog\Logger;
+use Monolog\Level;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -67,7 +67,7 @@ class SubmitItemActionProcessorTest extends KernelTestCase
             "[{$deliveryExecution->getId()}]"
             . ' - test taker has submitted the following item: [Item-Q01] with ItemResponse: '
             . '[{"RESPONSE":{"base":{"identifier":"tao"}}}] and itemState: [someItemState] ',
-            Logger::INFO,
+            Level::Info,
             'audit_delivery_execution',
         );
 
@@ -85,7 +85,7 @@ class SubmitItemActionProcessorTest extends KernelTestCase
                 'feedbacks' => $expectedFeedbacks,
                 'itemSession' => [
                     'numAttempts' => ['base' => ['integer' => 1]],
-                    'duration' => ['base' => ['duration' => 'PT0S']],
+                    'duration' => ['base' => ['duration' => 'PT3H25M45S']],
                     'completionStatus' => ['base' => ['identifier' => 'completed']],
                     'SCORE' => ['base' => ['float' => 1.0]],
                     'RESPONSE' => ['base' => ['identifier' => 'tao']],

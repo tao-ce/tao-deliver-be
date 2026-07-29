@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2025-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -9,16 +9,21 @@ declare(strict_types=1);
 
 namespace App\Tests\Traits;
 
+use App\Service\Infrastructure\Contract\MemoizedService;
+
 trait MemoryLeaksTrait
 {
     public const ALLOWED_MEMORY_LEAKS = 1024 * 1024;
-    protected function measureLeakForMethod(mixed $obj, string $method, array $argArray): void
+    protected function measureLeakForMethod(object $obj, string $method, array $argArray): void
     {
         gc_collect_cycles();
         $startMemoryUsage = memory_get_usage();
         while ($arg = array_shift($argArray)) {
             $arg = is_array($arg) ? $arg : [$arg];
             call_user_func([$obj, $method], ...$arg);
+        }
+        if ($obj instanceof MemoizedService) {
+            $obj->flush();
         }
         gc_collect_cycles();
         $endMemoryUsage = memory_get_usage();

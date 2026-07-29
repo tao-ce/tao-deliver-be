@@ -11,6 +11,7 @@ namespace App\Serializer\Normalizer;
 
 use App\Domain\Tenant\Model\EmptyTestRunnerTheme;
 use App\Generator\UrlGenerator;
+use App\Lti\LtiCustomSettings;
 use App\Response\GetDeliveryExecutionConfigurationResponse;
 use App\Service\Locale\Contract\UserLocaleProviderInterface;
 use App\Service\Locale\Dto\UserLocaleProviderContext;
@@ -22,6 +23,7 @@ readonly class GetDeliveryExecutionConfigurationNormalizer implements Normalizer
     public function __construct(
         private UserLocaleProviderInterface $userLocaleProvider,
         private UrlGenerator $urlGenerator,
+        private LtiCustomSettings $ltiCustomSettings,
     ) {
     }
 
@@ -35,6 +37,11 @@ readonly class GetDeliveryExecutionConfigurationNormalizer implements Normalizer
         $ltiParameters = $deliveryExecution->getLtiLaunchParameters();
         $testRunnerConfiguration = $object->getTestRunnerConfiguration() ?? [];
 
+        $isAnonymousScoring = $this->ltiCustomSettings->isAnonymousScoring();
+        $testTakerName = $isAnonymousScoring && $deliveryExecution->isReview()
+            ? ($this->ltiCustomSettings->getTestTakerName() ?? $ltiParameters['user_name'])
+            : $ltiParameters['user_name'];
+
         $updatedConfiguration = [
             'hasItemState' => $deliveryExecution->getExtraStateData()->hasItemStates(),
             'deliveryId' => $deliveryExecution->getDeliveryId(),
@@ -42,9 +49,9 @@ readonly class GetDeliveryExecutionConfigurationNormalizer implements Normalizer
             'locale' => $object->getTranslatedTestLocale() ?? $this->provideUserLocale($object),
             'testTaker' => [
                 'id' => $deliveryExecution->getUserId(),
-                'name' => $ltiParameters['user_name'],
-                'firstName' => $ltiParameters['given_name'] ?? null,
-                'lastName' => $ltiParameters['family_name'] ?? null,
+                'name' => $testTakerName,
+                'firstName' => $isAnonymousScoring ? null : ($ltiParameters['given_name'] ?? null),
+                'lastName' => $isAnonymousScoring ? null : ($ltiParameters['family_name'] ?? null),
             ],
             'options' => [
                 'endAssessmentUrl' => empty($ltiParameters['proctoring_end_assessment_return'])

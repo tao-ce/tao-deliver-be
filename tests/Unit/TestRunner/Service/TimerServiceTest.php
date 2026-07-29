@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2019-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2019-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -17,6 +17,7 @@ use App\TestRunner\Service\TimerService;
 use App\Tests\Traits\DomainTestingTrait;
 use App\Tests\Traits\LoggerTestingTrait;
 use LogicException;
+use Monolog\Level;
 use Monolog\Logger;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
@@ -66,8 +67,6 @@ class TimerServiceTest extends KernelTestCase
         $this->subject = new TimerService(
             $this->createMock(ExternalTimerService::class),
             static::getContainer()->get(LoggerInterface::class),
-            static::getContainer()->get('monolog.logger.audit_delivery_execution'),
-            0.5,
         );
 
         $this->createDeliveryExecutionMock();
@@ -132,6 +131,11 @@ class TimerServiceTest extends KernelTestCase
             ->method('withStoppedServerTimer')
             ->with('itemRefIdentifier')
             ->willThrowException(new LogicException('foo'));
+        foreach ($this->qtiDurationMocks as $durationMockMap) {
+            /** @var MockObject&QtiDuration $durationMock */
+            $durationMock = $durationMockMap[1];
+            $durationMock->expects($this->once())->method('add')->with(new QtiDuration('PT2S'));
+        }
 
         $this->subject->endServerTimer(
             $this->deliveryExecution,
@@ -139,7 +143,7 @@ class TimerServiceTest extends KernelTestCase
             1.5,
         );
 
-        $this->assertHasLogRecordWithMessage('[userId#deliveryId#resultId#tenantId] foo', Logger::WARNING);
+        $this->assertHasLogRecordWithMessage('[userId#deliveryId#resultId#tenantId] foo', Level::Warning);
     }
 
     private function createDeliveryExecutionMock(): void

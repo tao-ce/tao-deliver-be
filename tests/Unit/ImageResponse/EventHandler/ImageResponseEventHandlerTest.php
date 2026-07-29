@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2025-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -37,10 +37,11 @@ class ImageResponseEventHandlerTest extends KernelTestCase
                     'd6bd7c84-095d-4299-aabb-591f3cf9cf05',
                     '1',
                     new DateTime(),
-                    'test-taker-1',
                     'failed',
                     new Metadata(
+                        '18e8c261-c478-4a7e-be99-55468f89aef5test-taker-1',
                         '76f244a88322',
+                        '18e8c261-c478-4a7e-be99-55468f89aef5',
                         '18e8c261-c478-4a7e-be99-55468f89aef5',
                         'item-1',
                         'RESPONSE',
@@ -53,10 +54,11 @@ class ImageResponseEventHandlerTest extends KernelTestCase
                     'd6bd7c84-095d-4299-aabb-591f3cf9cf05',
                     '1',
                     new DateTime(),
-                    'test-taker-1',
                     'success',
                     new Metadata(
+                        '18e8c261-c478-4a7e-be99-55468f89aef5test-taker-1',
                         '76f244a88322',
+                        '18e8c261-c478-4a7e-be99-55468f89aef5',
                         '18e8c261-c478-4a7e-be99-55468f89aef5',
                         'item-1',
                         'RESPONSE',
@@ -68,10 +70,11 @@ class ImageResponseEventHandlerTest extends KernelTestCase
                     'd6bd7c84-095d-4299-aabb-591f3cf9cf05',
                     '1',
                     new DateTime(),
-                    'test-taker-1',
                     'success',
                     new Metadata(
+                        '18e8c261-c478-4a7e-be99-55468f89aef5test-taker-1',
                         '76f244a88322',
+                        '18e8c261-c478-4a7e-be99-55468f89aef5',
                         '18e8c261-c478-4a7e-be99-55468f89aef5',
                         'item-1',
                         pageNumber: 1,
@@ -83,10 +86,11 @@ class ImageResponseEventHandlerTest extends KernelTestCase
                     'd6bd7c84-095d-4299-aabb-591f3cf9cf05',
                     '1',
                     new DateTime(),
-                    'test-taker-1',
                     'success',
                     new Metadata(
+                        '18e8c261-c478-4a7e-be99-55468f89aef5test-taker-1',
                         '76f244a88322',
+                        '18e8c261-c478-4a7e-be99-55468f89aef5',
                         '18e8c261-c478-4a7e-be99-55468f89aef5',
                         responseId: 'RESPONSE',
                         pageNumber: 1,
@@ -98,10 +102,27 @@ class ImageResponseEventHandlerTest extends KernelTestCase
                     'd6bd7c84-095d-4299-aabb-591f3cf9cf05',
                     '1',
                     new DateTime(),
-                    'test-taker-1',
                     'success',
                     new Metadata(
+                        '18e8c261-c478-4a7e-be99-55468f89aef5test-taker-1',
                         '76f244a88322',
+                        '18e8c261-c478-4a7e-be99-55468f89aef5',
+                        itemId: 'item-1',
+                        responseId: 'RESPONSE',
+                        pageNumber: 1,
+                    ),
+                ),
+            ],
+            'Missing session ID' => [
+                new ImageResponse(
+                    'd6bd7c84-095d-4299-aabb-591f3cf9cf05',
+                    '1',
+                    new DateTime(),
+                    'success',
+                    new Metadata(
+                        '18e8c261-c478-4a7e-be99-55468f89aef5test-taker-1',
+                        '76f244a88322',
+                        attemptId: '18e8c261-c478-4a7e-be99-55468f89aef5',
                         itemId: 'item-1',
                         responseId: 'RESPONSE',
                         pageNumber: 1,
@@ -113,9 +134,26 @@ class ImageResponseEventHandlerTest extends KernelTestCase
                     'd6bd7c84-095d-4299-aabb-591f3cf9cf05',
                     '1',
                     new DateTime(),
-                    'test-taker-1',
                     'success',
                     new Metadata(
+                        '18e8c261-c478-4a7e-be99-55468f89aef5test-taker-1',
+                        sessionId: '18e8c261-c478-4a7e-be99-55468f89aef5',
+                        attemptId: '18e8c261-c478-4a7e-be99-55468f89aef5',
+                        itemId: 'item-1',
+                        responseId: 'RESPONSE',
+                        pageNumber: 1,
+                    ),
+                ),
+            ],
+            'Missing user session ID' => [
+                new ImageResponse(
+                    'd6bd7c84-095d-4299-aabb-591f3cf9cf05',
+                    '1',
+                    new DateTime(),
+                    'success',
+                    new Metadata(
+                        deliveryId: '76f244a88322',
+                        sessionId: '18e8c261-c478-4a7e-be99-55468f89aef5',
                         attemptId: '18e8c261-c478-4a7e-be99-55468f89aef5',
                         itemId: 'item-1',
                         responseId: 'RESPONSE',
@@ -165,17 +203,18 @@ class ImageResponseEventHandlerTest extends KernelTestCase
     public function testItSkipsWhenDeliveryExecutionNotFound(): void
     {
         $deliveryId = '76f244a88322';
-        $attemptId = '18e8c261-c478-4a7e-be99-55468f89aef5';
+        $sessionId = $attemptId = '18e8c261-c478-4a7e-be99-55468f89aef5';
         $tenantId = '1';
         $userId = 'test-taker-1';
         $message = new ImageResponse(
             'd6bd7c84-095d-4299-aabb-591f3cf9cf05',
             $tenantId,
             new DateTime(),
-            $userId,
             'success',
             new Metadata(
+                "$sessionId$userId",
                 $deliveryId,
+                $sessionId,
                 $attemptId,
                 'item-1',
                 'RESPONSE',
@@ -204,17 +243,18 @@ class ImageResponseEventHandlerTest extends KernelTestCase
     public function testItSkipsWhenDeliveryExecutionNotFinished(): void
     {
         $deliveryId = '76f244a88322';
-        $attemptId = '18e8c261-c478-4a7e-be99-55468f89aef5';
+        $sessionId = $attemptId = '18e8c261-c478-4a7e-be99-55468f89aef5';
         $tenantId = '1';
         $userId = 'test-taker-1';
         $message = new ImageResponse(
             'd6bd7c84-095d-4299-aabb-591f3cf9cf05',
             $tenantId,
             new DateTime(),
-            $userId,
             'success',
             new Metadata(
+                "$sessionId$userId",
                 $deliveryId,
+                $sessionId,
                 $attemptId,
                 'item-1',
                 'RESPONSE',
@@ -243,17 +283,18 @@ class ImageResponseEventHandlerTest extends KernelTestCase
     public function testItSkipsForMismatchingTenantId(): void
     {
         $deliveryId = '76f244a88322';
-        $attemptId = '18e8c261-c478-4a7e-be99-55468f89aef5';
+        $sessionId = $attemptId = '18e8c261-c478-4a7e-be99-55468f89aef5';
         $tenantId = '1';
         $userId = 'test-taker-1';
         $message = new ImageResponse(
             'd6bd7c84-095d-4299-aabb-591f3cf9cf05',
             $tenantId,
             new DateTime(),
-            $userId,
             'success',
             new Metadata(
+                "$sessionId$userId",
                 $deliveryId,
+                $sessionId,
                 $attemptId,
                 'item-1',
                 'RESPONSE',
@@ -288,17 +329,18 @@ class ImageResponseEventHandlerTest extends KernelTestCase
     public function testItSetsAttachmentToDeliveryExecution(): void
     {
         $deliveryId = '76f244a88322';
-        $attemptId = '18e8c261-c478-4a7e-be99-55468f89aef5';
+        $sessionId = $attemptId = '18e8c261-c478-4a7e-be99-55468f89aef5';
         $tenantId = '1';
         $userId = 'test-taker-1';
         $message = new ImageResponse(
             'd6bd7c84-095d-4299-aabb-591f3cf9cf05',
             $tenantId,
             new DateTime('2025-12-02T20:46:52+01:00'),
-            $userId,
             'success',
             new Metadata(
+                "$sessionId$userId",
                 $deliveryId,
+                $sessionId,
                 $attemptId,
                 'item-1',
                 'RESPONSE',
@@ -341,17 +383,18 @@ class ImageResponseEventHandlerTest extends KernelTestCase
     public function testItAddsSecondPageAttachmentToDeliveryExecution(): void
     {
         $deliveryId = '76f244a88322';
-        $attemptId = '18e8c261-c478-4a7e-be99-55468f89aef5';
+        $sessionId = $attemptId = '18e8c261-c478-4a7e-be99-55468f89aef5';
         $tenantId = '1';
         $userId = 'test-taker-1';
         $message = new ImageResponse(
             'e79e3cd3-8022-4fd7-a9e1-bcf072639915',
             $tenantId,
             new DateTime('2025-12-02T20:47:28+01:00'),
-            $userId,
             'success',
             new Metadata(
+                "$sessionId$userId",
                 $deliveryId,
+                $sessionId,
                 $attemptId,
                 'item-1',
                 'RESPONSE',
@@ -416,17 +459,18 @@ class ImageResponseEventHandlerTest extends KernelTestCase
     public function testItReplacesPageAttachmentToDeliveryExecution(): void
     {
         $deliveryId = '76f244a88322';
-        $attemptId = '18e8c261-c478-4a7e-be99-55468f89aef5';
+        $sessionId = $attemptId = '18e8c261-c478-4a7e-be99-55468f89aef5';
         $tenantId = '1';
         $userId = 'test-taker-1';
         $message = new ImageResponse(
             '22bc50a0-9892-4732-baa9-3cc9f038162b',
             $tenantId,
             new DateTime('2025-12-02T20:52:31+01:00'),
-            $userId,
             'success',
             new Metadata(
+                "$sessionId$userId",
                 $deliveryId,
+                $sessionId,
                 $attemptId,
                 'item-1',
                 'RESPONSE',
@@ -497,17 +541,18 @@ class ImageResponseEventHandlerTest extends KernelTestCase
     public function testItRejectsWhenOlderItemResponseIsProvisioned(): void
     {
         $deliveryId = '76f244a88322';
-        $attemptId = '18e8c261-c478-4a7e-be99-55468f89aef5';
+        $sessionId = $attemptId = '18e8c261-c478-4a7e-be99-55468f89aef5';
         $tenantId = '1';
         $userId = 'test-taker-1';
         $message = new ImageResponse(
             'd6bd7c84-095d-4299-aabb-591f3cf9cf05',
             $tenantId,
             new DateTime('2025-12-02T20:46:52+01:00'),
-            $userId,
             'success',
             new Metadata(
+                "$sessionId$userId",
                 $deliveryId,
+                $sessionId,
                 $attemptId,
                 'item-1',
                 'RESPONSE',

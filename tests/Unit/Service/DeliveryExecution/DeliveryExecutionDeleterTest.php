@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2012-2026 Open Assessment Technologies S.A.
-// Copyright (C) 2023-2025 (original work) Open Assessment Technologies SA;
+// Copyright (C) 2023-2026 (original work) Open Assessment Technologies SA;
 //
 // SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-TAO-Commercial-License
 
@@ -16,6 +16,7 @@ use App\Messenger\Stamp\StartTimeStamp;
 use App\Repository\DeliveryExecutionRepository;
 use App\Service\DeliveryExecution\DeliveryExecutionDeleter;
 use App\Service\DeliveryExecution\DeliveryExecutionResultManagerService;
+use App\Service\DeliveryExecution\DeliveryExecutionUploadsManagerService;
 use App\TestRunner\Service\ExternalTimerService;
 use DateTimeImmutable;
 use Exception;
@@ -30,6 +31,7 @@ class DeliveryExecutionDeleterTest extends TestCase
     private PostProcessedMessageBusInterface|MockObject $postProcessedMessageBusMock;
     private DeliveryExecutionRepository|MockObject $deliveryExecutionRepositoryMock;
     private DeliveryExecutionResultManagerService|MockObject $deliveryExecutionResultManagerServiceMock;
+    private DeliveryExecutionUploadsManagerService|MockObject $deliveryExecutionUploadsManagerServiceMock;
     private ExternalTimerService|MockObject $externalTimerServiceMock;
 
     protected function setUp(): void
@@ -37,12 +39,14 @@ class DeliveryExecutionDeleterTest extends TestCase
         $this->postProcessedMessageBusMock = $this->createMock(PostProcessedMessageBusInterface::class);
         $this->deliveryExecutionRepositoryMock = $this->createMock(DeliveryExecutionRepository::class);
         $this->deliveryExecutionResultManagerServiceMock = $this->createMock(DeliveryExecutionResultManagerService::class);
+        $this->deliveryExecutionUploadsManagerServiceMock = $this->createMock(DeliveryExecutionUploadsManagerService::class);
         $this->externalTimerServiceMock = $this->createMock(ExternalTimerService::class);
 
         $this->subject = new DeliveryExecutionDeleter(
             $this->postProcessedMessageBusMock,
             $this->deliveryExecutionRepositoryMock,
             $this->deliveryExecutionResultManagerServiceMock,
+            $this->deliveryExecutionUploadsManagerServiceMock,
             $this->externalTimerServiceMock,
         );
     }
@@ -71,10 +75,15 @@ class DeliveryExecutionDeleterTest extends TestCase
             ->method('dropResults')
             ->with('id');
 
+        $this->deliveryExecutionUploadsManagerServiceMock
+             ->expects($this->once())
+             ->method('dropUploads')
+             ->with('id');
+
         $this->externalTimerServiceMock
             ->expects($this->once())
             ->method('deleteServerTimer')
-            ->with($deliveryExecutionMock);
+            ->with($deliveryExecutionMock->getId());
 
         $this->postProcessedMessageBusMock
             ->expects($this->once())
@@ -116,6 +125,10 @@ class DeliveryExecutionDeleterTest extends TestCase
         $this->deliveryExecutionResultManagerServiceMock
             ->expects($this->never())
             ->method('dropResults');
+
+        $this->deliveryExecutionUploadsManagerServiceMock
+             ->expects($this->never())
+             ->method('dropUploads');
 
         $this->externalTimerServiceMock
             ->expects($this->never())
